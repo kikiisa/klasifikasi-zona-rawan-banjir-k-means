@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='dist/output.css')}}"
+    />
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+    <title>CLUSTER BANJIR</title>
+  </head>
+  <body>
+    <header class="bg-gradient shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="dashboard.html" class="flex items-center hover:opacity-90 transition-opacity duration-200">
+                <i class="fas fa-address-book text-white text-2xl mr-3"></i>
+                <div class="text-white font-bold text-xl">Cluster Management</div>
+            </a>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li>
+                        <a href="profile.html" class="text-gray-100 hover:text-white flex items-center transition-colors duration-200">
+                            <i class="fas fa-user-circle mr-2"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.html" class="text-gray-100 hover:text-white flex items-center transition-colors duration-200">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>
