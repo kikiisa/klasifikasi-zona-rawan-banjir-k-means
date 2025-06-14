@@ -2,6 +2,7 @@
   "name": "service-cluster",
   "version": "1.0.0",
   "description": "",
+  
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,6 +15,7 @@
     "tailwindcss": "^4.1.10"
   },
   "dependencies": {
+    "datatables.net-dt": "^2.3.2",
     "flowbite": "^3.1.2"
   }
 }
