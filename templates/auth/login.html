@@ -7,15 +7,23 @@
       rel="stylesheet"
       href="{{url_for('static',filename='dist/output.css')}}"
     />
-    <link rel="stylesheet" href="{{url_for('static',filename='src/input.css')}}">
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='src/input.css')}}"
+    />
     <title>LOGIN - CLUSTER BANJIR</title>
   </head>
   <body>
-    <div class="wrap-login flex justify-center items-center h-screen">
+    <div class="wrap-login flex flex-col justify-center items-center h-screen">
+     
       <form
+        method="post"
+        action="/login"
         class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
       >
-        <div class="header-login flex flex-col justify-center items-center gap-2">
+        <div
+          class="header-login flex flex-col justify-center items-center gap-2"
+        >
           <img
             class="text-center"
             width="90"
@@ -32,17 +40,29 @@
             Masuk Ke Akun
           </h2>
         </div>
+         {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div>
+        {% for category, message in messages %}
+        <div
+          class="flowbite-alert mb-4 mt-3 border border-red-300 shadow rounded-md bg-red-100 p-4"
+        >
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
         <div class="mb-5">
           <label
-            for="email"
+            for="username"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Your email</label
+            >Username</label
           >
           <input
-            type="email"
-            id="email"
+            type="text"
+            id="username"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Masukan Email Anda"
+            placeholder="Masukan Username Anda"
             required
           />
         </div>

@@ -22,6 +22,13 @@ content %}
         Upload Data CSV
       </button>
     </form>
+    <form action="/prosess" method="post">
+      <button
+        class="bg-blue-900 hover:bg-blue-800 mt-4 text-white font-bold py-2 px-4 rounded"
+      >
+        Proses Klasifikasi
+      </button>
+    </form>
   </div>
   {% with messages = get_flashed_messages(with_categories=true) %} {% if
   messages %}
@@ -34,12 +41,16 @@ content %}
     </div>
     {% endfor %}
   </div>
-  {% endif %} {% endwith %} {% if status_file %}
-   <div class="overflow-x-auto rounded-lg shadow">
-      <div class="bg-white p-4 rounded-lg border border-gray-200">
-        {{ data|safe }}
-      </div>
+  {% endif %} {% endwith %} 
+  {% if status_file %}
+  <div class="overflow-x-auto rounded-lg shadow">
+    <div class="bg-white p-4 rounded-lg border border-gray-200">
+      <h1 class="mb-3 text-2xl font-bold text-gray-900 dark:text-white">
+        Dataset
+      </h1>
+      {{ data|safe }}
     </div>
+  </div>
   {% else %}
   <div
     class="lg:w-1/2 flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
@@ -63,13 +74,26 @@ content %}
     </div>
   </div>
   {% endif %}
+  <div class="overflow-x-auto rounded-lg shadow mt-4">
+    <div class="bg-white p-4 rounded-lg border border-gray-200">
+      <h1 class="mb-3 text-2xl font-bold text-gray-900 dark:text-white">
+        Hasil Klasifikasi
+      </h1>
+
+      {% if result %} {{ result|safe }} {% else %}
+      <div class="alert alert-warning" role="alert">
+        No results found. Please ensure the input data is valid.
+      </div>
+      {% endif %}
+    </div>
+  </div>
 </div>
 
 <script src="{{url_for('static',filename='vendor/jquery.js')}}"></script>
 <script src="{{url_for('static',filename='vendor/datatables.min.js')}}"></script>
 <script>
   $(document).ready(function () {
-    $('.dataframe').DataTable();
+    $(".dataframe").DataTable();
   });
 </script>
 {% endblock %}

@@ -2,7 +2,11 @@ from flask import Flask,render_template,request,redirect,url_for,flash
 from werkzeug.utils import secure_filename
 import os
 import pandas as pd
-import time
+import db 
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.cluster import KMeans
+
+import db.index
 app = Flask(__name__)
 
 app.secret_key = "jody"
@@ -17,21 +21,48 @@ def allowed_file(filename):
 def index():
     return render_template('index.html',title='Home')
 
-@app.route('/login')
+@app.route('/login',methods=['GET'])
 def login():
     return render_template('auth/login.html',title='Login')
 
+@app.route('/login',methods=['POST'])
+def login_post():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    user = db.index.login(username,password)
+    if user:
+        return redirect(url_for('dashboard'))
+    else:
+        flash('Username atau Password Salah')
+        return redirect(url_for('login'))
 @app.route('/dashboard')
 def dashboard():
-    file_path = os.path.join(dataset_dir,'dataset.csv')
-    if(os.path.isfile(file_path)):
-        df = pd.read_csv(file_path)
-        convertHTML = df.to_html(classes='',index=False)
-        return render_template('dashboard/index.html',title='Dashboard',status_file=True,data=convertHTML)
-    else:
-        return render_template('dashboard/index.html',title='Dashboard',status_file=False)
-       
+    file_path = os.path.join(dataset_dir, 'dataset.csv')
+    result_path = os.path.join('output', 'result.csv')
 
+    # Inisialisasi nilai default
+    convertHTML = None
+    converHTMLresult = None
+
+    status_file = os.path.isfile(file_path)
+    status_result = os.path.isfile(result_path)
+
+    if status_file:
+        df = pd.read_csv(file_path)
+        convertHTML = df.to_html(classes='table table-bordered', index=False)
+
+    if status_result:
+        result = pd.read_csv(result_path)
+        converHTMLresult = result.to_html(classes='table table-bordered', index=False)
+
+    return render_template(
+        'dashboard/index.html',
+        title='Dashboard',
+        status_file=status_file,
+        status_result=status_result,
+        data=convertHTML,
+        result=converHTMLresult
+    )
 
 @app.route('/upload-file',methods=['POST','GET'])
 def upload_file():
@@ -57,9 +88,38 @@ def upload_file():
             return redirect(url_for('upload_file'))
         flash('File tidak diizinkan.')
         return redirect(request.url)
-    
-    
     return redirect(url_for('dashboard'))
+
+@app.route('/prosess',methods=['POST'])
+def prosess():
+    if request.method == 'POST':
+        file_path = os.path.join(dataset_dir,'dataset.csv')
+        if(not os.path.isfile(file_path)):
+            flash('File CSV Tidak Ditemukan')
+            return redirect(url_for('dashboard'))
+        
+        data= pd.read_csv(file_path)
+        fitur = ['elevation_m', 'curah_hujan_mm', 'jarak_sungai_m',
+         'kemiringan_persen','banjir_historis']
+        scaler = MinMaxScaler()
+        data_scaled = scaler.fit_transform(data[fitur])
+        # === 4. Jalankan K-Means ===
+        k = 3
+        kmeans = KMeans(n_clusters=k, random_state=42)
+        data['klaster'] = kmeans.fit_predict(data_scaled)
+
+        # === 5. Pemetaan label klaster ke zonasi ===
+        mapping = {0: 'Rendah', 1: 'Sedang', 2: 'Tinggi'}
+
+        # Urutkan berdasarkan elevasi rata-rata per klaster (agar labelnya masuk akal)
+        centers = pd.DataFrame(kmeans.cluster_centers_, columns=fitur)
+        order = centers['elevation_m'].argsort().values
+        label_map = {old: mapping[new] for new, old in enumerate(order)}
+        data['klaster_banjir'] = data['klaster'].map(label_map)
+        # === 6. Simpan hasilnya ke CSV ===
+        data.to_csv("output/result.csv", index=False)
+        flash('Proses Berhasil')
+        return redirect(url_for('dashboard'))
 if __name__ == '__main__':
     app.run(debug=True)
     
