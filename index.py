@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,redirect,url_for,flash
+from flask import Flask,render_template,request,redirect,url_for,flash,session
 from werkzeug.utils import secure_filename
 import os
 import pandas as pd
@@ -23,13 +23,25 @@ def index():
 
 @app.route('/login',methods=['GET'])
 def login():
-    return render_template('auth/login.html',title='Login')
+    if(session.get('status')):
+        return redirect(url_for('dashboard'))
+    else:
+        return render_template('auth/login.html',title='Login')
+
+@app.route('/logout',methods=['GET'])
+def logout():
+    session.pop('status',None)
+    session.pop('id',None)
+    return redirect(url_for('login'))
 
 @app.route('/login',methods=['POST'])
 def login_post():
+    
     username = request.form.get('username')
     password = request.form.get('password')
     user = db.index.login(username,password)
+    session['id'] = user[0]
+    session['status'] = True
     if user:
         return redirect(url_for('dashboard'))
     else:
@@ -37,6 +49,9 @@ def login_post():
         return redirect(url_for('login'))
 @app.route('/dashboard')
 def dashboard():
+    if(not session.get('status')):
+        flash('Silahkan Login Terlebih Dahulu !')
+        return redirect(url_for('login'))
     file_path = os.path.join(dataset_dir, 'dataset.csv')
     result_path = os.path.join('output', 'result.csv')
 

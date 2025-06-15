@@ -6,7 +6,7 @@ import random
 np.random.seed(42)
 
 # Generate 100 rows of random data
-num_samples = 100
+num_samples = 500
 
 # ID from 1 to 100
 ids = list(range(1, num_samples + 1))
