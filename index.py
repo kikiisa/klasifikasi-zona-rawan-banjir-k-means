@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,redirect,url_for,flash,session
+from flask import Flask,render_template,request,redirect,url_for,flash,session,jsonify
 from werkzeug.utils import secure_filename
 import os
 import pandas as pd
@@ -104,6 +104,13 @@ def upload_file():
         flash('File tidak diizinkan.')
         return redirect(request.url)
     return redirect(url_for('dashboard'))
+
+
+@app.route("/api/results", methods=["GET"])
+def results():  
+    data = pd.read_csv('output/result.csv')
+    return  data.to_json(orient="records")
+    # data.to_json(orient="records")
 
 @app.route('/prosess',methods=['POST'])
 def prosess():
