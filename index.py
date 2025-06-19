@@ -113,11 +113,16 @@ def prosess():
             flash('File CSV Tidak Ditemukan')
             return redirect(url_for('dashboard'))
         
+        # === 3. Preprocessing ===
         data= pd.read_csv(file_path)
-        fitur = ['elevation_m', 'curah_hujan_mm', 'jarak_sungai_m',
+        fitur = ['curah_hujan_mm',
          'kemiringan_persen','banjir_historis']
+        
+        # === 3. Preprocessing ===
+        
         scaler = MinMaxScaler()
         data_scaled = scaler.fit_transform(data[fitur])
+        
         # === 4. Jalankan K-Means ===
         k = 3
         kmeans = KMeans(n_clusters=k, random_state=42)
@@ -128,7 +133,7 @@ def prosess():
 
         # Urutkan berdasarkan elevasi rata-rata per klaster (agar labelnya masuk akal)
         centers = pd.DataFrame(kmeans.cluster_centers_, columns=fitur)
-        order = centers['elevation_m'].argsort().values
+        order = centers['curah_hujan_mm'].argsort().values
         label_map = {old: mapping[new] for new, old in enumerate(order)}
         data['klaster_banjir'] = data['klaster'].map(label_map)
         # === 6. Simpan hasilnya ke CSV ===
