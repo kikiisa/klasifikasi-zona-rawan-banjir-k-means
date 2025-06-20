@@ -1,8 +1,9 @@
 from flask import Flask,render_template,request,redirect,url_for,flash,session,jsonify
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
 import pandas as pd
-import db 
+import db
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
 
@@ -10,6 +11,7 @@ import db.index
 app = Flask(__name__)
 
 app.secret_key = "jody"
+CORS(app)
 dataset_dir = 'dataset'
 UPLOAD_FOLDER = 'dataset'
 ALLOWED_EXTENSIONS = {'csv'}
@@ -19,30 +21,26 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
-    return render_template('index.html',title='Home')
-
-@app.route('/login',methods=['GET'])
-def login():
     if(session.get('status')):
         return redirect(url_for('dashboard'))
     else:
         return render_template('auth/login.html',title='Login')
 
+
 @app.route('/logout',methods=['GET'])
 def logout():
     session.pop('status',None)
     session.pop('id',None)
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 @app.route('/login',methods=['POST'])
 def login_post():
-    
     username = request.form.get('username')
     password = request.form.get('password')
     user = db.index.login(username,password)
-    session['id'] = user[0]
-    session['status'] = True
     if user:
+        session['id'] = user[0]
+        session['status'] = True
         return redirect(url_for('dashboard'))
     else:
         flash('Username atau Password Salah')
@@ -126,7 +124,6 @@ def prosess():
          'kemiringan_persen','banjir_historis']
         
         # === 3. Preprocessing ===
-        
         scaler = MinMaxScaler()
         data_scaled = scaler.fit_transform(data[fitur])
         
@@ -143,6 +140,7 @@ def prosess():
         order = centers['curah_hujan_mm'].argsort().values
         label_map = {old: mapping[new] for new, old in enumerate(order)}
         data['klaster_banjir'] = data['klaster'].map(label_map)
+        
         # === 6. Simpan hasilnya ke CSV ===
         data.to_csv("output/result.csv", index=False)
         flash('Proses Berhasil')
