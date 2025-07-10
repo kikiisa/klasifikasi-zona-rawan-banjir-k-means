@@ -1,100 +1,167 @@
-{% extends 'layouts.html' %} {% block title %}Beranda{% endblock %} {% block
-content %}
-<div class="wraper-dashboard flex flex-col p-4 lg:m-4">
-  <div class="header-list mb-3">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-      Management Data
-    </h1>
-    <form
-      method="post"
-      action="/upload-file"
-      enctype="multipart/form-data"
-      class="form-input"
-    >
-      <input
-      required
-        name="file"
-        type="file"
-        class="mt-2 border-1 cursor-pointer hover:bg-gray-100 border-dashed border-gray-600 rounded-sm p-2"
-      />
-      <button
-        class="bg-blue-900 hover:bg-blue-800 mt-4 text-white font-bold py-2 px-4 rounded"
-      >
-        Upload Data CSV
-      </button>
-    </form>
-    <form action="/prosess" method="post">
-      <button
-        class="bg-blue-900 hover:bg-blue-800 mt-4 text-white font-bold py-2 px-4 rounded"
-      >
-        Proses Klasifikasi
-      </button>
-    </form>
-  </div>
-  {% with messages = get_flashed_messages(with_categories=true) %} {% if
-  messages %}
-  <div>
-    {% for category, message in messages %}
-    <div
-      class="flowbite-alert mb-4 lg:w-1/2 border border-blue-300 shadow rounded-md bg-blue-100 p-4"
-    >
-      {{ message }}
-    </div>
-    {% endfor %}
-  </div>
-  {% endif %} {% endwith %} 
-  {% if status_file %}
-  <div class="overflow-x-auto rounded-lg shadow">
-    <div class="bg-white p-4 rounded-lg border border-gray-200">
-      <h1 class="mb-3 text-2xl font-bold text-gray-900 dark:text-white">
-        Dataset
-      </h1>
-      {{ data|safe }}
-    </div>
-  </div>
-  {% else %}
-  <div
-    class="lg:w-1/2 flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
-    role="alert"
-  >
-    <svg
-      class="shrink-0 inline w-4 h-4 me-3"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="currentColor"
-      viewBox="0 0 20 20"
-    >
-      <path
-        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"
-      />
-    </svg>
-    <span class="sr-only">Info</span>
-    <div>
-      <span class="font-medium">Info Error</span> File CSV Tidak Ditemukan,
-      Silahkan Upload File CSV
-    </div>
-  </div>
-  {% endif %}
-  <div class="overflow-x-auto rounded-lg shadow mt-4">
-    <div class="bg-white p-4 rounded-lg border border-gray-200">
-      <h1 class="mb-3 text-2xl font-bold text-gray-900 dark:text-white">
-        Hasil Klasifikasi
-      </h1>
-
-      {% if result %} {{ result|safe }} {% else %}
-      <div class="alert alert-warning" role="alert">
-        No results found. Please ensure the input data is valid.
+{% extends 'app.html' %} {% block title %}Beranda{% endblock %} {% block content
+%}
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/datatables/datatables.min.css')}}"
+/>
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css')}}"
+/>
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/prism/prism.css')}}"
+/>
+<section class="section">
+  <div class="section-header">
+    <h1>Dashboard</h1>
+    <div class="section-header-breadcrumb">
+      <div class="breadcrumb-item active">
+        <a href="/dashboard">Dashboard</a>
       </div>
-      {% endif %}
     </div>
   </div>
-</div>
+  <div class="section-body">
+    <h2 class="section-title">Dashboard</h2>
+    <div class="row">
+      <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="card">
+          <div class="card-body">
+           
+            {% if existFile %}
+            <div class="summary-chart active" data-tab-group="summary-tab" id="summary-chart">
+              <canvas id="statistik-1" height="180"></canvas>
+            </div>
+            {% else %}
+            <div class="alert alert-warning" role="alert">
+              Data Cluster Belum Tersedia
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<script src="{{url_for('static',filename='vendor/jquery.js')}}"></script>
-<script src="{{url_for('static',filename='vendor/datatables.min.js')}}"></script>
+  <!-- modal add -->
+  <div class="modal-dialog m-0 add-form" role="document">
+    <div></div>
+  </div>
+  <!-- end modal -->
+</section>
+<!-- JS Libraies -->
+<script src="{{url_for('static',filename='template/modules/jquery.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/datatables.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/jquery-ui/jquery-ui.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/prism/prism.js')}}"></script>
+<script src="{{url_for('static',filename='template/js/stisla.js')}}"></script>
+<!-- Page Specific JS File -->
+<!-- JS Libraies -->
+<script src="{{url_for('static',filename='template/modules/sweetalert/sweetalert.min.js')}}"></script>
+
+<!-- Page Specific JS File -->
+<script src="{{url_for('static',filename='template/js/page/modules-sweetalert.js')}}"></script>
+<!-- <script src="{{url_for('static',filename='template/js/page/modules-datatables.js')}}"></script> -->
 <script>
-  $(document).ready(function () {
-    $(".dataframe").DataTable();
+  $(".dataframe ").dataTable({
+    columnDefs: [{ sortable: false, targets: [2, 3] }],
   });
+</script>
+<script src="{{url_for('static',filename='template/modules/datatables/datatables.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
+<script>
+  $("#table-1").dataTable({
+    columnDefs: [{ sortable: false, targets: [2, 3] }],
+  });
+</script>
+<script src="{{url_for('static',filename='template/modules/chart.min.js')}}"></script>
+    
+<script>
+    const ctx = document.getElementById("statistik-1").getContext("2d");
+
+  const fetchDataStatistik = async () => {
+    try {
+      const response = await fetch("{{ url_for('results') }}");
+      const data = await response.json();
+
+      // Inisialisasi jumlah per kategori
+      const clusterCount = {
+        "Tidak Rawan": 0,
+        "Rawan": 0,
+        "Sangat Rawan": 0
+      };
+
+      // Hitung jumlah desa per claster
+      data.forEach(item => {
+        const claster = item.claster;
+        if (clusterCount.hasOwnProperty(claster)) {
+          clusterCount[claster]++;
+        }
+      });
+
+      // Data untuk grafik
+      const labels = Object.keys(clusterCount);
+      const values = Object.values(clusterCount);
+      const backgroundColors = [
+        "rgba(75, 192, 192, 0.7)",     // Tidak Rawan → hijau
+        "rgba(255, 206, 86, 0.7)",     // Rawan → kuning
+        "rgba(255, 99, 132, 0.7)"      // Sangat Rawan → merah
+      ];
+
+      // Tampilkan chart
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Jumlah Desa per Kategori",
+            data: values,
+            backgroundColor: backgroundColors,
+            borderColor: "rgba(0,0,0,0.1)",
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `Jumlah Desa: ${context.raw}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 2
+              },
+              grid: {
+                color: "#f2f2f2"
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              }
+            }
+          }
+        }
+      });
+
+    } catch (error) {
+      console.error("Gagal memuat data:", error);
+    }
+  };
+
+  fetchDataStatistik();
 </script>
 {% endblock %}

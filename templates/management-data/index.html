@@ -1,0 +1,150 @@
+{% extends 'app.html' %} {% block title %}Beranda{% endblock %} {% block content
+%}
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/datatables/datatables.min.css')}}"
+/>
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css')}}"
+/>
+
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/prism/prism.css')}}"
+/>
+<section class="section">
+  <div class="section-header">
+    <h1>Management Data</h1>
+    <div class="section-header-breadcrumb">
+      <div class="breadcrumb-item active">
+        <a href="/dashboard">Dashboard</a>
+      </div>
+      <div class="breadcrumb-item">Management Data</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <h2 class="section-title">Management Data</h2>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <!-- <form action="" method="post" action="/upload-file"
+              enctype="multipart/form-data"
+              class="form-input">
+              <div class="form">
+                <div class="form-group">
+                  <label>Import Excel</label>
+                  <div class="input-group">
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                      <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form> -->
+            {% with messages = get_flashed_messages(with_categories=true) %} {%
+            if messages %}
+            <div class="alert alert-{{ messages[0][0] }}">
+              {% for category, message in messages %}
+              <div>{{ message }}</div>
+              {% endfor %}
+            </div>
+            {% endif %} {% endwith %}
+
+            <a href="/management-data/create" class="btn btn-primary mb-3">
+              Tambah Data
+            </a>
+            <div class="table-responsive">
+              <table class="table table-striped" id="table-1">
+                <thead>
+                  <tr>
+                    <th class="text-center">No</th>
+                    <th>Longitude</th>
+                    <th>Latitude</th>
+                    <th>Nama Desa</th>
+                    <th>Curah Hujan</th>
+                    <th>Kemiringan</th>
+                    <th>Banjir Histori</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for x in data %}
+                  <tr>
+                    <td class="text-center">{{ loop.index }}</td>
+                    <td>{{ x.lng }}</td>
+                    <td>{{ x.lat }}</td>
+                    <td>{{ x.nama_desa }}</td>
+                    <td>{{ x.curah_hujan }}</td>
+                    <td>{{ x.kemiringan }}</td>
+                    <td>{{ x.banjir_histori }}</td>
+                    <td>
+                      <a
+                        href="{{url_for('edit',id=x.id)}}"
+                        class="btn btn-primary"
+                        >Edit</a
+                      >
+                      <a
+                        onclick="deleteData('{{x.id}}')"
+                        href="javascript:void(0)"
+                        class="btn btn-danger delete-data"
+                        >Hapus</a
+                      >
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal add -->
+  <div class="modal-dialog m-0 add-form" role="document">
+    <div></div>
+  </div>
+  <!-- end modal -->
+</section>
+<!-- JS Libraies -->
+<script src="{{url_for('static',filename='template/modules/jquery.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/datatables.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/jquery-ui/jquery-ui.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/prism/prism.js')}}"></script>
+
+<!-- Page Specific JS File -->
+<!-- JS Libraies -->
+<script src="{{url_for('static',filename='template/modules/sweetalert/sweetalert.min.js')}}"></script>
+
+<!-- Page Specific JS File -->
+<script src="{{url_for('static',filename='template/js/page/modules-sweetalert.js')}}"></script>
+<!-- <script src="{{url_for('static',filename='template/js/page/modules-datatables.js')}}"></script> -->
+<script>
+  $("#table-1").dataTable({
+    columnDefs: [{ sortable: false, targets: [2, 3] }],
+  });
+  
+  const deleteData = async (id) =>
+  {
+    swal({
+      title: "Apakah anda yakin ingin menghapus data ini?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+      
+    }).then((willDelete) => {
+      if (willDelete) {
+        window.location.href = `/management-data/delete/${id}`
+      }
+      
+    })
+  }
+</script>
+
+{% endblock %}

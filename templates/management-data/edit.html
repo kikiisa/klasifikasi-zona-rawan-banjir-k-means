@@ -1,0 +1,132 @@
+{% extends 'app.html' %} {% block title %}Beranda{% endblock %} {% block content
+%}
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/datatables/datatables.min.css')}}"
+/>
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css')}}"
+/>
+
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/prism/prism.css')}}"
+/>
+<section class="section">
+  <div class="section-header">
+    <h1>Edit Data</h1>
+    <div class="section-header-breadcrumb">
+      <div class="breadcrumb-item active">
+        <a href="/dashboard">Dashboard</a>
+      </div>
+      <div class="breadcrumb-item">Tambah Data</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <h2 class="section-title">Tambah Data</h2>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+           
+            <form action="{{url_for('update',id=data.id)}}" method="POST">
+              <div class="form-group">
+                <label for="lng">Longitude</label>
+                <input
+                  type="text"
+                  required
+                  value="{{data.lng}}"
+                  class="form-control"
+                  id="lng"
+                  name="lng"
+                  placeholder="Longitude"
+                />
+              </div>
+              <div class="form-group">
+                <label for="lat">Latitude</label>
+                <input
+                  type="text"
+                  required
+                  value="{{data.lat}}"
+                  class="form-control"
+                  id="lat"
+                  name="lat"
+                  placeholder="Latitude"
+                />
+              </div>
+              <div class="form-group">
+                <label for="nama_desa">Nama Desa</label>
+                <input
+                  type="text"
+                  value="{{data.nama_desa}}"
+                  required
+                  class="form-control"
+                  id="nama_desa"
+                  name="nama_desa"
+                  placeholder="Nama Desa"
+                />
+              </div>
+              <div class="form-group">
+                <label for="curah_hujan">Curah Hujan (mm/tahun)</label>
+                <input
+                  type="text"
+                  required
+                  value="{{data.curah_hujan}}"
+                  class="form-control"
+                  id="curah_hujan"
+                  name="curah_hujan"
+                  placeholder="Curah Hujan (mm/tahun)"
+                />
+              </div>
+              <div class="form-group">
+                <label for="kemiringan">Kemiringan (%)</label>
+                <input
+                  type="text"
+                  value="{{data.kemiringan}}"
+                  required
+                  class="form-control"
+                  id="kemiringan"
+                  name="kemiringan"
+                  placeholder="Kemiringan (%)"
+                />
+              </div>
+              <div class="form-group">
+                <label for="banjir_histori">Banjir Histori</label>
+                <input
+                  type="text"
+                  required
+                  value="{{data.banjir_histori}}"
+                  class="form-control"
+                  id="banjir_histori"
+                  name="banjir_histori"
+                  placeholder="Banjir Histori"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal add -->
+  <div class="modal-dialog m-0 add-form" role="document">
+    <div></div>
+  </div>
+  <!-- end modal -->
+</section>
+<!-- JS Libraies -->
+<script src="{{url_for('static',filename='template/modules/jquery.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/datatables.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/jquery-ui/jquery-ui.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/prism/prism.js')}}"></script>
+<script src="{{url_for('static',filename='template/js/stisla.js')}}"></script>
+<!-- Page Specific JS File -->
+<!-- <script src="{{url_for('static',filename='template/js/page/modules-datatables.js')}}"></script> -->
+
+{% endblock %}
