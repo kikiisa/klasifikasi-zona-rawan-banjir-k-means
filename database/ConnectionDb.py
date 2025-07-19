@@ -45,7 +45,7 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
         cursor.close()
     def insert_data_cluster(self):
         cursor = self.db.cursor()
-        df = pd.read_csv("output/result.csv")
+        df = pd.read_csv("dataset/result.csv")
         df = df.rename(columns={
             'longitude': 'lng',
             'latitude': 'lat',
