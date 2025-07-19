@@ -4,16 +4,14 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
 import pandas as pd
+
 import db
 import database.ConnectionDb
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
 import csv
 import db.index
-import datetime
-
-app = Flask(__name__)
-
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 initDb = database.ConnectionDb.run
 app.secret_key = "jody"
 CORS(app)
@@ -21,23 +19,28 @@ dataset_dir = 'storage'
 UPLOAD_FOLDER = 'dataset'
 ALLOWED_EXTENSIONS = {'csv'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/')
 def index():
-    
+    return render_template('front/index.html')
+
+@app.route("/login",methods=['GET'])
+def login():    
     if(session.get('status')):
         return redirect(url_for('dashboard'))
     else:
         return render_template('auth/auth.html',title='Login')
 
 
+
 @app.route('/logout',methods=['GET'])
 def logout():
     session.pop('status',None)
     session.pop('id',None)
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 @app.route('/login',methods=['POST'])
 def login_post():
@@ -68,7 +71,6 @@ def management_data():
         flash('Silahkan Login Terlebih Dahulu !')
         return redirect(url_for('login'))
     data = initDb.fetchData()
-
     return render_template('management-data/index.html',title='Management Data',data=data)
 
 @app.route("/data-peta",methods=['GET'])
@@ -123,8 +125,19 @@ def update(id):
     kemiringan = request.form.get('kemiringan')
     banjir_histori = request.form.get('banjir_histori')
 
-    
-    initDb.updateData(id,lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori)
+    file = request.files.get('upload')
+    filename = None
+    if file and file.filename != '':        
+        ext = os.path.splitext(file.filename)[1]  # dapatkan ekstensi (misalnya .jpg)
+        filename = nama_desa + ext # buat nama acak dengan ekstensi asli
+        upload_folder = os.path.join('static', 'upload')
+        os.makedirs(upload_folder, exist_ok=True)  # Buat folder jika belum ada
+        file_path = os.path.join(upload_folder, filename)
+        file.save(file_path)
+        initDb.updateData(id,lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori,filename)
+    else:
+        initDb.updateDataNoData(id,lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori)
+        
     flash("Berhasil Updated Data","success")
     return redirect(url_for('management_data'))
 
@@ -143,14 +156,28 @@ def delete(id):
 @app.route('/insert-data',methods=['POST'])
 def insertData():
     if(request.method == 'POST'):
+        
+        
         lng = request.form.get('lng')
         lat = request.form.get('lat')
         nama_desa = request.form.get('nama_desa')
         curah_hujan = request.form.get('curah_hujan')
         kemiringan = request.form.get('kemiringan')
         banjir_histori = request.form.get('banjir_histori')
+        
+        file = request.files.get('upload')
+        filename = None
+        if file and file.filename != '':
+            ext = os.path.splitext(file.filename)[1]  # dapatkan ekstensi (misalnya .jpg)
+            filename = nama_desa + ext # buat nama acak dengan ekstensi asli
+            upload_folder = os.path.join('static', 'upload')
+            os.makedirs(upload_folder, exist_ok=True)  # Buat folder jika belum ada
+            file_path = os.path.join(upload_folder, filename)
+            file.save(file_path)
 
-        initDb.insertData(lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori)
+        # Simpan data ke database
+        initDb.insertData(lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori,filename)
+        # initDb.insertData(lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori)
         flash('Data Berhasil Disimpan','success')
         return redirect(url_for('management_data'))
     
@@ -203,16 +230,15 @@ def management_cluster():
     status_final_result = os.path.isfile(result_path_final)
     
     if status_sinkronasi:
-        resultSinkronasi = pd.read_csv(result_path).drop(columns=['id','claster'])
+        resultSinkronasi = pd.read_csv(result_path).drop(columns=['id','geojson','claster'])
         converHTMLresultSinkronasi = resultSinkronasi.to_html(classes='table table-bordered', index=False)  
     
     if processingData:
         resultProcessing = pd.read_csv(result_path_processing)
         convertHTMLresultProcessing = resultProcessing.to_html(classes='table table-bordered', index=False)
         
-      
     if status_final_result:
-        resultFinal = pd.read_csv(result_path_final).drop(columns=['id'])
+        resultFinal = pd.read_csv(result_path_final).drop(columns=['id','geojson'])
         converHTMLresultFinal = resultFinal.to_html(classes='table table-bordered', index=False)
     return render_template(
         'klaster/index.html',
@@ -277,6 +303,7 @@ def prosess():
         # Konversi ke DataFrame
         
         data_scaled_df = pd.DataFrame(data_scaled, columns=fitur)
+        
         data_scaled_df.to_csv("storage/prosessing.csv")
         
         print(data_scaled_df)

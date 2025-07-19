@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='template/modules/bootstrap/css/bootstrap.min.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='template/modules/fontawesome/css/all.min.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='vendor/datatable.min.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='template/css/style.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='template/css/components.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='template/modules/ionicons/css/ionicons.min.css')}}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='vendor/leaflet/leaflet.css')}}"
+    />
+    <title>Document</title>
+  </head>
+  <style>
+    #map {
+      height: 600px;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="card-body">
+        <h4 class="text-center">Hasil Klasifikasi Dearah Rawan Banjir</h4>
+        <div id="map"></div>
+      </div>
+    </div>
+    <script src="{{url_for('static',filename='template/modules/jquery.min.js')}}"></script>
+    <script src="{{url_for('static',filename='template/modules/datatables/datatables.min.js')}}"></script>
+    <script src="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
+    <script src="{{url_for('static',filename='template/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
+    <script src="{{url_for('static',filename='template/modules/jquery-ui/jquery-ui.min.js')}}"></script>
+    <script src="{{url_for('static',filename='template/modules/prism/prism.js')}}"></script>
+    <script src="{{url_for('static',filename='template/js/stisla.js')}}"></script>
+    <script src="{{url_for('static',filename='/vendor/leaflet/leaflet.js')}}"></script>
+    <script>
+      // const map = L.map("map").setView([0.5565751, 123.1292814], 10);
+
+      // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      //   attribution: "&copy; OpenStreetMap contributors",
+      // }).addTo(map);
+      const fetchMap = async () => {
+        const url = "/api/results";
+        const response = await fetch(url);
+        const data = await response.json();
+
+        // Inisialisasi map
+        const map = L.map("map").setView([0.9070359, 123.4257745], 12);
+
+        // Tambahkan tile layer OpenStreetMap
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(map);
+
+        // Contoh marker statis (bisa dihapus jika tidak dibutuhkan)
+
+        // Iterasi data dari API
+        data.map((values) => {
+          // Perbaikan 1: URL geojson yang benar
+          const geojsonUrl = `/static/upload/${values.geojson}`;
+          console.log(geojsonUrl);
+
+          // Tentukan ikon berdasarkan kategori
+          let iconUrl = "";
+          let circleColor = "";
+
+          if (values.claster === "Sangat Rawan") {
+            // Perbaikan 2: Gunakan path langsung untuk static files
+            iconUrl = "/static/image/tinggi.png";
+            circleColor = "#ff0000"; // merah
+          } else if (values.claster === "Rawan") {
+            iconUrl = "/static/image/sedang.png";
+            circleColor = "#ffc107"; // kuning
+          } else if (values.claster === "Tidak Rawan") {
+            iconUrl = "/static/image/rendah.png";
+            circleColor = "#28a745"; // hijau
+          } else {
+            iconUrl = "/static/image/default.png";
+            circleColor = "#999"; // abu-abu default
+          }
+
+          // Buat ikon custom
+          const customIcon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32],
+          });
+
+          let latlng = [values.lat, values.lng];
+
+          // Tambahkan marker ke peta
+          L.marker([values.lat, values.lng], { icon: customIcon })
+            .addTo(map)
+            .bindPopup(`<b>${values.nama_desa}</b>`);
+
+          // Tambahkan circle ke peta
+          
+          // Perbaikan 3: Fetch geojson dengan URL yang benar
+          fetch(geojsonUrl)
+          .then((response) => response.json())
+          .then((geojsonData) => {
+            L.geoJSON(geojsonData, {
+              style: {
+                color: circleColor,
+                weight: 1,
+                opacity: 1,
+              },
+              onEachFeature: (feature, layer) => {
+                const nama = feature.properties.nama || "Tanpa Nama";
+                const coords = feature.geometry.coordinates;
+                // Pembulatan untuk menghindari masalah desimal kecil
+                layer.bindTooltip(nama);
+              },
+            }).addTo(map);
+          })
+          .catch((error) => console.error("Error loading GeoJSON:", error));
+        });
+      };
+
+      fetchMap();
+      const fetchGeoJson = async () => {
+        const data = await fetch("/api/results").then((response) =>
+          response.json()
+        );
+        console.log("from db", data);
+        const geojson = await fetch(
+          "{{url_for('static',filename='geojson/data.geojson')}}"
+        )
+          .then((response) => response.json())
+          .then((geojsonData) => {
+            console.log(geojsonData);
+            L.geoJSON(geojsonData, {
+              pointToLayer: (feature, latlng) => {
+                return L.circleMarker(latlng, {
+                  radius: 3,
+                  color: "#007cbf",
+                  weight: 1,
+                  opacity: 1,
+                  fillOpacity: 0.8,
+                });
+              },
+              style: (feature) => {
+                if (feature.geometry.type === "LineString") {
+                  return {
+                    color: "#ff0000",
+                    weight: 2,
+                  };
+                }
+              },
+
+              onEachFeature: (feature, layer) => {
+                const nama = feature.properties.nama || "Tanpa Nama";
+                const coords = feature.geometry.coordinates;
+                console.log(feature);
+                // Pembulatan untuk menghindari masalah desimal kecil
+                layer.bindTooltip(nama);
+              },
+            }).addTo(map);
+          })
+          .catch((error) => console.error("Error loading GeoJSON:", error));
+      };
+
+      // fetchGeoJson();
+    </script>
+  </body>
+</html>

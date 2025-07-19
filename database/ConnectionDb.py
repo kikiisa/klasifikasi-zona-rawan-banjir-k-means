@@ -9,7 +9,7 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
             "user": "root",
             "password": "",  # Empty password
             "database": "cluster_banjir",
-            "port": 3306,
+            "port": 3306,   
             "charset": "utf8mb4",
             "autocommit": False
         }
@@ -36,7 +36,8 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
                 curah_hujan TEXT NOT NULL,
                 kemiringan TEXT NOT NULL,
                 banjir_histori TEXT NOT NULL,
-                claster CHAR NULL
+                geojson VARCHAR(255),
+                claster VARCHAR(255)
             )
         """)
         print("Table 'claster' created successfully")
@@ -70,10 +71,10 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
         cursor.close()
         return data
     
-    def insertData(self, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori):
+    def insertData(self, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson):
         cursor = self.db.cursor()
-        insert_query = "INSERT INTO claster (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori) VALUES (%s, %s, %s, %s, %s, %s)"
-        cursor.execute(insert_query, (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori))
+        insert_query = "INSERT INTO claster (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        cursor.execute(insert_query, (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson))
         self.db.commit()
         cursor.close()
         
@@ -89,7 +90,13 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
         cursor.execute("DELETE FROM claster WHERE id = %s", (id,))
         self.db.commit()
         cursor.close()
-    def updateData(self, id, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori):
+    def updateData(self, id, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson):
+        cursor = self.db.cursor()
+        update_query = "UPDATE claster SET lng = %s, lat = %s, nama_desa = %s, curah_hujan = %s, kemiringan = %s, banjir_histori = %s, geojson = %s WHERE id = %s"
+        cursor.execute(update_query, (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson, id))
+        self.db.commit()
+        cursor.close()
+    def updateDataNoData(self, id, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori):
         cursor = self.db.cursor()
         update_query = "UPDATE claster SET lng = %s, lat = %s, nama_desa = %s, curah_hujan = %s, kemiringan = %s, banjir_histori = %s WHERE id = %s"
         cursor.execute(update_query, (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, id))
@@ -98,3 +105,4 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
 run = ConnectionDb()
 # run.create_table_cluster()
 # run.insert_data_cluster()
+
