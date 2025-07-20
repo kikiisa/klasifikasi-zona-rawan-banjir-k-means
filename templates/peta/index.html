@@ -46,21 +46,31 @@
             <div class="d-flex flex-row gap-3 justify-center">
               <div class="d-flex align-items-start gap-2">
                 <figure class="mb-0">
-                  <img src="{{url_for('static', filename='image/tinggi.png')}}" width="30" alt="" />
-
+                  <img
+                    src="{{url_for('static', filename='image/tinggi.png')}}"
+                    width="30"
+                    alt=""
+                  />
                 </figure>
                 <h6 class="fw-bold mt-1">Sangat Rawan</h6>
               </div>
               <div class="d-flex align-items-start gap-2">
                 <figure class="mb-0">
-                    <img src="{{url_for('static', filename='image/sedang.png')}}" width="30" alt="" />
-                  
+                  <img
+                    src="{{url_for('static', filename='image/sedang.png')}}"
+                    width="30"
+                    alt=""
+                  />
                 </figure>
                 <h6 class="fw-bold mt-1">Rawan</h6>
               </div>
               <div class="d-flex align-items-start gap-2">
                 <figure class="mb-0">
-                  <img src="{{url_for('static', filename='image/rendah.png')}}" width="30" alt="" />
+                  <img
+                    src="{{url_for('static', filename='image/rendah.png')}}"
+                    width="30"
+                    alt=""
+                  />
                 </figure>
                 <h6 class="fw-bold mt-1">Tidak Rawan</h6>
               </div>
@@ -86,12 +96,14 @@
 <script src="{{url_for('static',filename='template/modules/prism/prism.js')}}"></script>
 <script src="{{url_for('static',filename='template/js/stisla.js')}}"></script>
 <script src="{{url_for('static',filename='/vendor/leaflet/leaflet.js')}}"></script>
+
+</script>
 <script>
   const fetchMap = async () => {
     const url = "/api/results";
     const response = await fetch(url);
     const data = await response.json();
-
+    
     // Inisialisasi map
     const map = L.map("map").setView([0.9070359, 123.4257745], 12);
 
@@ -105,25 +117,29 @@
 
     // Iterasi data dari API
     data.map((values) => {
-      console.log(values);
+      // Perbaikan 1: URL geojson yang benar
+      const geojsonUrl = `/static/upload/${values.geojson}`;
+      console.log(geojsonUrl);
 
       // Tentukan ikon berdasarkan kategori
       let iconUrl = "";
       let circleColor = "";
 
       if (values.claster === "Sangat Rawan") {
-        iconUrl = "{{url_for('static',filename='image/tinggi.png')}}";
+        // Perbaikan 2: Gunakan path langsung untuk static files
+        iconUrl = "/static/image/tinggi.png";
         circleColor = "#ff0000"; // merah
       } else if (values.claster === "Rawan") {
-        iconUrl = "{{url_for('static',filename='image/sedang.png')}}";
+        iconUrl = "/static/image/sedang.png";
         circleColor = "#ffc107"; // kuning
       } else if (values.claster === "Tidak Rawan") {
-        iconUrl = "{{url_for('static',filename='image/rendah.png')}}";
+        iconUrl = "/static/image/rendah.png";
         circleColor = "#28a745"; // hijau
       } else {
-        iconUrl = "default.png";
+        iconUrl = "/static/image/default.png";
         circleColor = "#999"; // abu-abu default
       }
+
       // Buat ikon custom
       const customIcon = L.icon({
         iconUrl: iconUrl,
@@ -131,22 +147,72 @@
         iconAnchor: [16, 32],
         popupAnchor: [0, -32],
       });
-      let latlng = [values.lat, values.lng];
-      // Tambahkan marker ke peta
-      L.marker([values.lat, values.lng], { icon: customIcon })
-        .addTo(map)
 
-        .bindPopup(`<b>${values.nama_desa}</b>`);
-      L.circle(latlng, {
-        radius: 2000,
-        color: circleColor,
-        fillColor: circleColor,
-        fillOpacity: 0.2,
-        weight: 1,
-      }).addTo(map);
+      let latlng = [values.lat, values.lng];
+      fetch(geojsonUrl)
+        .then((response) => response.json())
+        .then((geojsonData) => {
+          L.geoJSON(geojsonData, {
+            style: {
+              color: circleColor,
+              weight: 1,
+              opacity: 1,
+            },
+            onEachFeature: (feature, layer) => {
+              const nama = feature.properties.nama || "Tanpa Nama";
+              const coords = feature.geometry.coordinates;
+              // Pembulatan untuk menghindari masalah desimal kecil
+              layer.bindTooltip(nama);
+            },
+          }).addTo(map);
+        })
+        .catch((error) => console.error("Error loading GeoJSON:", error));
     });
   };
-  fetchMap();
-</script>
 
+  fetchMap();
+  const fetchGeoJson = async () => {
+    const data = await fetch("/api/results").then((response) =>
+      response.json()
+    );
+    console.log("from db", data);
+    const geojson = await fetch(
+      "{{url_for('static',filename='geojson/data.geojson')}}"
+    )
+      .then((response) => response.json())
+      .then((geojsonData) => {
+        console.log(geojsonData);
+        L.geoJSON(geojsonData, {
+          pointToLayer: (feature, latlng) => {
+            return L.circleMarker(latlng, {
+              radius: 3,
+              color: "#007cbf",
+              weight: 1,
+              opacity: 1,
+              fillOpacity: 0.8,
+            });
+          },
+          style: (feature) => {
+            if (feature.geometry.type === "LineString") {
+              return {
+                color: "#ff0000",
+                weight: 2,
+              };
+            }
+          },
+
+          onEachFeature: (feature, layer) => {
+            const nama = feature.properties.nama || "Tanpa Nama";
+            const coords = feature.geometry.coordinates;
+            console.log(feature);
+            // Pembulatan untuk menghindari masalah desimal kecil
+            layer.bindTooltip(nama);
+          },
+        }).addTo(map);
+      })
+      .catch((error) => console.error("Error loading GeoJSON:", error));
+  };
+
+  
+</script>
 {% endblock %}

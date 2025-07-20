@@ -1,65 +1,677 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="{{url_for('static',filename='template/modules/bootstrap/css/bootstrap.min.css')}}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{url_for('static',filename='template/modules/fontawesome/css/all.min.css')}}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{url_for('static',filename='vendor/datatable.min.css')}}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{url_for('static',filename='template/css/style.css')}}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{url_for('static',filename='template/css/components.css')}}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{url_for('static',filename='template/modules/ionicons/css/ionicons.min.css')}}"
-    />
+    <title>K-Means - Pemetaan Zona Banjir Bolaang Mongondow Utara</title>
 
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"
+    />
+    <!-- Google Fonts - Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="{{url_for('static',filename='vendor/leaflet/leaflet.css')}}"
     />
-    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --primary-color: #6610f2;
+        --secondary-color: #7c3aed;
+        --accent-color: #a855f7;
+        --light-purple: #f3f4f6;
+        --dark-text: #1f2937;
+        --light-text: #6b7280;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Outfit", sans-serif;
+        line-height: 1.6;
+        color: var(--dark-text);
+        overflow-x: hidden;
+      }
+
+      /* Navbar Styles */
+      .navbar {
+        background: rgba(102, 16, 242, 0.95) !important;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 4px 30px rgba(102, 16, 242, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: white !important;
+      }
+
+      .navbar-nav .nav-link {
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-weight: 500;
+        margin: 0 10px;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .navbar-nav .nav-link:hover {
+        color: white !important;
+        transform: translateY(-2px);
+      }
+
+      .navbar-nav .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: white;
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+
+      .navbar-nav .nav-link:hover::after {
+        width: 80%;
+      }
+
+      /* Hero Section */
+      .hero-section {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--secondary-color) 50%,
+          var(--accent-color) 100%
+        );
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="100" fill="url(%23a)"/><circle cx="800" cy="300" r="150" fill="url(%23a)"/><circle cx="400" cy="700" r="120" fill="url(%23a)"/></svg>');
+        animation: float 20s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(180deg);
+        }
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero-title {
+        font-size: 4rem;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+      }
+
+      .hero-subtitle {
+        font-size: 1.4rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 2.5rem;
+        font-weight: 400;
+      }
+
+      .btn-hero {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 15px 35px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        margin-right: 15px;
+        margin-bottom: 15px;
+        display: inline-block;
+      }
+
+      .btn-hero:hover {
+        background: white;
+        color: var(--primary-color);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .hero-image {
+        position: relative;
+        z-index: 2;
+      }
+
+      .floating-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 20px;
+        margin: 20px 0;
+        animation: floatCard 6s ease-in-out infinite;
+      }
+
+      @keyframes floatCard {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* Statistics Section */
+      .stats-section {
+        padding: 100px 0;
+        background: linear-gradient(45deg, #f8fafc 0%, #f1f5f9 100%);
+        position: relative;
+      }
+
+      .stat-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px 30px;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(102, 16, 242, 0.1);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(102, 16, 242, 0.05);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          var(--primary-color),
+          var(--accent-color)
+        );
+      }
+
+      .stat-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 30px 80px rgba(102, 16, 242, 0.15);
+      }
+
+      .stat-icon {
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+      }
+
+      .stat-number {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+      }
+
+      .stat-label {
+        font-size: 1.1rem;
+        color: var(--light-text);
+        font-weight: 500;
+      }
+
+      /* Map Section */
+
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--dark-text);
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .section-subtitle {
+        font-size: 1.2rem;
+        color: var(--light-text);
+        text-align: center;
+        margin-bottom: 60px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      #map {
+        height: 600px;
+        border-radius: 20px;
+      }
+
+      /* Features Section */
+      .features-section {
+        padding: 100px 0;
+        background: linear-gradient(135deg, #6610f2 0%, #7c3aed 100%);
+      }
+
+      .feature-card {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        backdrop-filter: blur(20px);
+        transition: all 0.3s ease;
+        height: 100%;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .feature-icon {
+        font-size: 3rem;
+        color: white;
+        margin-bottom: 25px;
+      }
+
+      .feature-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 15px;
+      }
+
+      .feature-text {
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.7;
+      }
+
+      /* Footer */
+      .footer {
+        background: #1a1a2e;
+        color: white;
+        padding: 50px 0 30px;
+      }
+
+      .footer-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: white;
+      }
+
+      .footer-link {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .footer-link:hover {
+        color: var(--accent-color);
+        transform: translateX(5px);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: 2.5rem;
+        }
+
+        .hero-subtitle {
+          font-size: 1.1rem;
+        }
+
+        .stat-card {
+          margin-bottom: 30px;
+        }
+      }
+
+      /* Loading Animation */
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
-  <style>
-    #map {
-      height: 600px;
-    }
-  </style>
   <body>
-    <div class="container">
-      <div class="card-body">
-        <h4 class="text-center">Hasil Klasifikasi Dearah Rawan Banjir</h4>
-        <div id="map"></div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#"
+          ><i class="fas fa-map-marked-alt me-2"></i>K-Means Zonasi Banjir</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#home">Beranda</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#statistics">Statistik</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#map">Peta</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#features">Fitur</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contact">Kontak</a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <script src="{{url_for('static',filename='template/modules/jquery.min.js')}}"></script>
-    <script src="{{url_for('static',filename='template/modules/datatables/datatables.min.js')}}"></script>
-    <script src="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
-    <script src="{{url_for('static',filename='template/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
-    <script src="{{url_for('static',filename='template/modules/jquery-ui/jquery-ui.min.js')}}"></script>
-    <script src="{{url_for('static',filename='template/modules/prism/prism.js')}}"></script>
-    <script src="{{url_for('static',filename='template/js/stisla.js')}}"></script>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section mt-8">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6" style="margin-top: 50px">
+            <div class="hero-content">
+              <h1 class="hero-title">
+                Pemetaan Zona Banjir <span style="color: #fbbf24">K-Means</span>
+              </h1>
+              <p class="hero-subtitle">
+                Sistem informasi geografis untuk memantau, memprediksi, dan
+                memetakan zona rawan banjir di Kabupaten Bolaang Mongondow Utara
+                dengan teknologi terdepan.
+              </p>
+              <a href="#map" class="btn-hero">
+                <i class="fas fa-map me-2"></i>Lihat Peta
+              </a>
+              <a href="#statistics" class="btn-hero">
+                <i class="fas fa-chart-bar me-2"></i>Statistik
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="hero-image">
+              <div class="floating-card">
+                <div class="row text-center">
+                  <div class="col-4">
+                    <i
+                      class="fas fa-exclamation-triangle text-warning mb-2"
+                      style="font-size: 2rem"
+                    ></i>
+                    <h4 class="text-white rawan-banjir"></h4>
+                    <small class="text-white-50">Zona Rawan Banjir</small>
+                  </div>
+                  <div class="col-4">
+                    <i
+                      class="fas fa-eye text-info mb-2"
+                      style="font-size: 2rem"
+                    ></i>
+                    <h4 class="text-white terpantau-1"></h4>
+                    <small class="text-white-50">Monitoring</small>
+                  </div>
+                  <div class="col-4">
+                    <i
+                      class="fas fa-users text-success mb-2"
+                      style="font-size: 2rem"
+                    ></i>
+                    <h4 class="text-white">0</h4>
+                    <small class="text-white-50">Pengunjung</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section id="statistics" class="stats-section">
+      <div class="container">
+        <div class="row text-center mb-5">
+          <div class="col-12">
+            <h2 class="section-title">Statistik Daerah</h2>
+            <p class="section-subtitle">
+              Data terkini mengenai kondisi banjir di Indonesia berdasarkan
+              monitoring real-time sistem kami
+            </p>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card">
+              <i class="fas fa-map-marked-alt stat-icon"></i>
+              <div class="stat-number terpantau" data-target="34"></div>
+              <div class="stat-label">Desa Terpantau</div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card">
+              <i class="fas fa-exclamation-triangle stat-icon"></i>
+              <div class="stat-number rawan-banjir-1"></div>
+              <div class="stat-label">Zona Rawan</div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card">
+              <i class="fas fa-satellite-dish stat-icon"></i>
+              <div class="stat-number sangat-rawan" data-target="456">0</div>
+              <div class="stat-label">Zona Sangat Rawan</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section mt-4 mb-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="section-title">Peta Interaktif Zona Banjir</h2>
+            <p class="section-subtitle">
+              Explore peta interaktif untuk melihat zona rawan banjir, tingkat
+              bahaya, dan informasi real-time di Kabupaten Bolaang Mongondow
+              Utara
+            </p>
+          </div>
+        </div>
+        <div class="card border-0">
+          <div class="card-body">
+            <div id="map"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+      <div class="container">
+        <div class="row text-center mb-5">
+          <div class="col-12">
+            <h2 class="section-title text-white">Fitur Unggulan</h2>
+            <p class="section-subtitle text-white opacity-75">
+              Teknologi canggih untuk monitoring dan prediksi banjir yang akurat
+            </p>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+              <i class="fas fa-brain feature-icon"></i>
+              <h3 class="feature-title">AI Prediction</h3>
+              <p class="feature-text">
+                Algoritma kecerdasan buatan untuk memprediksi kemungkinan banjir
+                berdasarkan pola cuaca dan topografi.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+              <i class="fas fa-chart-line feature-icon"></i>
+              <h3 class="feature-title">Data Analytics</h3>
+              <p class="feature-text">
+                Analisis mendalam terhadap data historis banjir untuk
+                perencanaan mitigasi yang lebih baik.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="footer">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-4 mb-4 text-center">
+            <h3 class="footer-title">
+              <i class="fas fa-map-marked-alt me-2"></i>K-Means Zona Banjir
+            </h3>
+            <p class="text-white-50">
+              Sistem informasi geografis terdepan untuk monitoring dan pemetaan
+              zona banjir di Kabupaten Bolaang Mongondow Utara.
+            </p>
+            <div class="mt-3">
+              <i
+                class="fab fa-facebook text-white me-3"
+                style="font-size: 1.5rem"
+              ></i>
+              <i
+                class="fab fa-twitter text-white me-3"
+                style="font-size: 1.5rem"
+              ></i>
+              <i
+                class="fab fa-instagram text-white me-3"
+                style="font-size: 1.5rem"
+              ></i>
+              <i
+                class="fab fa-linkedin text-white"
+                style="font-size: 1.5rem"
+              ></i>
+            </div>
+          </div>
+        </div>
+        <hr class="my-4 border-white-50" />
+        <div class="row">
+          <div class="col-12 text-center">
+            <p class="text-white-50 mb-0">
+              &copy; 2025 Jodi. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS -->
     <script src="{{url_for('static',filename='/vendor/leaflet/leaflet.js')}}"></script>
     <script>
-      // const map = L.map("map").setView([0.5565751, 123.1292814], 10);
 
-      // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      //   attribution: "&copy; OpenStreetMap contributors",
-      // }).addTo(map);
+      const statNumber = document.querySelector('.terpantau'); // Get the element
+      const statNumberTerpantau1 = document.querySelector('.terpantau-1'); // Get the element
+      const statNumberRawanBanjir = document.querySelector('.rawan-banjir'); // Get the element
+      const statNumberRawanBanjir1 = document.querySelector('.rawan-banjir-1'); // Get the element
+      const statSangatRawan = document.querySelector(".sangat-rawan");
+      const countClusters = (data) => {
+        const result = {
+          total: data.length,
+          sangatRawan: 0,
+          rawan: 0,
+          tidakRawan: 0,
+        };
+
+        data.forEach((item) => {
+          switch (item.claster) {
+            case "Sangat Rawan":
+              result.sangatRawan++;
+              break;
+            case "Rawan":
+              result.rawan++;
+              break;
+            case "Tidak Rawan":
+              result.tidakRawan++;
+              break;
+          }
+        });
+
+        return result;
+      };
+
+      // Contoh penggunaan:
+      const fetchDataAndCount = async () => {
+        const url = "/api/results";
+        const response = await fetch(url);
+        const data = await response.json();
+        
+
+        const clusterCounts = countClusters(data);
+        
+        statNumber.textContent = clusterCounts.total;
+        statNumberTerpantau1.textContent = clusterCounts.total
+        statNumberRawanBanjir.textContent = clusterCounts.rawan
+        statSangatRawan.textContent = clusterCounts.sangatRawan
+        statNumberRawanBanjir1.textContent = clusterCounts.rawan
+         // Output: { total: 6, sangatRawan: 2, rawan: 1, tidakRawan: 3 }
+      };
+
+      fetchDataAndCount();
+
       const fetchMap = async () => {
         const url = "/api/results";
         const response = await fetch(url);
@@ -112,78 +724,56 @@
           let latlng = [values.lat, values.lng];
 
           // Tambahkan marker ke peta
-          L.marker([values.lat, values.lng], { icon: customIcon })
-            .addTo(map)
-            .bindPopup(`<b>${values.nama_desa}</b>`);
+          // L.marker([values.lat, values.lng], { icon: customIcon })
+          //   .addTo(map)
+          //   .bindPopup(`<b>${values.nama_desa}</b>`);
 
-          // Tambahkan circle ke peta
-          
+          // Tambahkan circle ke peta and remove data
+
           // Perbaikan 3: Fetch geojson dengan URL yang benar
           fetch(geojsonUrl)
-          .then((response) => response.json())
-          .then((geojsonData) => {
-            L.geoJSON(geojsonData, {
-              style: {
-                color: circleColor,
-                weight: 1,
-                opacity: 1,
-              },
-              onEachFeature: (feature, layer) => {
-                const nama = feature.properties.nama || "Tanpa Nama";
-                const coords = feature.geometry.coordinates;
-                // Pembulatan untuk menghindari masalah desimal kecil
-                layer.bindTooltip(nama);
-              },
-            }).addTo(map);
-          })
-          .catch((error) => console.error("Error loading GeoJSON:", error));
+            .then((response) => response.json())
+            .then((geojsonData) => {
+              L.geoJSON(geojsonData, {
+                style: {
+                  color: circleColor,
+                  weight: 1,
+                  opacity: 1,
+                },
+                onEachFeature: (feature, layer) => {
+                  const nama = feature.properties.nama || "Tanpa Nama";
+                  const coords = feature.geometry.coordinates;
+                  // Pembulatan untuk menghindari masalah desimal kecil
+                  layer.bindTooltip(nama);
+                },
+              }).addTo(map);
+            })
+            .catch((error) => console.error("Error loading GeoJSON:", error));
         });
+
+        // Tambahkan legenda ke peta
+        const legend = L.control({ position: "bottomright" });
+
+        legend.onAdd = function (map) {
+          const div = L.DomUtil.create("div", "info legend");
+          const grades = ["Sangat Rawan", "Rawan", "Tidak Rawan"];
+          const colors = ["#ff0000", "#ffc107", "#28a745"];
+          const labels = [];
+
+          for (let i = 0; i < grades.length; i++) {
+            labels.push(
+              `<i style="background:${colors[i]}; width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.8;"></i> ${grades[i]}<br>`
+            );
+          }
+
+          div.innerHTML = labels.join("");
+          return div;
+        };
+
+        legend.addTo(map);
       };
 
       fetchMap();
-      const fetchGeoJson = async () => {
-        const data = await fetch("/api/results").then((response) =>
-          response.json()
-        );
-        console.log("from db", data);
-        const geojson = await fetch(
-          "{{url_for('static',filename='geojson/data.geojson')}}"
-        )
-          .then((response) => response.json())
-          .then((geojsonData) => {
-            console.log(geojsonData);
-            L.geoJSON(geojsonData, {
-              pointToLayer: (feature, latlng) => {
-                return L.circleMarker(latlng, {
-                  radius: 3,
-                  color: "#007cbf",
-                  weight: 1,
-                  opacity: 1,
-                  fillOpacity: 0.8,
-                });
-              },
-              style: (feature) => {
-                if (feature.geometry.type === "LineString") {
-                  return {
-                    color: "#ff0000",
-                    weight: 2,
-                  };
-                }
-              },
-
-              onEachFeature: (feature, layer) => {
-                const nama = feature.properties.nama || "Tanpa Nama";
-                const coords = feature.geometry.coordinates;
-                console.log(feature);
-                // Pembulatan untuk menghindari masalah desimal kecil
-                layer.bindTooltip(nama);
-              },
-            }).addTo(map);
-          })
-          .catch((error) => console.error("Error loading GeoJSON:", error));
-      };
-
-      // fetchGeoJson();
     </script>
   </body>
 </html>
