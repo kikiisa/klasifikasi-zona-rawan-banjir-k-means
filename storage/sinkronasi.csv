@@ -5,7 +5,7 @@ id,lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori,geojson,claster
 4,123.1008937,0.9103633,Buko Selatan,3022,8,5,,
 5,123.1327501,0.9213702,Buko Utara,2697,10,1,,
 6,123.1274686,0.8757991,Busato,2504,6,3,,
-7,123.1103405,0.9028503,Dalapuli,2498,8,1,Dalapuli.geojson,
+7,123.1103405,0.9028503,Dalapuli,2498,8,1,,
 8,123.1057031,0.9071478,Dalapuli Barat,2511,3,2,,
 9,123.1142117,0.8991006,Dalapuli Timur,2618,4,1,,
 10,123.1035262,0.8936166,Dengi,2671,1,2,,

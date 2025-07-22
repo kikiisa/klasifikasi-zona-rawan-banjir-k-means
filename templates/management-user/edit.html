@@ -17,9 +17,10 @@
       <div class="col-12">
         <div class="card">
           <div class="card-body">
+            
             <form id="userForm" method="POST" action="{{url_for('update_user',id=data.id)}}">
               <div class="row">
-                
+
                 <!-- Username -->
                 <div class="col-md-6 mb-3">
                   <label for="username">Username</label>
@@ -75,11 +76,4 @@
     </div>
   </div>
 </section>
-<script src="{{url_for('static',filename='template/modules/jquery.min.js')}}"></script>
-<script src="{{url_for('static',filename='template/modules/datatables/datatables.min.js')}}"></script>
-<script src="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
-<script src="{{url_for('static',filename='template/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
-<script src="{{url_for('static',filename='template/modules/jquery-ui/jquery-ui.min.js')}}"></script>
-<script src="{{url_for('static',filename='template/modules/prism/prism.js')}}"></script>
-<script src="{{url_for('static',filename='template/js/stisla.js')}}"></script>
 {% endblock %}

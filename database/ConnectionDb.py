@@ -1,6 +1,9 @@
 import mysql.connector
 from mysql.connector import Error
 import pandas as pd
+from werkzeug.security import generate_password_hash
+
+
 
 class ConnectionDb:  # Fixed typo: Claster -> Cluster
     def __init__(self):
@@ -43,6 +46,24 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
         print("Table 'claster' created successfully")
         self.db.commit()
         cursor.close()
+        
+    def createTableUer(self):
+        cursor = self.db.cursor()
+        cursor.execute("""
+            CREATE TABLE users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                username VARCHAR(100) NOT NULL,
+                full_name VARCHAR(100) NOT NULL,
+                email VARCHAR(100) NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                status ENUM('active','inactive'),
+                role ENUM('admin','operator') NOT NULL
+            )
+        """)
+        self.db.commit()
+        cursor.close()
+        print("Table 'users' created successfully")
+        
     def insert_data_cluster(self):
         cursor = self.db.cursor()
         df = pd.read_csv("dataset/result.csv")
@@ -70,6 +91,48 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
         data = cursor.fetchall()
         cursor.close()
         return data
+
+    def getUserByUsername(self, username):
+        cursor = self.db.cursor(dictionary=True)
+        query = "SELECT * FROM users WHERE email = %s"
+        cursor.execute(query, (username,))
+        user = cursor.fetchone()
+        cursor.close()
+        return user
+    
+
+    
+    
+    
+    def updateUser(self, user_id, username, full_name, email, password, status, role):
+        cursor = self.db.cursor()
+        if password:  # Jika password tidak kosong, update password juga
+            hashed_password = generate_password_hash(password)
+            update_query = """
+                UPDATE users
+                SET username = %s,
+                    full_name = %s,
+                    email = %s,
+                    password = %s,
+                    status = %s,
+                    role = %s
+                WHERE id = %s
+            """
+            values = (username, full_name, email, hashed_password, status, role, user_id)
+        else:  # Jika password kosong, abaikan kolom password
+            update_query = """
+                UPDATE users
+                SET username = %s,
+                    full_name = %s,
+                    email = %s,
+                    status = %s,
+                    role = %s
+                WHERE id = %s
+            """
+            values = (username, full_name, email, status, role, user_id)
+        cursor.execute(update_query, values)
+        self.db.commit()
+        cursor.close()
     
     def insertData(self, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson):
         cursor = self.db.cursor()
@@ -78,10 +141,37 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
         self.db.commit()
         cursor.close()
         
-    def fetchDataById(self, id):
+    def insertUser(self, username, full_name, email, password, status, role):
+        cursor = self.db.cursor()
+        insert_query = """
+            INSERT INTO users (username, full_name, email, password, status, role)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        hashed_password = generate_password_hash(password)
+        cursor.execute(insert_query, (username, full_name, email,hashed_password, status, role))
+        self.db.commit()
+        cursor.close()
+        
+    
+    def editUser(self,id):
+        cursor = self.db.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM users WHERE id = %s", (id,))
+        data = cursor.fetchone()
+        cursor.close()
+        return data
+    
+    
+    def fetchDataUserById(self, id):
         cursor = self.db.cursor(dictionary=True)
         cursor.execute("SELECT * FROM claster WHERE id = %s", (id,))
         data = cursor.fetchone()
+        cursor.close()
+        return data
+    
+    def fetchDataUser(self):
+        cursor = self.db.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM users")
+        data = cursor.fetchall()
         cursor.close()
         return data
     
@@ -102,7 +192,16 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
         cursor.execute(update_query, (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, id))
         self.db.commit()
         cursor.close()
+        
+    def deleteUser(self,id):
+        cursor = self.db.cursor()
+        cursor.execute("DELETE FROM users WHERE id = %s", (id,))
+        self.db.commit()
+        cursor.close()
+    
+        
 run = ConnectionDb()
 # run.create_table_cluster()
+# run.createTableUer()
 # run.insert_data_cluster()
 

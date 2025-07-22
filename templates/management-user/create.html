@@ -1,0 +1,176 @@
+{% extends 'app.html' %} {% block title %}Beranda{% endblock %} {% block content
+%}
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/datatables/datatables.min.css')}}"
+/>
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css')}}"
+/>
+
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/prism/prism.css')}}"
+/>
+<section class="section">
+  <div class="section-header">
+    <h1>Tambah Data </h1>
+    <div class="section-header-breadcrumb">
+      <div class="breadcrumb-item active">
+        <a href="/dashboard">Dashboard</a>
+      </div>
+      <div class="breadcrumb-item">Tambah Data User</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <h2 class="section-title">Tambah Data User</h2>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form id="userForm" action="{{url_for('store_user')}}" method="POST">
+                    <div class="row">
+                        <!-- Username -->
+                        <div class="col-md-6 mb-3">
+                            <label for="username" class="form-label">
+                                Username <span class="required">*</span>
+                            </label>
+                            <input type="text" 
+                                    class="form-control" 
+                                    id="username" 
+                                    name="username" 
+                                    maxlength="100" 
+                                    required
+                                    placeholder="Masukkan username">
+                            <div class="invalid-feedback">
+                                Username wajib diisi (maksimal 100 karakter).
+                            </div>
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="col-md-6 mb-3">
+                            <label for="full_name" class="form-label">
+                                Nama Lengkap <span class="required">*</span>
+                            </label>
+                            <input type="text" 
+                                    class="form-control" 
+                                    id="full_name" 
+                                    name="full_name" 
+                                    maxlength="100" 
+                                    required
+                                    placeholder="Masukkan nama lengkap">
+                            <div class="invalid-feedback">
+                                Nama lengkap wajib diisi (maksimal 100 karakter).
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">
+                                Email <span class="required">*</span>
+                            </label>
+                            <input type="email" 
+                                    class="form-control" 
+                                    id="email" 
+                                    name="email" 
+                                    maxlength="100" 
+                                    required
+                                    placeholder="contoh@email.com">
+                            <div class="invalid-feedback">
+                                Email valid wajib diisi (maksimal 100 karakter).
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="col-md-6 mb-3">
+                            <label for="password" class="form-label">
+                                Password <span class="required">*</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="password" 
+                                        class="form-control" 
+                                        id="password" 
+                                        name="password" 
+                                        minlength="6"
+                                        maxlength="255" 
+                                        required
+                                        placeholder="Masukkan password">
+                               
+                                </button>
+                                <div class="invalid-feedback">
+                                    Password wajib diisi (minimal 6 karakter, maksimal 255 karakter).
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Role -->
+                        <div class="col-md-6 mb-3">
+                            <label for="role" class="form-label">
+                                Role <span class="required">*</span>
+                            </label>
+                            <select class="form-control" 
+                                    id="role" 
+                                    name="role" 
+                                    required>
+                                <option value="">Pilih Role</option>
+                                <option value="admin">Admin</option>
+                                <option value="operator">Operator</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Role wajib dipilih.
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6 mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select form-control" 
+                                    id="status" 
+                                    name="status">
+                                <option value="active" selected>Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" 
+                                        class="btn btn-secondary" 
+                                        onclick="resetForm()">
+                                    Reset
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    Simpan User
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal add -->
+  <div class="modal-dialog m-0 add-form" role="document">
+    <div></div>
+  </div>
+  <!-- end modal -->
+</section>
+<!-- JS Libraies -->
+<script src="{{url_for('static',filename='template/modules/jquery.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/datatables.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/jquery-ui/jquery-ui.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/prism/prism.js')}}"></script>
+<script src="{{url_for('static',filename='template/js/stisla.js')}}"></script>
+<!-- Page Specific JS File -->
+<!-- <script src="{{url_for('static',filename='template/js/page/modules-datatables.js')}}"></script> -->
+
+{% endblock %}

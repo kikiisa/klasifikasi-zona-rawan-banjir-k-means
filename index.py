@@ -4,7 +4,8 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
 import pandas as pd
-
+from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash
 import db
 import database.ConnectionDb
 from sklearn.preprocessing import MinMaxScaler
@@ -34,8 +35,6 @@ def login():
     else:
         return render_template('auth/auth.html',title='Login')
 
-
-
 @app.route('/logout',methods=['GET'])
 def logout():
     session.pop('status',None)
@@ -44,18 +43,32 @@ def logout():
 
 @app.route('/login',methods=['POST'])
 def login_post():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    user = db.index.login(username,password)
-    if user:
-        session['id'] = user[0]
-        session['status'] = True
-        return redirect(url_for('dashboard'))
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    user = initDb.getUserByUsername(username)
+    if user:    
+        if user['status'] != 'active':
+            flash("Akun anda di Nonaktifkan")
+            return redirect(url_for("login"))
+        
+        if check_password_hash(user['password'], password):
+            session['id'] = user
+            session['status'] = True
+            return redirect(url_for("dashboard"))
+        else:
+            flash("Usernme atau Password Salah")
+            return redirect(url_for("login"))
     else:
-        flash('Username atau Password Salah')
-        return redirect(url_for('index'))
+        flash("Usernme atau Password Salah")
+        return redirect(url_for("login"))
+       
 @app.route('/dashboard')
 def dashboard():
+    if(not session.get('status')):
+        flash('Silahkan Login Terlebih Dahulu !')
+        return redirect(url_for('login'))   
+    
     statusFile = False
     checkFile = os.path.isfile(os.path.join(dataset_dir,'result.csv'))
     if(checkFile):
@@ -64,6 +77,14 @@ def dashboard():
         statusFile = False
     return render_template('dashboard/index.html',title='Dashboard',existFile=statusFile)
 
+
+@app.route("/setting",methods=["GET"])
+def settings():
+    if(not session.get('status')):
+        flash('Silahkan Login Terlebih Dahulu !')
+        return redirect(url_for('login')) 
+    
+    return render_template("profile/index.html",data=session.get("id"))
 # route management data
 @app.route('/management-data',methods=['GET'])
 def management_data():
@@ -86,6 +107,67 @@ def data_peta():
         statusFile = False
  
     return render_template('peta/index.html',title='Data Peta',existFile=statusFile)
+
+
+@app.route("/management-user",methods=['GET'])
+def management_user():
+    # return jsonify(session.get("id")['role'])
+    if(not session.get('status')):
+        flash('Silahkan Login Terlebih Dahulu !')
+        return redirect(url_for('login'))
+    else:
+        user = session.get("id")['role']
+        if(user != 'admin'):
+            flash('Maaf Akses Terbatas')
+            return redirect(url_for('login'))
+        else:
+            data = initDb.fetchDataUser()
+            return render_template("management-user/index.html",data=data)
+            
+
+
+@app.route("/create/user",methods=["GET"])
+def create_user():
+    return render_template("management-user/create.html")
+
+@app.route("/edit/user/<id>",methods=["GET"])
+def edit_user(id):
+    data = initDb.editUser(id)
+    return render_template("management-user/edit.html",data=data)
+
+@app.route("/create/user/store",methods=["POST"])
+def store_user():
+    username = request.form.get('username')
+    full_name = request.form.get('full_name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    status = request.form.get('status')
+    role = request.form.get('role')
+    initDb.insertUser(username,full_name,email,password,status,role)
+    flash("Berhasil Menambahkan User","success")
+    return redirect(url_for("management_user"))
+
+@app.route("/update/user/<id>",methods=["POST"])
+def update_user(id):
+    username = request.form.get('username')
+    full_name = request.form.get('full_name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    status = request.form.get('status')
+    role = request.form.get('role')
+    initDb.updateUser(id,username,full_name,email,password,status,role)
+    flash("Berhasil Menghapus Data","success")
+    return redirect(url_for('management_user'))
+
+@app.route("/delete-user/<id>",methods=["GET"])
+def delete_user(id):
+    initDb.deleteUser(id)
+    flash("Berhasil Menghapus Data","success")
+    
+    return redirect(url_for('management_user'))
+
+
+
 
 @app.route("/reset-data",methods=['GET'])
 def reset_data():
