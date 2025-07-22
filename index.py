@@ -57,7 +57,7 @@ def login_post():
             session['status'] = True
             return redirect(url_for("dashboard"))
         else:
-            flash("Usernme atau Password Salah")
+            flash("Username atau Password Salah")
             return redirect(url_for("login"))
     else:
         flash("Usernme atau Password Salah")
