@@ -6,12 +6,11 @@ import os
 import pandas as pd
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
-import db
 import database.ConnectionDb
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
 import csv
-import db.index
+
 app = Flask(__name__, static_folder='static', static_url_path='/static')
 initDb = database.ConnectionDb.run
 app.secret_key = "jody"
@@ -47,6 +46,7 @@ def login_post():
     password = request.form.get("password")
 
     user = initDb.getUserByUsername(username)
+
     if user:    
         if user['status'] != 'active':
             flash("Akun anda di Nonaktifkan")
@@ -193,7 +193,7 @@ def edit(id):
     if(not session.get('status')):
         flash('Silahkan Login Terlebih Dahulu !')
         return redirect(url_for('login'))
-    data = initDb.fetchDataById(id)
+    data = initDb.fetchDataUserById(id)
     return render_template('management-data/edit.html',title='Edit Data',data=data)
 @app.route("/management-data/update/<id>",methods=['POST'])
 def update(id):

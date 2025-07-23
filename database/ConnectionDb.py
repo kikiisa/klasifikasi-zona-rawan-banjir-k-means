@@ -98,11 +98,7 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
         cursor.execute(query, (username,))
         user = cursor.fetchone()
         cursor.close()
-        return user
-    
-
-    
-    
+        return user    
     
     def updateUser(self, user_id, username, full_name, email, password, status, role):
         cursor = self.db.cursor()
