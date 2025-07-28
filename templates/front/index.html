@@ -529,6 +529,18 @@
             </p>
           </div>
         </div>
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <label for="kecamatan" class="form-label fw-bold">
+              <i class="fas fa-globe me-1"></i>Kecamatan
+            </label>
+            <select class="form-select" id="kecamatan" required>
+              <option value="">Pilih Kecamatan</option>
+              
+            </select>
+          </div>
+        </div>
+
         <div class="card border-0">
           <div class="card-body">
             <div id="map"></div>
@@ -622,11 +634,10 @@
     <!-- Leaflet JS -->
     <script src="{{url_for('static',filename='/vendor/leaflet/leaflet.js')}}"></script>
     <script>
-
-      const statNumber = document.querySelector('.terpantau'); // Get the element
-      const statNumberTerpantau1 = document.querySelector('.terpantau-1'); // Get the element
-      const statNumberRawanBanjir = document.querySelector('.rawan-banjir'); // Get the element
-      const statNumberRawanBanjir1 = document.querySelector('.rawan-banjir-1'); // Get the element
+      const statNumber = document.querySelector(".terpantau"); // Get the element
+      const statNumberTerpantau1 = document.querySelector(".terpantau-1"); // Get the element
+      const statNumberRawanBanjir = document.querySelector(".rawan-banjir"); // Get the element
+      const statNumberRawanBanjir1 = document.querySelector(".rawan-banjir-1"); // Get the element
       const statSangatRawan = document.querySelector(".sangat-rawan");
       const countClusters = (data) => {
         const result = {
@@ -658,16 +669,15 @@
         const url = "/api/results";
         const response = await fetch(url);
         const data = await response.json();
-        
 
         const clusterCounts = countClusters(data);
-        
+
         statNumber.textContent = clusterCounts.total;
-        statNumberTerpantau1.textContent = clusterCounts.total
-        statNumberRawanBanjir.textContent = clusterCounts.rawan
-        statSangatRawan.textContent = clusterCounts.sangatRawan
-        statNumberRawanBanjir1.textContent = clusterCounts.rawan
-         // Output: { total: 6, sangatRawan: 2, rawan: 1, tidakRawan: 3 }
+        statNumberTerpantau1.textContent = clusterCounts.total;
+        statNumberRawanBanjir.textContent = clusterCounts.rawan;
+        statSangatRawan.textContent = clusterCounts.sangatRawan;
+        statNumberRawanBanjir1.textContent = clusterCounts.rawan;
+        // Output: { total: 6, sangatRawan: 2, rawan: 1, tidakRawan: 3 }
       };
 
       fetchDataAndCount();
