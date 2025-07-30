@@ -44,9 +44,7 @@ def logout():
 def login_post():
     username = request.form.get("username")
     password = request.form.get("password")
-
     user = initDb.getUserByUsername(username)
-
     if user:    
         if user['status'] != 'active':
             flash("Akun anda di Nonaktifkan")
@@ -185,8 +183,39 @@ def create():
     if(not session.get('status')):
         flash('Silahkan Login Terlebih Dahulu !')
         return redirect(url_for('login'))
-    
-    return render_template('management-data/create.html',title='Create Data')
+    kecamatan_data = [
+        {
+            "id": "7107010",
+            "regency_id": "7107",
+            "name": "SANGKUB"
+        },
+        {
+            "id": "7107020",
+            "regency_id": "7107",
+            "name": "BINTAUNA"
+        },
+        {
+            "id": "7107030",
+            "regency_id": "7107",
+            "name": "BOLANG ITANG TIMUR"
+        },
+        {
+            "id": "7107040",
+            "regency_id": "7107",
+            "name": "BOLANG ITANG BARAT"
+        },
+        {
+            "id": "7107050",
+            "regency_id": "7107",
+            "name": "KAIDIPANG"
+        },
+        {
+            "id": "7107060",
+            "regency_id": "7107",
+            "name": "PINOGALUMAN"
+        }
+    ]
+    return render_template('management-data/create.html',title='Create Data',kecamatan=kecamatan_data)
 
 @app.route("/management-data/edit/<id>",methods=['GET'])
 def edit(id):
@@ -194,7 +223,39 @@ def edit(id):
         flash('Silahkan Login Terlebih Dahulu !')
         return redirect(url_for('login'))
     data = initDb.fetchDataUserById(id)
-    return render_template('management-data/edit.html',title='Edit Data',data=data)
+    kecamatan_data = [
+        {
+            "id": "7107010",
+            "regency_id": "7107",
+            "name": "SANGKUB"
+        },
+        {
+            "id": "7107020",
+            "regency_id": "7107",
+            "name": "BINTAUNA"
+        },
+        {
+            "id": "7107030",
+            "regency_id": "7107",
+            "name": "BOLANG ITANG TIMUR"
+        },
+        {
+            "id": "7107040",
+            "regency_id": "7107",
+            "name": "BOLANG ITANG BARAT"
+        },
+        {
+            "id": "7107050",
+            "regency_id": "7107",
+            "name": "KAIDIPANG"
+        },
+        {
+            "id": "7107060",
+            "regency_id": "7107",
+            "name": "PINOGALUMAN"
+        }
+    ]
+    return render_template('management-data/edit.html',title='Edit Data',data=data,kecamatan=kecamatan_data)
 @app.route("/management-data/update/<id>",methods=['POST'])
 def update(id):
     if(not session.get('status')):
@@ -206,6 +267,7 @@ def update(id):
     curah_hujan = request.form.get('curah_hujan')
     kemiringan = request.form.get('kemiringan')
     banjir_histori = request.form.get('banjir_histori')
+    kecamatan = request.form.get("kecamatan")
 
     file = request.files.get('upload')
     filename = None
@@ -216,9 +278,9 @@ def update(id):
         os.makedirs(upload_folder, exist_ok=True)  # Buat folder jika belum ada
         file_path = os.path.join(upload_folder, filename)
         file.save(file_path)
-        initDb.updateData(id,lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori,filename)
+        initDb.updateData(id,lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori,filename,kecamatan)
     else:
-        initDb.updateDataNoData(id,lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori)
+        initDb.updateDataNoData(id,lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori,kecamatan)
         
     flash("Berhasil Updated Data","success")
     return redirect(url_for('management_data'))
@@ -237,16 +299,16 @@ def delete(id):
 # end route management data
 @app.route('/insert-data',methods=['POST'])
 def insertData():
-    if(request.method == 'POST'):
-        
-        
+    if(request.method == 'POST'):     
         lng = request.form.get('lng')
         lat = request.form.get('lat')
         nama_desa = request.form.get('nama_desa')
         curah_hujan = request.form.get('curah_hujan')
         kemiringan = request.form.get('kemiringan')
         banjir_histori = request.form.get('banjir_histori')
+        kecamatan = request.form.get("kecamatan")
         
+        # return jsonify(request.form.get("kecamatan"))
         file = request.files.get('upload')
         filename = None
         if file and file.filename != '':
@@ -258,7 +320,7 @@ def insertData():
             file.save(file_path)
 
         # Simpan data ke database
-        initDb.insertData(lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori,filename)
+        initDb.insertData(lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori,filename,kecamatan)
         # initDb.insertData(lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori)
         flash('Data Berhasil Disimpan','success')
         return redirect(url_for('management_data'))
@@ -312,7 +374,7 @@ def management_cluster():
     status_final_result = os.path.isfile(result_path_final)
     
     if status_sinkronasi:
-        resultSinkronasi = pd.read_csv(result_path).drop(columns=['id','geojson','claster'])
+        resultSinkronasi = pd.read_csv(result_path).drop(columns=['id','geojson'])
         converHTMLresultSinkronasi = resultSinkronasi.to_html(classes='table table-bordered', index=False)  
     
     if processingData:
@@ -322,13 +384,13 @@ def management_cluster():
     if status_final_result:
         resultFinal = pd.read_csv(result_path_final).drop(columns=['id','geojson'])
         converHTMLresultFinal = resultFinal.to_html(classes='table table-bordered', index=False)
+        
     return render_template(
         'klaster/index.html',
         title='Dashboard',
         resultSinkronasi=converHTMLresultSinkronasi,
         resultFinalData=converHTMLresultFinal,
-        resultStepProsessing=convertHTMLresultProcessing
-        
+        resultStepProsessing=convertHTMLresultProcessing   
     )
 
 
@@ -357,14 +419,35 @@ def sinkronasi():
 
     # Tentukan path file tujuan
     file_path = os.path.join("storage", "sinkronasi.csv")
+    # Transformasi data: ganti key 'claster' jadi 'kecamatan', dan tambahkan 'claster'
+    modified_datas = []
+    for row in datas:
+        new_row = row.copy()
+        new_row['kecamatan'] = new_row.pop('claster')  # ganti nama kolom
+        new_row['claster'] = row['claster']            # tambahkan kolom claster kembali
+        modified_datas.append(new_row)
+
+    with open(file_path, mode="w", newline='', encoding='utf-8') as file:
+        writer = csv.DictWriter(file, fieldnames=modified_datas[0].keys())
+        writer.writeheader()
+        writer.writerows(modified_datas)
 
     # Simpan ke file
-    with open(file_path, mode="w", newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=datas[0].keys())
-        writer.writeheader()
-        writer.writerows(datas)
+    # with open(file_path, mode="w", newline='', encoding='utf-8') as file:
+    #     writer = csv.DictWriter(file, fieldnames=datas[0].keys())
+    #     writer.writeheader()
+    #     writer.writerows(datas)
+    result_path = os.path.join('storage', 'sinkronasi.csv')
+    resultSinkronasi = pd.read_csv(result_path).drop(columns=['id','geojson','claster'])
     flash(f"Berhasil Menyinkronkan Data, Lakukan Prosessing Data","success")
     return redirect(url_for('management_cluster'))
+
+@app.route("/api/filter-by/<id>",methods=['GET'])
+def filterbyidKecamatan(id):
+    data = initDb.getVillaeByDistrict(id)
+    return jsonify(data)
+
+    
 @app.route('/prosess',methods=['POST'])
 def prosess():
     if request.method == 'POST':
@@ -381,13 +464,9 @@ def prosess():
         # === 3. Preprocessing ===
         scaler = MinMaxScaler()
         data_scaled = scaler.fit_transform(data[fitur])
-        
         # Konversi ke DataFrame
-        
         data_scaled_df = pd.DataFrame(data_scaled, columns=fitur)
-        
         data_scaled_df.to_csv("storage/prosessing.csv")
-        
         print(data_scaled_df)
         # === 4. Jalankan K-Means ===
         k = 3

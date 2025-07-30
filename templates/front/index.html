@@ -532,11 +532,11 @@
         <div class="row justify-content-center">
           <div class="col-md-6">
             <label for="kecamatan" class="form-label fw-bold">
-              <i class="fas fa-globe me-1"></i>Kecamatan
+              <i class="fas fa-globe me-1"></i>Filter Berdasarkan Kecamatan
             </label>
             <select class="form-select" id="kecamatan" required>
               <option value="">Pilih Kecamatan</option>
-              
+              <option value="all">Semua Wilayah</option>
             </select>
           </div>
         </div>
@@ -628,17 +628,107 @@
         </div>
       </div>
     </footer>
-
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Info Lokasi</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="modalContent">
+            <!-- Isi dari JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <!-- Leaflet JS -->
     <script src="{{url_for('static',filename='/vendor/leaflet/leaflet.js')}}"></script>
     <script>
-      const statNumber = document.querySelector(".terpantau"); // Get the element
-      const statNumberTerpantau1 = document.querySelector(".terpantau-1"); // Get the element
-      const statNumberRawanBanjir = document.querySelector(".rawan-banjir"); // Get the element
-      const statNumberRawanBanjir1 = document.querySelector(".rawan-banjir-1"); // Get the element
+      const map = L.map("map").setView([0.9070359, 123.4257745], 12);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          }).addTo(map);
+      const selectRegency = document.querySelector("#kecamatan");
+      let previousLayers = []; // Menyimpan layer-layer sebelumnya
+
+      // Fungsi hapus semua layer sebelumnya
+      const clearMapLayers = () => {
+        previousLayers.forEach((layer) => {
+          map.removeLayer(layer);
+        });
+        previousLayers = [];
+      };
+
+      // Fetch dropdown kecamatan
+      const fetchSelectDown = async () => {
+        fetch(
+          "https://www.emsifa.com/api-wilayah-indonesia/api/districts/7107.json"
+        )
+          .then((response) => response.json())
+          .then((districts) => {
+            districts.forEach((district) => {
+              const option = document.createElement("option");
+              option.value = district.id;
+              option.textContent = district.name;
+              selectRegency.appendChild(option);
+            });
+          })
+          .catch((error) => {
+            console.error("Gagal mengambil data kecamatan:", error);
+          });
+      };
+      fetchSelectDown();
+
+      // Event saat dropdown berubah
+      selectRegency.addEventListener("change", async function () {
+        const selectedValue = this.value;
+        clearMapLayers(); // Hapus semua layer sebelumnya
+        
+        if(selectedValue == "all")
+        {
+          await fetchMap("all")    
+        }else{
+          const geojsnondistrick = `/static/geojson/${selectedValue}.geojson`;
+          try {
+            const response = await fetch(geojsnondistrick);
+            if (!response.ok)
+              throw new Error(`HTTP error! Status: ${response.status}`);
+  
+            const geojsonData = await response.json();
+  
+            const borderLayer = L.geoJSON(geojsonData, {
+              style: {
+                color: "#1A2A80",
+                weight: 3,
+                opacity: 1,
+                dashArray: "5, 5", // Garis putus-putus
+              },
+            }).addTo(map);
+  
+            previousLayers.push(borderLayer); // Simpan layer
+  
+            await fetchMap(selectedValue); // Render peta berdasarkan clustering
+          } catch (error) {
+            console.error("Error loading GeoJSON:", error);
+          }
+        }
+      });
+
+      // Statistik
+      const statNumber = document.querySelector(".terpantau");
+      const statNumberTerpantau1 = document.querySelector(".terpantau-1");
+      const statNumberRawanBanjir = document.querySelector(".rawan-banjir");
+      const statNumberRawanBanjir1 = document.querySelector(".rawan-banjir-1");
       const statSangatRawan = document.querySelector(".sangat-rawan");
+
       const countClusters = (data) => {
         const result = {
           total: data.length,
@@ -646,7 +736,6 @@
           rawan: 0,
           tidakRawan: 0,
         };
-
         data.forEach((item) => {
           switch (item.claster) {
             case "Sangat Rawan":
@@ -660,130 +749,123 @@
               break;
           }
         });
-
         return result;
       };
 
-      // Contoh penggunaan:
       const fetchDataAndCount = async () => {
         const url = "/api/results";
         const response = await fetch(url);
         const data = await response.json();
-
         const clusterCounts = countClusters(data);
-
         statNumber.textContent = clusterCounts.total;
         statNumberTerpantau1.textContent = clusterCounts.total;
         statNumberRawanBanjir.textContent = clusterCounts.rawan;
         statSangatRawan.textContent = clusterCounts.sangatRawan;
         statNumberRawanBanjir1.textContent = clusterCounts.rawan;
-        // Output: { total: 6, sangatRawan: 2, rawan: 1, tidakRawan: 3 }
       };
-
       fetchDataAndCount();
 
-      const fetchMap = async () => {
-        const url = "/api/results";
-        const response = await fetch(url);
+      // Fungsi render peta berdasarkan clustering
+      const fetchMap = async (id_kecamatan) => {
+        const response = await fetch(`/api/results`);
         const data = await response.json();
+        let hasil;
+        if(id_kecamatan != "all")
+        {
+          hasil = data.filter((item) => item.kecamatan == id_kecamatan);
+        }else{
+          hasil = data
+        }
+        // Tambahkan tileLayer satu kali jika belum ada
+        if (!map._tileLayerAdded) {
+          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          }).addTo(map);
+          map._tileLayerAdded = true;
+        }
 
-        // Inisialisasi map
-        const map = L.map("map").setView([0.9070359, 123.4257745], 12);
-
-        // Tambahkan tile layer OpenStreetMap
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        }).addTo(map);
-
-        // Contoh marker statis (bisa dihapus jika tidak dibutuhkan)
-
-        // Iterasi data dari API
-        data.map((values) => {
-          // Perbaikan 1: URL geojson yang benar
+        hasil.map(async (values) => {
           const geojsonUrl = `/static/upload/${values.geojson}`;
-          console.log(geojsonUrl);
-
-          // Tentukan ikon berdasarkan kategori
-          let iconUrl = "";
-          let circleColor = "";
+          let iconUrl = "",
+            circleColor = "";
 
           if (values.claster === "Sangat Rawan") {
-            // Perbaikan 2: Gunakan path langsung untuk static files
             iconUrl = "/static/image/tinggi.png";
-            circleColor = "#ff0000"; // merah
+            circleColor = "#ff0000";
           } else if (values.claster === "Rawan") {
             iconUrl = "/static/image/sedang.png";
-            circleColor = "#ffc107"; // kuning
+            circleColor = "#ffc107";
           } else if (values.claster === "Tidak Rawan") {
             iconUrl = "/static/image/rendah.png";
-            circleColor = "#28a745"; // hijau
+            circleColor = "#28a745";
           } else {
             iconUrl = "/static/image/default.png";
-            circleColor = "#999"; // abu-abu default
+            circleColor = "#999";
           }
 
-          // Buat ikon custom
-          const customIcon = L.icon({
-            iconUrl: iconUrl,
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32],
-          });
+          const geojsonResponse = await fetch(geojsonUrl);
+          const geojsonData = await geojsonResponse.json();
+          const clusterLayer = L.geoJSON(geojsonData, {
+            style: {
+              color: circleColor,
+              weight: 1,
+              opacity: 1,
+            },
+            
+            onEachFeature: (feature, layer) => {
+              layer.on("click", function () {
+                const props = feature.properties;
+                
+                // Siapkan konten yang mau ditampilkan
+                  const content = `
+                    <p><strong>Nama Lokasi :</strong> ${props.nama || "Tidak diketahui"}</p>
+                    <p><strong>Klasifikasi :</strong> ${values.claster || "-"}</p>
+                    <p><strong>Kecamatan   :</strong> ${props.kecamatan || "-"}</p>
+                    `;
 
-          let latlng = [values.lat, values.lng];
+                // Masukkan ke modal
+                document.getElementById("modalContent").innerHTML = content;
 
-          // Tambahkan marker ke peta
-          // L.marker([values.lat, values.lng], { icon: customIcon })
-          //   .addTo(map)
-          //   .bindPopup(`<b>${values.nama_desa}</b>`);
+                // Tampilkan modal (pakai Bootstrap 5)
+                const modal = new bootstrap.Modal(
+                  document.getElementById("infoModal")
+                );
+                modal.show();
+              });
 
-          // Tambahkan circle ke peta and remove data
+              const nama = feature.properties.nama || "Tanpa Nama";
+              layer.bindTooltip(nama);
+            },
+          }).addTo(map);
 
-          // Perbaikan 3: Fetch geojson dengan URL yang benar
-          fetch(geojsonUrl)
-            .then((response) => response.json())
-            .then((geojsonData) => {
-              L.geoJSON(geojsonData, {
-                style: {
-                  color: circleColor,
-                  weight: 1,
-                  opacity: 1,
-                },
-                onEachFeature: (feature, layer) => {
-                  const nama = feature.properties.nama || "Tanpa Nama";
-                  const coords = feature.geometry.coordinates;
-                  // Pembulatan untuk menghindari masalah desimal kecil
-                  layer.bindTooltip(nama);
-                },
-              }).addTo(map);
-            })
-            .catch((error) => console.error("Error loading GeoJSON:", error));
+          previousLayers.push(clusterLayer); // Simpan layer untuk nanti dihapus
         });
 
-        // Tambahkan legenda ke peta
-        const legend = L.control({ position: "bottomright" });
+        // Legenda tetap ditambahkan satu kali
+        if (!map._legendAdded) {
+          const legend = L.control({ position: "bottomright" });
 
-        legend.onAdd = function (map) {
-          const div = L.DomUtil.create("div", "info legend");
-          const grades = ["Sangat Rawan", "Rawan", "Tidak Rawan"];
-          const colors = ["#ff0000", "#ffc107", "#28a745"];
-          const labels = [];
+          legend.onAdd = function (map) {
+            const div = L.DomUtil.create("div", "info legend");
+            const grades = ["Sangat Rawan", "Rawan", "Tidak Rawan"];
+            const colors = ["#ff0000", "#ffc107", "#28a745"];
+            const labels = [];
 
-          for (let i = 0; i < grades.length; i++) {
-            labels.push(
-              `<i style="background:${colors[i]}; width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.8;"></i> ${grades[i]}<br>`
-            );
-          }
+            for (let i = 0; i < grades.length; i++) {
+              labels.push(
+                `<i style="background:${colors[i]}; width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.8;"></i> ${grades[i]}<br>`
+              );
+            }
 
-          div.innerHTML = labels.join("");
-          return div;
-        };
+            div.innerHTML = labels.join("");
+            return div;
+          };
 
-        legend.addTo(map);
+          legend.addTo(map);
+          map._legendAdded = true;
+        }
       };
-
-      fetchMap();
     </script>
   </body>
 </html>

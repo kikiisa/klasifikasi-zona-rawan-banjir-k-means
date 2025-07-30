@@ -11,7 +11,7 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
             "host": "localhost",
             "user": "root",
             "password": "",  # Empty password
-            "database": "cluster_banjir",
+            "database": "development_banjir",
             "port": 3306,   
             "charset": "utf8mb4",
             "autocommit": False
@@ -100,6 +100,15 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
         cursor.close()
         return user    
     
+    def getVillaeByDistrict(self,id):
+        cursor = self.db.cursor(dictionary=True)
+        query = "SELECT * FROM claster WHERE claster = %s"
+        cursor.execute(query, (id,))
+        village = cursor.fetchall()
+        cursor.close()
+        return village
+    
+    
     def updateUser(self, user_id, username, full_name, email, password, status, role):
         cursor = self.db.cursor()
         if password:  # Jika password tidak kosong, update password juga
@@ -130,10 +139,10 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
         self.db.commit()
         cursor.close()
     
-    def insertData(self, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson):
+    def insertData(self, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson,kecamatan):
         cursor = self.db.cursor()
-        insert_query = "INSERT INTO claster (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        cursor.execute(insert_query, (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson))
+        insert_query = "INSERT INTO claster (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson,claster) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        cursor.execute(insert_query, (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson,kecamatan))
         self.db.commit()
         cursor.close()
         
@@ -176,16 +185,18 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
         cursor.execute("DELETE FROM claster WHERE id = %s", (id,))
         self.db.commit()
         cursor.close()
-    def updateData(self, id, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson):
+        
+    def updateData(self, id, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson,kecamatan):
         cursor = self.db.cursor()
-        update_query = "UPDATE claster SET lng = %s, lat = %s, nama_desa = %s, curah_hujan = %s, kemiringan = %s, banjir_histori = %s, geojson = %s WHERE id = %s"
-        cursor.execute(update_query, (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson, id))
+        update_query = "UPDATE claster SET lng = %s, lat = %s, nama_desa = %s, curah_hujan = %s, kemiringan = %s, banjir_histori = %s, geojson = %s, claster = %s WHERE id = %s"
+        cursor.execute(update_query, (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, geojson,kecamatan, id))
         self.db.commit()
         cursor.close()
-    def updateDataNoData(self, id, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori):
+        
+    def updateDataNoData(self, id, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori,kecamatan):
         cursor = self.db.cursor()
-        update_query = "UPDATE claster SET lng = %s, lat = %s, nama_desa = %s, curah_hujan = %s, kemiringan = %s, banjir_histori = %s WHERE id = %s"
-        cursor.execute(update_query, (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, id))
+        update_query = "UPDATE claster SET lng = %s, lat = %s, nama_desa = %s, curah_hujan = %s, kemiringan = %s, banjir_histori = %s, claster = %s WHERE id = %s"
+        cursor.execute(update_query, (lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori,kecamatan, id))
         self.db.commit()
         cursor.close()
         

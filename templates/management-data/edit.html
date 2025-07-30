@@ -103,7 +103,17 @@
                   placeholder="Banjir Histori"
                 />
               </div>
-              
+              <div class="form-group mb-3">
+                <label for="kecamatan" class="form-label">Kecamatan</label>
+                <select class="form-control" id="kecamatan" name="kecamatan">
+                  <option value="">-- Pilih Kecamatan --</option>
+                  {% for x in kecamatan %}
+                  <option value="{{ x.id }}" {% if data.claster == x.id %}selected{% endif %} >
+                    {{ x.name }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
               <div class="form-group">
                 <label for="upload">Upload Geo Json</label>
                 <input type="file" class="form-control-file" id="upload" name="upload" />

@@ -29,21 +29,7 @@
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <!-- <form action="" method="post" action="/upload-file"
-              enctype="multipart/form-data"
-              class="form-input">
-              <div class="form">
-                <div class="form-group">
-                  <label>Import Excel</label>
-                  <div class="input-group">
-                    <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                      <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form> -->
+           
             {% with messages = get_flashed_messages(with_categories=true) %} {%
             if messages %}
             <div class="alert alert-{{ messages[0][0] }}">
@@ -67,6 +53,7 @@
                     <th>Curah Hujan</th>
                     <th>Kemiringan</th>
                     <th>Banjir Histori</th>
+                    <th>Kecamatan</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -80,6 +67,14 @@
                     <td>{{ x.curah_hujan }}</td>
                     <td>{{ x.kemiringan }}</td>
                     <td>{{ x.banjir_histori }}</td>
+                    <td>
+                      {% if x.claster == "7107010" %} Sangkub {% elif x.claster
+                      == "7107020" %} Bintauna {% elif x.claster == "7107030" %}
+                      Bolang Itang Timur {% elif x.claster == "7107040" %}
+                      Bolang Itang Barat {% elif x.claster == "7107050" %}
+                      Kaidipang {% elif x.claster == "7107060" %} Pinogaluman {%
+                      else %} - {% endif %}
+                    </td>
                     <td>
                       <a
                         href="{{url_for('edit',id=x.id)}}"
@@ -115,6 +110,7 @@
 <script src="{{url_for('static',filename='template/modules/datatables/datatables.min.js')}}"></script>
 <script src="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{url_for('static',filename='template/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
+
 <script src="{{url_for('static',filename='template/modules/jquery-ui/jquery-ui.min.js')}}"></script>
 <script src="{{url_for('static',filename='template/modules/prism/prism.js')}}"></script>
 
@@ -129,22 +125,19 @@
   $("#table-1").dataTable({
     columnDefs: [{ sortable: false, targets: [2, 3] }],
   });
-  
-  const deleteData = async (id) =>
-  {
+
+  const deleteData = async (id) => {
     swal({
       title: "Apakah anda yakin ingin menghapus data ini?",
       icon: "warning",
       buttons: true,
       dangerMode: true,
-      
     }).then((willDelete) => {
       if (willDelete) {
-        window.location.href = `/management-data/delete/${id}`
+        window.location.href = `/management-data/delete/${id}`;
       }
-      
-    })
-  }
+    });
+  };
 </script>
 
 {% endblock %}
