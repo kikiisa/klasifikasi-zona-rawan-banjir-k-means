@@ -1,5 +1,5 @@
 id,lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori,geojson,kecamatan,claster
-215,123.1251358,0.8940865,Batubantayo,2558,7,4,Batubantayo.geojson,,
+215,123.1251358,0.8940865,Batubantayo,2558,7,4,Batubantayo.geojson,7107060,7107060
 216,123.165318,0.8964744,Batutajam,2642,3,0,Batutajam.geojson,,
 217,123.1366502,0.9203082,Buko,2588,5,1,Buko.geojson,7107060,7107060
 218,123.1008937,0.9103633,Buko Selatan,3022,8,5,Buko Selatan.geojson,,

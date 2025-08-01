@@ -651,11 +651,21 @@
     <!-- Leaflet JS -->
     <script src="{{url_for('static',filename='/vendor/leaflet/leaflet.js')}}"></script>
     <script>
-      const map = L.map("map").setView([0.9070359, 123.4257745], 12);
+      const map = L.map("map").setView([0.7609332,123.2606188],12);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
             attribution:
               '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           }).addTo(map);
+
+
+        // Efek animasi zoom ke level 15 saat map selesai dimuat
+        map.whenReady(() => {
+          map.flyTo([0.7609332, 123.2606188], 12, {
+            animate: true,
+            duration: 2 // durasi animasi dalam detik
+          });
+        });
+
       const selectRegency = document.querySelector("#kecamatan");
       let previousLayers = []; // Menyimpan layer-layer sebelumnya
 
@@ -792,13 +802,13 @@
 
           if (values.claster === "Sangat Rawan") {
             iconUrl = "/static/image/tinggi.png";
-            circleColor = "#ff0000";
+            circleColor = "#FF894F";
           } else if (values.claster === "Rawan") {
             iconUrl = "/static/image/sedang.png";
             circleColor = "#ffc107";
           } else if (values.claster === "Tidak Rawan") {
             iconUrl = "/static/image/rendah.png";
-            circleColor = "#28a745";
+            circleColor = "#7ADAA5";
           } else {
             iconUrl = "/static/image/default.png";
             circleColor = "#999";
@@ -849,7 +859,7 @@
           legend.onAdd = function (map) {
             const div = L.DomUtil.create("div", "info legend");
             const grades = ["Sangat Rawan", "Rawan", "Tidak Rawan"];
-            const colors = ["#ff0000", "#ffc107", "#28a745"];
+            const colors = ["#FF894F", "#ffc107", "#7ADAA5"];
             const labels = [];
 
             for (let i = 0; i < grades.length; i++) {
