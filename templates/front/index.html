@@ -18,7 +18,6 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{url_for('static',filename='vendor/leaflet/leaflet.css')}}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
   <style>
     :root {
       --primary-color: #6610f2;
@@ -87,10 +86,12 @@
 
     /* Hero Section */
     .hero-section {
-      background: linear-gradient(135deg,
-          var(--primary-color) 0%,
-          var(--secondary-color) 50%,
-          var(--accent-color) 100%);
+      background: linear-gradient(
+        135deg,
+        var(--primary-color) 0%,
+        var(--secondary-color) 50%,
+        var(--accent-color) 100%
+      );
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -110,12 +111,10 @@
     }
 
     @keyframes float {
-
       0%,
       100% {
         transform: translateY(0px) rotate(0deg);
       }
-
       50% {
         transform: translateY(-20px) rotate(180deg);
       }
@@ -178,22 +177,11 @@
       animation: floatCard 6s ease-in-out infinite;
     }
 
-    .modal-body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 16px;
-      color: white;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      margin: 0 auto;
-    }
-
     @keyframes floatCard {
-
       0%,
       100% {
         transform: translateY(0px);
       }
-
       50% {
         transform: translateY(-10px);
       }
@@ -225,9 +213,11 @@
       left: 0;
       right: 0;
       height: 4px;
-      background: linear-gradient(90deg,
-          var(--primary-color),
-          var(--accent-color));
+      background: linear-gradient(
+        90deg,
+        var(--primary-color),
+        var(--accent-color)
+      );
     }
 
     .stat-card:hover {
@@ -325,7 +315,16 @@
       color: white;
       padding: 50px 0 30px;
     }
-
+    .modal-body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 24px;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    max-width: 400px;
+    margin: 0 auto;
+    }
     .footer-title {
       font-size: 1.3rem;
       font-weight: 600;
@@ -434,26 +433,32 @@
         <div class="col-lg-6">
           <div class="hero-image">
             <div class="floating-card">
-              <div class="row text-center">
-                <div class="col-4">
-                  <i class="fas fa-exclamation-triangle text-warning mb-2" style="font-size: 2rem"></i>
-                  <h4 class="text-white rawan-banjir"></h4>
+              <div class="d-flex justify-content-between text-center text-white px-3 py-3 gap-3">
+                <!-- Zona Rawan Banjir -->
+                <div class="flex-fill">
+                  <i class="fas fa-exclamation-triangle text-warning mb-2" style="font-size: 2rem;"></i>
+                  <h4 class="rawan-banjir">0</h4>
                   <small class="text-white-50">Zona Rawan Banjir</small>
                 </div>
-                <div class="col-4">
-                  <i class="fas fa-eye text-info mb-2" style="font-size: 2rem"></i>
-                  <h4 class="text-white terpantau-1"></h4>
+        
+                <!-- Monitoring -->
+                <div class="flex-fill border-start border-end px-3">
+                  <i class="fas fa-eye text-info mb-2" style="font-size: 2rem;"></i>
+                  <h4 class="terpantau-1">0</h4>
                   <small class="text-white-50">Monitoring</small>
                 </div>
-                <div class="col-4">
-                  <i class="fas fa-users text-success mb-2" style="font-size: 2rem"></i>
-                  <h4 class="text-white">0</h4>
+        
+                <!-- Pengunjung -->
+                <div class="flex-fill">
+                  <i class="fas fa-users text-success mb-2" style="font-size: 2rem;"></i>
+                  <h4>0</h4>
                   <small class="text-white-50">Pengunjung</small>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        
       </div>
     </div>
   </section>
@@ -478,6 +483,7 @@
             <div class="stat-label">Desa Terpantau</div>
           </div>
         </div>
+        <div class="dashed-divider-vertical-dark d-none d-lg-block" style="position: absolute; left: 33.33%; top: 0; bottom: 0;"></div>
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="stat-card">
             <i class="fas fa-exclamation-triangle stat-icon"></i>
@@ -485,6 +491,7 @@
             <div class="stat-label">Zona Rawan</div>
           </div>
         </div>
+        <div class="dashed-divider-vertical-dark d-none d-lg-block" style="position: absolute; left: 66.66%; top: 0; bottom: 0;"></div>
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="stat-card">
             <i class="fas fa-satellite-dish stat-icon"></i>
@@ -495,6 +502,10 @@
       </div>
     </div>
   </section>
+  
+  <!-- Dashed divider between sections -->
+  <div class="dashed-divider"></div>
+  
   <section id="features" class="features-section">
     <div class="container">
       <div class="row text-center mb-5">
@@ -531,6 +542,9 @@
     </div>
   </section>
 
+  <!-- Dashed divider between sections -->
+  <div class="dashed-divider"></div>
+
   <!-- Map Section -->
   <section class="map-section mt-4 mb-4">
     <div class="container">
@@ -556,6 +570,7 @@
         </div>
       </div>
 
+      <div class="dashed-divider-dark my-4"></div
       <div class="card border-0">
         <div class="card-body">
           <div id="map"></div>
@@ -585,7 +600,7 @@
           </div>
         </div>
       </div>
-      <hr class="my-4 border-white-50" />
+      <div class="dashed-divider"></div>
       <div class="row">
         <div class="col-12 text-center">
           <p class="text-white-50 mb-0">
@@ -596,7 +611,7 @@
     </div>
   </footer>
   <div class="modal fade" id="infoModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog  rounded-2xl">
       <div class="modal-body" id="modalContent">
         <!-- Isi dari JavaScript -->
       </div>
@@ -674,8 +689,9 @@
             style: {
               color: "#9929EA",
               weight: 1,
-              fill: false,
+              fill: false,              
               opacity: 1,
+              dashArray: "5, 5",
 
             },
           }).addTo(map);
@@ -763,7 +779,7 @@
           circleColor = "#ffc107";
         } else if (values.claster === "Tidak Rawan") {
           iconUrl = "https://cdn-icons-png.flaticon.com/128/1161/1161388.png";
-          circleColor = "#7ADAA5";
+          circleColor = "#347433";
         } else {
           iconUrl = "/static/image/default.png";
           circleColor = "#999";
@@ -774,8 +790,8 @@
         const clusterLayer = L.geoJSON(geojsonData, {
           style: {
             color: circleColor,
-            weight: 3,
-            opacity: 1,
+            weight: 1,
+            opacity: 100,
           },
 
           onEachFeature: (feature, layer) => {
