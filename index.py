@@ -102,10 +102,8 @@ def data_peta():
     if(checkFile):
         statusFile = True
     else:
-        statusFile = False
- 
+        statusFile = False 
     return render_template('peta/index.html',title='Data Peta',existFile=statusFile)
-
 
 @app.route("/management-user",methods=['GET'])
 def management_user():
@@ -364,6 +362,7 @@ def management_cluster():
     result_path_processing = os.path.join('storage', 'prosessing.csv')
     result_path_final = os.path.join('storage', 'result.csv')
     
+    
     # Inisialisasi nilai default
     converHTMLresultSinkronasi = None
     converHTMLresultFinal = None
@@ -486,6 +485,7 @@ def prosess():
         data.to_csv("storage/result.csv", index=False)
         flash('Proses Berhasil','success')
         return redirect(url_for('management_cluster'))
+    
 if __name__ == '__main__':
     app.run(debug=True)
     
