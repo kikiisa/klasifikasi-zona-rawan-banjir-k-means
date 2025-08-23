@@ -117,6 +117,14 @@
                   <span>Management Cluster</span></a
                 >
               </li>
+              <li
+                class="{{ request.path == url_for('contact') and 'active' or '' }} "
+              >
+                <a class="nav-link" href="{{url_for('contact')}}"
+                  ><i class="ion-shuffle"></i>
+                  <span>Management Contact</span></a
+                >
+              </li>
               {% if session.get("id") and session.get("id")["role"] == "admin"
               %}
               <li

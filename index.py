@@ -25,7 +25,8 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
-    return render_template('front/index.html')
+    data = initDb.fetchContact()
+    return render_template('front/index.html', data=data)
 
 @app.route("/login",methods=['GET'])
 def login():    
@@ -121,7 +122,6 @@ def management_user():
             return render_template("management-user/index.html",data=data)
             
 
-
 @app.route("/create/user",methods=["GET"])
 def create_user():
     return render_template("management-user/create.html")
@@ -161,9 +161,6 @@ def delete_user(id):
     flash("Berhasil Menghapus Data","success")
     
     return redirect(url_for('management_user'))
-
-
-
 
 @app.route("/reset-data",methods=['GET'])
 def reset_data():
@@ -324,7 +321,6 @@ def insertData():
         return redirect(url_for('management_data'))
     
 
-
 @app.route('/upload-file',methods=['POST','GET'])
 def upload_file():
     if request.method == 'POST':
@@ -391,8 +387,6 @@ def management_cluster():
         resultFinalData=converHTMLresultFinal,
         resultStepProsessing=convertHTMLresultProcessing   
     )
-
-
 
 
 @app.route("/api/results", methods=["GET"])
@@ -486,6 +480,23 @@ def prosess():
         flash('Proses Berhasil','success')
         return redirect(url_for('management_cluster'))
     
+
+@app.route('/contact', methods=['GET'])
+def contact():
+    data = initDb.fetchContact()
+    return render_template('contact/index.html', contact=data)
+
+@app.route('/contact', methods=['POST'])
+def update_contact():
+    instagram = request.form.get('instagram')
+    facebook = request.form.get('facebook')
+    whatsapp = request.form.get('whatsapp')
+    initDb.updateContact(1, instagram, facebook, whatsapp)
+    flash('Contact updated successfully', 'success')
+    return redirect(url_for('contact'))
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
     

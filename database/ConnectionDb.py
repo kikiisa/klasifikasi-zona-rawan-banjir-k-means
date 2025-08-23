@@ -180,6 +180,24 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
         cursor.close()
         return data
     
+    def fetchContact(self):
+        cursor = self.db.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM contact WHERE id = 1")
+        data = cursor.fetchone()
+        cursor.close()
+        return data
+
+    def updateContact(self, id, instagram, facebook, whatsapp):
+        cursor = self.db.cursor()
+        update_query = """
+            UPDATE contact
+            SET instagram = %s, facebook = %s, whatsapp = %s
+            WHERE id = %s
+        """
+        cursor.execute(update_query, (instagram, facebook, whatsapp, id))
+        self.db.commit()
+        cursor.close()
+
     def deleteData(self, id):
         cursor = self.db.cursor()
         cursor.execute("DELETE FROM claster WHERE id = %s", (id,))
