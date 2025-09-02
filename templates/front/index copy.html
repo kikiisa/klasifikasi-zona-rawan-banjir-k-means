@@ -662,24 +662,6 @@
       accessToken: 'pk.eyJ1Ijoia2lraWlzYSIsImEiOiJjbWE2N2kyaWowajVhMmpzZnhjbTFzdGJsIn0.7CJ3vKEqNj3XxC6MstaehA'
     }).addTo(map);
 
-    const shp_geojson = "/static/geojson/shp.geojson";
-    const fethGeojsonShp = async () => {
-      const response = await fetch(shp_geojson);
-      const data = await response.json();
-      L.geoJSON(data, {
-        style: {
-          color: "#6610F2",
-          weight: 1,
-          fill: false,
-          opacity: 1,
-          dashArray: "5, 5",
-
-        },
-      }).addTo(map);
-    };
-    fethGeojsonShp();
-
-
     // Efek animasi zoom ke level 15 saat map selesai dimuat
     map.whenReady(() => {
       map.flyTo([0.7609332, 123.2606188], 12, {
