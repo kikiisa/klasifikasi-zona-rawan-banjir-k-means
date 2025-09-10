@@ -496,6 +496,15 @@ def update_contact():
     return redirect(url_for('contact'))
 
 
+@app.route("/hasil-cluster",methods=['GET'])
+def hasil_cluster():    
+    data = initDb.fetchContact()
+    return render_template('front/cluster.html', data=data)
+
+@app.route("/peta-bencana",methods=["GET"])
+def peta_bencana():
+    data = initDb.fetchContact()
+    return render_template("front/peta-bencana.html",data=data)
 
 if __name__ == '__main__':
     app.run(debug=True)

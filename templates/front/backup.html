@@ -410,7 +410,7 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container">
-      <a class="navbar-brand" href="#"><img src="{{url_for('static', filename='image/logo.png')}}" width="30" alt="" srcset=""></i> Boolaang Mongondow Utara</a>
+      <a class="navbar-brand" href="#"><img src="{{url_for('static', filename='image/logo.png')}}" width="30" alt="" srcset=""></i> Bolaang Mongondow Utara</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -422,11 +422,9 @@
           <li class="nav-item">
             <a class="nav-link" href="#statistics">Statistik</a>
           </li>
+          
           <li class="nav-item">
-            <a class="nav-link" href="#features">Fitur</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#map">Peta</a>
+            <a class="nav-link" href="">Peta SHP</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/login">Login</a>
@@ -485,7 +483,6 @@
             </div>
           </div>
         </div>
-        
       </div>
     </div>
   </section>
@@ -532,42 +529,7 @@
   
   <!-- Dashed divider between sections -->
   <div class="dashed-divider"></div>
-  
-  <section id="features" class="features-section">
-    <div class="container">
-      <div class="row text-center mb-5">
-        <div class="col-12">
-          <h2 class="section-title text-white">Fitur Unggulan</h2>
-          <p class="section-subtitle text-white opacity-75">
-            Teknologi canggih untuk monitoring dan prediksi banjir yang akurat
-          </p>
-        </div>
-      </div>
-      <div class="row justify-content-center">
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="feature-card">
-            <i class="fas fa-brain feature-icon"></i>
-            <h3 class="feature-title">AI Prediction</h3>
-            <p class="feature-text">
-              Algoritma kecerdasan buatan untuk memprediksi kemungkinan banjir
-              berdasarkan pola cuaca dan topografi.
-            </p>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="feature-card">
-            <i class="fas fa-chart-line feature-icon"></i>
-            <h3 class="feature-title">Data Analytics</h3>
-            <p class="feature-text">
-              Analisis mendalam terhadap data historis banjir untuk
-              perencanaan mitigasi yang lebih baik.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+ 
 
   <!-- Dashed divider between sections -->
   <div class="dashed-divider"></div>
@@ -594,6 +556,7 @@
             <option value="">Pilih Kecamatan</option>
             <option value="all">Semua Wilayah</option>
           </select>
+          <span class="text-info text-center">Lihat juga versi SHP <i class="fas fa-map "></i> <a href="http://">Disini</a></span>
         </div>
       </div>
 
@@ -652,7 +615,8 @@
   <!-- Bootstrap JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <!-- Leaflet JS -->
-  <script src="{{url_for('static',filename='/vendor/leaflet/leaflet.js')}}"></script>
+  <!-- <script src="{{url_for('static',filename='/vendor/leaflet/leaflet.js')}}"></script> -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
     const map = L.map("map").setView([0.7609332, 123.2606188], 12);
     L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -661,6 +625,24 @@
 
       accessToken: 'pk.eyJ1Ijoia2lraWlzYSIsImEiOiJjbWE2N2kyaWowajVhMmpzZnhjbTFzdGJsIn0.7CJ3vKEqNj3XxC6MstaehA'
     }).addTo(map);
+
+    const shp_geojson = "/static/geojson/shp.geojson";
+    const fethGeojsonShp = async () => {
+      const response = await fetch(shp_geojson);
+      const data = await response.json();
+      L.geoJSON(data, {
+        style: {
+          color: "#0000FF",
+          weight: 1,
+          fill: false,
+          opacity: 1,
+          dashArray: "5, 5",
+
+        },
+      }).addTo(map);
+    };
+    fethGeojsonShp();
+
 
     // Efek animasi zoom ke level 15 saat map selesai dimuat
     map.whenReady(() => {
@@ -805,7 +787,7 @@
           circleColor = "";
         if (values.claster === "Sangat Rawan") {
           iconUrl = "https://cdn-icons-png.flaticon.com/128/564/564619.png";
-          circleColor = "#FF894F";
+          circleColor = "#DC3545";
         } else if (values.claster === "Rawan") {
           iconUrl = "https://cdn-icons-png.flaticon.com/128/1008/1008928.png";
           circleColor = "#ffc107";

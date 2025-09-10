@@ -417,7 +417,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#home">Beranda</a>
+            <a class="nav-link" href="/">Beranda</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('hasil_cluster')}}">Hasil Clustering</a>
@@ -433,107 +433,28 @@
       </div>
     </div>
   </nav>
-  <!-- Hero Section -->
-  <section id="home" class="hero-section mt-8">
+  <!-- Map Section -->
+  <section class="map-section mb-4" style="margin-top: 100px;">
     <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-6" style="margin-top: 50px">
-          <div class="hero-content">
-            <h1 class="hero-title">
-              Pemetaan Zona Banjir <span style="color: #fbbf24">K-Means</span>
-            </h1>
-            <p class="hero-subtitle">
-              Sistem informasi geografis untuk memantau, memprediksi, dan
-              memetakan zona rawan banjir di Kabupaten Bolaang Mongondow Utara
-              dengan teknologi terdepan.
-            </p>
-            <a href="{{url_for('hasil_cluster')}}" class="btn-hero">
-              <i class="fas fa-map me-2"></i>Lihat Hasil Cluster
-            </a>
-            <a href="{{url_for('peta_bencana')}}" class="btn-hero">
-              <i class="fas fa-chart-bar me-2"></i>Lihat Peta Bencana
-            </a>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="hero-image">
-            <div class="floating-card">
-              <div class="d-flex justify-content-between text-center text-white px-3 py-3 gap-3">
-                <!-- Zona Rawan Banjir -->
-                <div class="flex-fill">
-                  <i class="fas fa-exclamation-triangle text-warning mb-2" style="font-size: 2rem;"></i>
-                  <h4 class="rawan-banjir">0</h4>
-                  <small class="text-white-50">Zona Rawan Banjir</small>
-                </div>
-        
-                <!-- Monitoring -->
-                <div class="flex-fill border-start border-end px-3">
-                  <i class="fas fa-eye text-info mb-2" style="font-size: 2rem;"></i>
-                  <h4 class="terpantau-1">0</h4>
-                  <small class="text-white-50">Monitoring</small>
-                </div>
-        
-                <!-- Pengunjung -->
-                <div class="flex-fill">
-                  <i class="fas fa-users text-success mb-2" style="font-size: 2rem;"></i>
-                  <h4>0</h4>
-                  <small class="text-white-50">Pengunjung</small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Statistics Section -->
-  <section id="statistics" class="stats-section">
-    <div class="container">
-      <div class="row text-center mb-5">
-        <div class="col-12">
-          <h2 class="section-title">Statistik Daerah</h2>
-          <p class="section-subtitle">
-            Data terkini mengenai kondisi banjir di Indonesia berdasarkan
-            monitoring real-time sistem kami
-          </p>
-        </div>
-      </div>
       <div class="row justify-content-center">
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="stat-card">
-            <i class="fas fa-map-marked-alt stat-icon"></i>
-            <div class="stat-number terpantau" data-target="34"></div>
-            <div class="stat-label">Desa Terpantau</div>
-          </div>
+        <div class="col-md-6">
+          <label for="kecamatan" class="form-label fw-bold">
+            <i class="fas fa-globe me-1"></i>Filter Berdasarkan Kecamatan
+          </label>
+          <select class="form-select" id="kecamatan" required>
+            <option value="">Pilih Kecamatan</option>
+            <option value="all">Semua Wilayah</option>
+          </select>
+        
         </div>
-        <div class="dashed-divider-vertical-dark d-none d-lg-block" style="position: absolute; left: 33.33%; top: 0; bottom: 0;"></div>
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="stat-card">
-            <i class="fas fa-exclamation-triangle stat-icon"></i>
-            <div class="stat-number rawan-banjir-1"></div>
-            <div class="stat-label">Zona Rawan</div>
-          </div>
-        </div>
-        <div class="dashed-divider-vertical-dark d-none d-lg-block" style="position: absolute; left: 66.66%; top: 0; bottom: 0;"></div>
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="stat-card">
-            <i class="fas fa-satellite-dish stat-icon"></i>
-            <div class="stat-number sangat-rawan" data-target="456">0</div>
-            <div class="stat-label">Zona Sangat Rawan</div>
-          </div>
+      </div>
+      <div class="card border-0" >
+        <div class="card-body">
+          <div id="map"></div>
         </div>
       </div>
     </div>
   </section>
-  
-  <!-- Dashed divider between sections -->
-  <div class="dashed-divider"></div>
- 
-
-  <!-- Dashed divider between sections -->
-  <div class="dashed-divider"></div>
-
   <!-- Footer -->
   <footer id="contact" class="footer">
     <div class="container">
@@ -584,14 +505,114 @@
   <!-- <script src="{{url_for('static',filename='/vendor/leaflet/leaflet.js')}}"></script> -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
-    
+    const map = L.map("map", {
+  center: [0.7609332, 123.2606188],
+  zoom: 12,
+  scrollWheelZoom: false, // disable zoom pakai scroll wheel / touchpad
+  touchZoom: false        // disable zoom pakai pinch gesture
+});
 
-        
+L.tileLayer(
+  "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+  {
+    attribution: "Maps",
+    id: "mapbox/outdoors-v11",
+    accessToken:
+      "pk.eyJ1Ijoia2lraWlzYSIsImEiOiJjbWE2N2kyaWowajVhMmpzZnhjbTFzdGJsIn0.7CJ3vKEqNj3XxC6MstaehA"
+  }
+).addTo(map);
+
+    const shp_geojson = "/static/geojson/shp.geojson";
+    const fethGeojsonShp = async () => {
+      const response = await fetch(shp_geojson);
+      const data = await response.json();
+      L.geoJSON(data, {
+        style: {
+          color: "#0000FF",
+          weight: 1,
+          fill: false,
+          opacity: 1,
+          dashArray: "5, 5",
+
+        },
+      }).addTo(map);
+    };
+    fethGeojsonShp();
 
 
     // Efek animasi zoom ke level 15 saat map selesai dimuat
-    
+    map.whenReady(() => {
+      map.flyTo([0.7609332, 123.2606188], 12, {
+        animate: true,
+        duration: 2 // durasi animasi dalam detik
+      });
+    });
+
+    const selectRegency = document.querySelector("#kecamatan");
+    let previousLayers = []; // Menyimpan layer-layer sebelumnya
+
+    // Fungsi hapus semua layer sebelumnya
+    const clearMapLayers = () => {
+      previousLayers.forEach((layer) => {
+        map.removeLayer(layer);
+      });
+      previousLayers = [];
+    };
+
+    // Fetch dropdown kecamatan
+    const fetchSelectDown = async () => {
+      fetch(
+        "https://www.emsifa.com/api-wilayah-indonesia/api/districts/7107.json"
+      )
+        .then((response) => response.json())
+        .then((districts) => {
+          districts.forEach((district) => {
+            const option = document.createElement("option");
+            option.value = district.id;
+            option.textContent = district.name;
+            selectRegency.appendChild(option);
+          });
+        })
+        .catch((error) => {
+          console.error("Gagal mengambil data kecamatan:", error);
+        });
+    };
+    fetchSelectDown();
+
     // Event saat dropdown berubah
+    selectRegency.addEventListener("change", async function () {
+      const selectedValue = this.value;
+      clearMapLayers(); // Hapus semua layer sebelumnya
+
+      if (selectedValue == "all") {
+        await fetchMap("all")
+      } else {
+        const geojsnondistrick = `/static/geojson/${selectedValue}.geojson`;
+        try {
+          const response = await fetch(geojsnondistrick);
+          if (!response.ok)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+
+          const geojsonData = await response.json();
+
+          const borderLayer = L.geoJSON(geojsonData, {
+            style: {
+              color: "#9929EA",
+              weight: 1,
+              fill: false,              
+              opacity: 1,
+              dashArray: "5, 5",
+
+            },
+          }).addTo(map);
+          previousLayers.push(borderLayer); // Simpan layer
+
+          await fetchMap(selectedValue); // Render peta berdasarkan clustering
+        } catch (error) {
+          console.error("Error loading GeoJSON:", error);
+        }
+      }
+    });
 
     // Statistik
     const statNumber = document.querySelector(".terpantau");
@@ -635,6 +656,272 @@
       statNumberRawanBanjir1.textContent = clusterCounts.rawan;
     };
     fetchDataAndCount();
+
+    // Fungsi render peta berdasarkan clustering
+    const fetchMap = async (id_kecamatan) => {
+      const response = await fetch(`/api/results`);
+      const data = await response.json();
+      let hasil;
+      if (id_kecamatan != "all") {
+        hasil = data.filter((item) => item.kecamatan == id_kecamatan);
+      } else {
+        hasil = data
+      }
+      // Tambahkan tileLayer satu kali jika belum ada
+      if (!map._tileLayerAdded) {
+        L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+          attribution: 'Maps',
+          id: 'mapbox/outdoors-v11',
+
+          accessToken: 'pk.eyJ1Ijoia2lraWlzYSIsImEiOiJjbWE2N2kyaWowajVhMmpzZnhjbTFzdGJsIn0.7CJ3vKEqNj3XxC6MstaehA'
+        }).addTo(map);
+        map._tileLayerAdded = true;
+      }
+      hasil.map(async (values) => {
+        const geojsonUrl = `/static/upload/${values.geojson}`;
+        let iconUrl = "",
+          circleColor = "";
+        if (values.claster === "Sangat Rawan") {
+          iconUrl = "https://cdn-icons-png.flaticon.com/128/564/564619.png";
+          circleColor = "#DC3545";
+        } else if (values.claster === "Rawan") {
+          iconUrl = "https://cdn-icons-png.flaticon.com/128/1008/1008928.png";
+          circleColor = "#ffc107";
+        } else if (values.claster === "Tidak Rawan") {
+          iconUrl = "https://cdn-icons-png.flaticon.com/128/1161/1161388.png";
+          circleColor = "#347433";
+        } else {
+          iconUrl = "/static/image/default.png";
+          circleColor = "#999";
+        }
+
+        const geojsonResponse = await fetch(geojsonUrl);
+        const geojsonData = await geojsonResponse.json();
+        const clusterLayer = L.geoJSON(geojsonData, {
+          style: {
+            color: circleColor,
+            weight: 1,
+            opacity: 100,
+          },
+
+          onEachFeature: (feature, layer) => {
+            layer.on("click", function () {
+              const props = feature.properties;
+              const content = `
+  <div style="">
+    <!-- Header Section -->
+    <div style="
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    ">
+      <div style="
+       
+      ">
+        <img src="${iconUrl}" alt="Location Icon" style="
+          width: 50px;
+          height: 50px;
+        
+        ">
+      </div>
+      <h1 style="
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        letter-spacing: 0.5px;
+      ">${values.claster}</h1>
+    </div>
+
+    <!-- Info Section -->
+    <div style="
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    ">
+      <div style="margin-bottom: 16px;">
+        <div style="
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 6px;
+        ">
+          <span style="
+            font-size: 16px;
+            opacity: 0.8;
+          ">📍</span>
+          <strong style="
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+          ">Nama Lokasi</strong>
+        </div>
+        <p style="
+          margin: 0;
+          font-size: 16px;
+          font-weight: 500;
+          padding-left: 24px;
+        ">${props.nama || "Tidak diketahui"}</p>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div style="
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 6px;
+        ">
+          <span style="
+            font-size: 16px;
+            opacity: 0.8;
+          ">🏘️</span>
+          <strong style="
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+          ">Kecamatan</strong>
+        </div>
+        <p style="
+          margin: 0;
+          font-size: 16px;
+          font-weight: 500;
+          padding-left: 24px;
+        ">${props.kecamatan || "-"}</p>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div style="
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 6px;
+        ">
+          <span style="
+            font-size: 16px;
+            opacity: 0.8;
+          ">🌊</span>
+          <strong style="
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+          ">Riwayat Banjir</strong>
+        </div>
+        <p style="
+          margin: 0;
+          font-size: 16px;
+          font-weight: 500;
+          padding-left: 24px;
+        ">${values.banjir_histori || "-"}</p>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div style="
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 6px;
+        ">
+          <span style="
+            font-size: 16px;
+            opacity: 0.8;
+          ">🌧️</span>
+          <strong style="
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+          ">Curah Hujan</strong>
+        </div>
+        <p style="
+          margin: 0;
+          font-size: 16px;
+          font-weight: 500;
+          padding-left: 24px;
+        ">${values.curah_hujan || "-"}</p>
+      </div>
+
+      <div>
+        <div style="
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 6px;
+        ">
+          <span style="
+            font-size: 16px;
+            opacity: 0.8;
+          ">⛰️</span>
+          <strong style="
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+          ">Kemiringan</strong>
+        </div>
+        <p style="
+          margin: 0;
+          font-size: 16px;
+          font-weight: 500;
+          padding-left: 24px;
+        ">${values.kemiringan || "-"}</p>
+      </div>
+    </div>
+  </div>`
+              // Siapkan konten yang mau ditampilkan
+
+              // Masukkan ke modal
+              document.getElementById("modalContent").innerHTML = content;
+
+              // Tampilkan modal (pakai Bootstrap 5)
+              const modal = new bootstrap.Modal(
+                document.getElementById("infoModal")
+              );
+              modal.show();
+            });
+
+            const nama = feature.properties.nama || "Tanpa Nama";
+            layer.bindTooltip(nama);
+          },
+        }).addTo(map);
+
+        previousLayers.push(clusterLayer); // Simpan layer untuk nanti dihapus
+      });
+
+      // Legenda tetap ditambahkan satu kali
+      if (!map._legendAdded) {
+        const legend = L.control({ position: "bottomright" });
+
+        legend.onAdd = function (map) {
+          const div = L.DomUtil.create("div", "info legend");
+          const grades = ["Sangat Rawan", "Rawan", "Tidak Rawan"];
+          const colors = ["#FF894F", "#ffc107", "#7ADAA5"];
+          const labels = [];
+
+          for (let i = 0; i < grades.length; i++) {
+            labels.push(
+              `<i style="background:${colors[i]}; width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.8;"></i> ${grades[i]}<br>`
+            );
+          }
+
+          div.innerHTML = labels.join("");
+          return div;
+        };
+
+        legend.addTo(map);
+        map._legendAdded = true;
+      }
+    };
   </script>
 </body>
 
