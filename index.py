@@ -46,7 +46,6 @@ def login_post():
     password = request.form.get("password")
 
     user = initDb.getUserByUsername(username)
-
     if user:    
         if user['status'] != 'active':
             flash("Akun anda di Nonaktifkan")
