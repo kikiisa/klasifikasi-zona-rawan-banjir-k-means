@@ -9,6 +9,7 @@ from werkzeug.security import check_password_hash
 import database.ConnectionDb
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
+
 import csv
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
