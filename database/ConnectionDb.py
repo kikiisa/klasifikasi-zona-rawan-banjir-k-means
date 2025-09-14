@@ -9,8 +9,8 @@ class ConnectionDb:  # Fixed typo: Claster -> Cluster
     def __init__(self):
         self.config = {
             "host": "localhost",
-            "user": "root",
-            "password": "",  # Empty password
+            "user": "admin",
+            "password": "kikiisaipk4",  # Empty password
             "database": "development_banjir",
             "port": 3306,   
             "charset": "utf8mb4",

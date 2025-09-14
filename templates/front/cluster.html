@@ -419,9 +419,6 @@
           <li class="nav-item">
             <a class="nav-link" href="/">Beranda</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{url_for('hasil_cluster')}}">Hasil Clustering</a>
-          </li>
           
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('peta_bencana')}}">Peta Bencana</a>
@@ -508,8 +505,7 @@
     const map = L.map("map", {
   center: [0.7609332, 123.2606188],
   zoom: 12,
-  scrollWheelZoom: false, // disable zoom pakai scroll wheel / touchpad
-  touchZoom: false        // disable zoom pakai pinch gesture
+  
 });
 
 L.tileLayer(

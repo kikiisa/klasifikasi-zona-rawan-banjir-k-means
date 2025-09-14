@@ -18,6 +18,10 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{url_for('static',filename='vendor/leaflet/leaflet.css')}}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='vendor/datatable.min.css')}}"
+    />
   <style>
     :root {
       --primary-color: #6610f2;
@@ -420,11 +424,7 @@
             <a class="nav-link" href="#home">Beranda</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{url_for('hasil_cluster')}}">Hasil Clustering</a>
-          </li>
-          
-          <li class="nav-item">
-            <a class="nav-link" href="{{url_for('peta_bencana')}}">Peta Bencana</a>
+            <a class="nav-link" href="/static/qgis/index.html">Peta Bencana</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/login">Login</a>
@@ -447,9 +447,7 @@
               memetakan zona rawan banjir di Kabupaten Bolaang Mongondow Utara
               dengan teknologi terdepan.
             </p>
-            <a href="{{url_for('hasil_cluster')}}" class="btn-hero">
-              <i class="fas fa-map me-2"></i>Lihat Hasil Cluster
-            </a>
+            
             <a href="{{url_for('peta_bencana')}}" class="btn-hero">
               <i class="fas fa-chart-bar me-2"></i>Lihat Peta Bencana
             </a>
@@ -526,7 +524,31 @@
       </div>
     </div>
   </section>
-  
+ <section class="tabel my-4 p-4">
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Hasil Proses Cluster</h5>
+    </div>
+    <div class="card-body">
+      <div class="process mt-3">
+        {% if final %}
+          <!-- Tabel atau konten hasil -->
+          <div class="table-responsive">
+            {{ final|safe }}
+          </div>
+        {% else %}
+          <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <div>
+              Tidak ada hasil ditemukan. Pastikan data input sudah valid.
+            </div>
+          </div>
+        {% endif %}
+        <a href="{{url_for('hasil_cluster')}}">Lihat dalam bentuk PETA</a>
+      </div>
+    </div>
+  </div>
+</section>
   <!-- Dashed divider between sections -->
   <div class="dashed-divider"></div>
  
@@ -583,7 +605,28 @@
   <!-- Leaflet JS -->
   <!-- <script src="{{url_for('static',filename='/vendor/leaflet/leaflet.js')}}"></script> -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="{{url_for('static',filename='template/modules/jquery.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/datatables.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/jquery-ui/jquery-ui.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/prism/prism.js')}}"></script>
+<script src="{{url_for('static',filename='template/js/stisla.js')}}"></script>
+<!-- Page Specific JS File -->
+<!-- JS Libraies -->
+<script src="{{url_for('static',filename='template/modules/sweetalert/sweetalert.min.js')}}"></script>
+
+<!-- Page Specific JS File -->
+<script src="{{url_for('static',filename='template/js/page/modules-sweetalert.js')}}"></script>
+<!-- <script src="{{url_for('static',filename='template/js/page/modules-datatables.js')}}"></script> -->
+<script>
+  $(".dataframe ").dataTable({
+    columnDefs: [{ sortable: false, targets: [2, 3] }],
+  });
+
+</script>
   <script>
+    
     
 
         

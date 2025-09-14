@@ -1,0 +1,133 @@
+{% extends 'app.html' %} {% block title %}Beranda{% endblock %} {% block content
+%}
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/datatables/datatables.min.css')}}"
+/>
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css')}}"
+/>
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='template/modules/prism/prism.css')}}"
+/>
+<style>
+  .nav-button {
+    margin: 2px;
+  }
+</style>
+<section class="section">
+  <div class="section-header">
+    <h1>Cluster Data</h1>
+    <div class="section-header-breadcrumb">
+      <div class="breadcrumb-item active">
+        <a href="/dashboard">Dashboard</a>
+      </div>
+      <div class="breadcrumb-item">Cluster Data</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <h2 class="section-title">Cluster Data</h2>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            {% with messages = get_flashed_messages(with_categories=true) %} {%
+            if messages %}
+            <div class="alert alert-{{ messages[0][0] }}">
+              {% for category, message in messages %}
+              <div>{{ message }}</div>
+              {% endfor %}
+            </div>
+            {% endif %} {% endwith %}
+            <div class="d-flex">
+              <form action="{{url_for('sinkronasi')}}" method="post">
+                <button type="submit" class="btn btn-success mb-3">
+                  <i class="fas fa-sync"></i>
+                  <span class="ms-2">Sinkronasi Data</span>
+                </button>
+              </form>
+            </div>
+            <form action="{{url_for('prosess')}}" method="post">
+              <button class="btn btn-primary mb-3">
+                <i class="fas fa-database"></i> Prosessing Cluster
+              </button>
+            </form>
+            <a onclick="resetData()" href="javascript:void(0)" class="btn btn-danger mb-3"><i class="fas fa-sync"></i> Reset Data</a>
+            {% if resultSinkronasi %} {{ resultSinkronasi|safe }} {% else %}
+            <div class="alert alert-warning" role="alert">
+              No results found. Please ensure the input data is valid.
+            </div>
+            {% endif %}
+            <div class="process mt-3">
+              {% if resultStepProsessing %} {{ resultStepProsessing|safe }} {% else %}
+             <div class="alert alert-warning" role="alert">
+               No results found. Please ensure the input data is valid.
+             </div>
+             {% endif %}
+            <div class="process mt-3">
+              {% if resultFinalData %} {{ resultFinalData|safe }} {% else %}
+             <div class="alert alert-warning" role="alert">
+               No results found. Please ensure the input data is valid.
+             </div>
+             {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal add -->
+  <div class="modal-dialog m-0 add-form" role="document">
+    <div></div>
+  </div>
+  <!-- end modal -->
+</section>
+<!-- JS Libraies -->
+<script src="{{url_for('static',filename='template/modules/jquery.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/datatables.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/jquery-ui/jquery-ui.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/prism/prism.js')}}"></script>
+<script src="{{url_for('static',filename='template/js/stisla.js')}}"></script>
+<!-- Page Specific JS File -->
+<!-- JS Libraies -->
+<script src="{{url_for('static',filename='template/modules/sweetalert/sweetalert.min.js')}}"></script>
+
+<!-- Page Specific JS File -->
+<script src="{{url_for('static',filename='template/js/page/modules-sweetalert.js')}}"></script>
+<!-- <script src="{{url_for('static',filename='template/js/page/modules-datatables.js')}}"></script> -->
+<script>
+  $(".dataframe ").dataTable({
+    columnDefs: [{ sortable: false, targets: [2, 3] }],
+  });
+
+</script>
+<script src="{{url_for('static',filename='template/modules/datatables/datatables.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static',filename='template/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
+<script>
+  $("#table-1").dataTable({
+    columnDefs: [{ sortable: false, targets: [2, 3] }],
+  });
+
+  const resetData = async () =>
+  {
+    swal({
+      title: "Apakah anda yakin ingin Reset data ini?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+      
+    }).then((willDelete) => {
+      if (willDelete) {
+        window.location.href = `/reset-data`
+      }
+      
+    })
+  }
+</script>
+{% endblock %}

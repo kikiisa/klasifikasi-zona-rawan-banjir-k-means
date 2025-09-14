@@ -10,6 +10,7 @@ import database.ConnectionDb
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
 import csv
+import numpy as np
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
 initDb = database.ConnectionDb.run
@@ -26,7 +27,13 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     data = initDb.fetchContact()
-    return render_template('front/index.html', data=data)
+    result_path_final = os.path.join('storage', 'result.csv')
+    status_final_result = os.path.isfile(result_path_final)
+    if status_final_result:
+        resultFinal = pd.read_csv(result_path_final).drop(columns=['id','geojson'])
+        converHTMLresultFinal = resultFinal.to_html(classes='table table-bordered', index=True)
+
+    return render_template('front/index.html', data=data,final=converHTMLresultFinal)
 
 @app.route("/login",methods=['GET'])
 def login():    
@@ -357,6 +364,7 @@ def management_cluster():
     result_path = os.path.join('storage', 'sinkronasi.csv')
     result_path_processing = os.path.join('storage', 'prosessing.csv')
     result_path_final = os.path.join('storage', 'result.csv')
+
     
     
     # Inisialisasi nilai default
@@ -441,46 +449,82 @@ def filterbyidKecamatan(id):
     return jsonify(data)
 
     
-@app.route('/prosess',methods=['POST'])
+@app.route('/prosess', methods=['POST'])
 def prosess():
     if request.method == 'POST':
-        file_path = os.path.join(dataset_dir,'sinkronasi.csv')
-        if(not os.path.isfile(file_path)):
-            flash('File CSV Tidak Ditemukan, Silahkan Sinkronasi Kembali',"danger")
+        file_path = os.path.join(dataset_dir, 'sinkronasi.csv')
+        if not os.path.isfile(file_path):
+            flash('File CSV Tidak Ditemukan, Silahkan Sinkronasi Kembali', "danger")
             return redirect(url_for('management_cluster'))
-        
-        # === 3. Preprocessing ===
-        data= pd.read_csv(file_path)
-        fitur = ['curah_hujan',
-         'kemiringan','banjir_histori']
-        
-        # === 3. Preprocessing ===
+
+        # === 1. Load & preprocessing ===
+        data = pd.read_csv(file_path)
+        fitur = ['curah_hujan', 'kemiringan', 'banjir_histori']
+
         scaler = MinMaxScaler()
         data_scaled = scaler.fit_transform(data[fitur])
-        # Konversi ke DataFrame
         data_scaled_df = pd.DataFrame(data_scaled, columns=fitur)
-        data_scaled_df.to_csv("storage/prosessing.csv")
-        print(data_scaled_df)
-        # === 4. Jalankan K-Means ===
+        data_scaled_df.to_csv("storage/prosessing.csv", index=False)
+
+        # === 2. Jalankan KMeans manual untuk log iterasi ===
         k = 3
+        np.random.seed(42)
+        centroids = data_scaled_df.sample(n=k).to_numpy()
+
+        log_iterasi = []
+        max_iter = 10
+        for i in range(max_iter):
+            # Hitung jarak Euclidean: √Σ(x_i - c_i)²
+            distances = np.sqrt(((data_scaled_df.to_numpy()[:, None] - centroids[None, :]) ** 2).sum(axis=2))
+            assign = np.argmin(distances, axis=1)
+
+            # Simpan log HTML
+            jarak_df = pd.DataFrame(distances, columns=[f'C{j}' for j in range(k)])
+            assign_df = pd.DataFrame({'Data': range(len(assign)), 'Cluster': assign})
+            centroid_df = pd.DataFrame(centroids, columns=fitur)
+
+            log_iterasi.append({
+                'iterasi': i + 1,
+                'rumus': 'Jarak Euclidean: √Σ(x_i - c_i)²',
+                'jarak_html': jarak_df.to_html(classes='table table-bordered'),
+                'assign_html': assign_df.to_html(classes='table table-bordered'),
+                'centroid_html': centroid_df.to_html(classes='table table-bordered')
+            })
+
+            # Update centroid baru (rata-rata titik pada cluster yang sama)
+            new_centroids = np.array([data_scaled_df.to_numpy()[assign == j].mean(axis=0) if np.any(assign == j) else centroids[j]
+                                      for j in range(k)])
+            if np.allclose(centroids, new_centroids):
+                break
+            centroids = new_centroids
+
+        # === 3. Jalankan KMeans sklearn untuk hasil final ===
         kmeans = KMeans(n_clusters=k, random_state=42)
         data['claster'] = kmeans.fit_predict(data_scaled)
 
-        # === 5. Pemetaan label klaster ke zonasi ===
         mapping = {0: 'Tidak Rawan', 1: 'Rawan', 2: 'Sangat Rawan'}
-
-        # Urutkan berdasarkan elevasi rata-rata per klaster (agar labelnya masuk akal)
         centers = pd.DataFrame(kmeans.cluster_centers_, columns=fitur)
         order = centers['curah_hujan'].argsort().values
         label_map = {old: mapping[new] for new, old in enumerate(order)}
         data['claster'] = data['claster'].map(label_map)
-        
-        # === 6. Simpan hasilnya ke CSV ===
-        data.to_csv("storage/result.csv", index=False)
-        flash('Proses Berhasil','success')
-        return redirect(url_for('management_cluster'))
-    
 
+        data.to_csv("storage/result.csv", index=False)
+
+        flash('Proses Berhasil', 'success')
+
+        result_path_final = os.path.join('storage', 'result.csv')
+        status_final_result = os.path.isfile(result_path_final)
+        if status_final_result:
+            resultFinal = pd.read_csv(result_path_final).drop(columns=['id','geojson'])
+            converHTMLresultFinal = resultFinal.to_html(classes='table table-bordered', index=False)
+        
+        return render_template('klaster/hasil.html',
+            scaled=data_scaled_df.to_html(classes='table table-bordered'),
+            centers=centers.to_html(classes='table table-bordered'),
+            hasil=data.to_html(classes='table table-bordered'),
+            log_iterasi=log_iterasi,
+            final=converHTMLresultFinal
+        )
 @app.route('/contact', methods=['GET'])
 def contact():
     data = initDb.fetchContact()
