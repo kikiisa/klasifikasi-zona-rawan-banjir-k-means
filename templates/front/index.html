@@ -18,395 +18,15 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{url_for('static',filename='vendor/leaflet/leaflet.css')}}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link
+  <!-- <link
       rel="stylesheet"
       href="{{url_for('static',filename='vendor/datatable.min.css')}}"
-    />
+    /> -->
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/table.css')}}">
+    
   <style>
-    :root {
-      --primary-color: #6610f2;
-      --secondary-color: #7c3aed;
-      --accent-color: #a855f7;
-      --light-purple: #f3f4f6;
-      --dark-text: #1f2937;
-      --light-text: #6b7280;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: "Outfit", sans-serif;
-      line-height: 1.6;
-      color: var(--dark-text);
-      overflow-x: hidden;
-    }
-
-    /* Navbar Styles */
-    .navbar {
-      background: rgba(102, 16, 242, 0.95) !important;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 4px 30px rgba(102, 16, 242, 0.1);
-      transition: all 0.3s ease;
-    }
-
-    .navbar-brand {
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: white !important;
-    }
-
-    .navbar-nav .nav-link {
-      color: rgba(255, 255, 255, 0.9) !important;
-      font-weight: 500;
-      margin: 0 10px;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    .navbar-nav .nav-link:hover {
-      color: white !important;
-      transform: translateY(-2px);
-    }
-
-    .navbar-nav .nav-link::after {
-      content: "";
-      position: absolute;
-      bottom: -5px;
-      left: 50%;
-      width: 0;
-      height: 2px;
-      background: white;
-      transition: all 0.3s ease;
-      transform: translateX(-50%);
-    }
-
-    .navbar-nav .nav-link:hover::after {
-      width: 80%;
-    }
-
-    /* Hero Section */
-    .hero-section {
-      background: linear-gradient(
-        135deg,
-        var(--primary-color) 0%,
-        var(--secondary-color) 50%,
-        var(--accent-color) 100%
-      );
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-section::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="100" fill="url(%23a)"/><circle cx="800" cy="300" r="150" fill="url(%23a)"/><circle cx="400" cy="700" r="120" fill="url(%23a)"/></svg>');
-      animation: float 20s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%,
-      100% {
-        transform: translateY(0px) rotate(0deg);
-      }
-      50% {
-        transform: translateY(-20px) rotate(180deg);
-      }
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    .hero-title {
-      font-size: 4rem;
-      font-weight: 800;
-      color: white;
-      margin-bottom: 1.5rem;
-      line-height: 1.2;
-    }
-
-    .hero-subtitle {
-      font-size: 1.4rem;
-      color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 2.5rem;
-      font-weight: 400;
-    }
-
-    .btn-hero {
-      background: rgba(255, 255, 255, 0.2);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      color: white;
-      padding: 15px 35px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border-radius: 50px;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-      margin-right: 15px;
-      margin-bottom: 15px;
-      display: inline-block;
-    }
-
-    .btn-hero:hover {
-      background: white;
-      color: var(--primary-color);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .hero-image {
-      position: relative;
-      z-index: 2;
-    }
-
-    .floating-card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
-      padding: 20px;
-      margin: 20px 0;
-      animation: floatCard 6s ease-in-out infinite;
-    }
-
-    @keyframes floatCard {
-      0%,
-      100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
-    }
-
-    /* Statistics Section */
-    .stats-section {
-      padding: 100px 0;
-      background: linear-gradient(45deg, #f8fafc 0%, #f1f5f9 100%);
-      position: relative;
-    }
-
-    .stat-card {
-      background: white;
-      border-radius: 20px;
-      padding: 40px 30px;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(102, 16, 242, 0.1);
-      transition: all 0.3s ease;
-      border: 1px solid rgba(102, 16, 242, 0.05);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .stat-card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(
-        90deg,
-        var(--primary-color),
-        var(--accent-color)
-      );
-    }
-
-    .stat-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 30px 80px rgba(102, 16, 242, 0.15);
-    }
-
-    .stat-icon {
-      font-size: 3rem;
-      color: var(--primary-color);
-      margin-bottom: 20px;
-    }
-
-    .stat-number {
-      font-size: 3rem;
-      font-weight: 800;
-      color: var(--primary-color);
-      margin-bottom: 10px;
-    }
-
-    .stat-label {
-      font-size: 1.1rem;
-      color: var(--light-text);
-      font-weight: 500;
-    }
-
-    /* Map Section */
-
-    .section-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--dark-text);
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .section-subtitle {
-      font-size: 1.2rem;
-      color: var(--light-text);
-      text-align: center;
-      margin-bottom: 60px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    #map {
-      height: 600px;
-      border-radius: 20px;
-    }
-
-    /* Features Section */
-    .features-section {
-      padding: 100px 0;
-      background: linear-gradient(135deg, #6610f2 0%, #7c3aed 100%);
-    }
-
-    .feature-card {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
-      padding: 40px;
-      text-align: center;
-      backdrop-filter: blur(20px);
-      transition: all 0.3s ease;
-      height: 100%;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    .feature-icon {
-      font-size: 3rem;
-      color: white;
-      margin-bottom: 25px;
-    }
-
-    .feature-title {
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: white;
-      margin-bottom: 15px;
-    }
-
-    .feature-text {
-      color: rgba(255, 255, 255, 0.9);
-      line-height: 1.7;
-    }
-
-    /* Footer */
-    .footer {
-      background: #1a1a2e;
-      color: white;
-      padding: 50px 0 30px;
-    }
-    .modal-body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 16px;
-    padding: 24px;
-    color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    max-width: 400px;
-    margin: 0 auto;
-    }
-    .footer-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-      color: white;
-    }
-
-    .footer-link {
-      color: rgba(255, 255, 255, 0.7);
-      text-decoration: none;
-      transition: all 0.3s ease;
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .footer-link:hover {
-      color: var(--accent-color);
-      transform: translateX(5px);
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .hero-title {
-        font-size: 2.5rem;
-      }
-
-      .hero-subtitle {
-        font-size: 1.1rem;
-      }
-
-      .stat-card {
-        margin-bottom: 30px;
-      }
-    }
-
-    /* Loading Animation */
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 1s ease-in-out infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-    .whatsapp-float {
-    position: fixed;
-    width: 60px;
-    height: 60px;
-    bottom: 20px;
-    right: 20px;
-    background-color: #25d366;
-    color: #fff;
-    border-radius: 50%;
-    text-align: center;
-    font-size: 28px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-  }
-
-  .whatsapp-float:hover {
-    background-color: #20b358;
-    transform: scale(1.1);
-  }
-
-  .whatsapp-float i {
-    line-height: 1;
-  }
+   
   </style>
 </head>
 
@@ -525,29 +145,65 @@
     </div>
   </section>
  <section class="tabel my-4 p-4">
-  <div class="card shadow-sm border-0">
-    <div class="card-header bg-primary text-white">
-      <h5 class="mb-0">Hasil Proses Cluster</h5>
-    </div>
-    <div class="card-body">
-      <div class="process mt-3">
-        {% if final %}
-          <!-- Tabel atau konten hasil -->
-          <div class="table-responsive">
-            {{ final|safe }}
-          </div>
-        {% else %}
-          <div class="alert alert-warning d-flex align-items-center" role="alert">
-            <i class="fas fa-exclamation-triangle me-2"></i>
-            <div>
-              Tidak ada hasil ditemukan. Pastikan data input sudah valid.
+   <div class="process">
+    {% if final %}
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <svg class="lucide lucide-droplets" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/>
+                        <path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2.04 4.6 4.14 5.58a11.12 11.12 0 0 1 2.17 1.06c.96.67 1.69 1.47 1.69 2.84 0 2.22-1.8 4.05-4 4.05-2.08 0-3.8-1.58-3.97-3.6"/>
+                    </svg>
+                    Analisis Risiko Banjir
+                </h2>
+                <p class="card-description">
+                    Data hasil analisis clustering untuk menentukan tingkat risiko banjir berdasarkan curah hujan, kemiringan, dan histori banjir
+                </p>
+                
             </div>
-          </div>
-        {% endif %}
-        <a href="{{url_for('hasil_cluster')}}">Lihat dalam bentuk PETA</a>
-      </div>
-    </div>
-  </div>
+            
+            <div class="card-content">
+                <div class="table-wrapper">
+                    {{ final|safe }}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <svg class="lucide lucide-droplets" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/>
+                        <path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2.04 4.6 4.14 5.58a11.12 11.12 0 0 1 2.17 1.06c.96.67 1.69 1.47 1.69 2.84 0 2.22-1.8 4.05-4 4.05-2.08 0-3.8-1.58-3.97-3.6"/>
+                    </svg>
+                    Analisis Risiko Banjir
+                </h2>
+                <p class="card-description">
+                    Data hasil analisis clustering untuk menentukan tingkat risiko banjir
+                </p>
+            </div>
+            
+            <div class="empty-state">
+                <svg class="empty-state-icon lucide lucide-file-x" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+                    <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+                    <path d="m9 15 6-6"/>
+                    <path d="m15 15-6-6"/>
+                </svg>
+                <h3>Tidak ada hasil ditemukan</h3>
+                <p>Pastikan data input sudah valid dan coba lagi. Periksa kembali parameter clustering yang digunakan.</p>
+            </div>
+        </div>
+    {% endif %}
+    
+    <a href="{{url_for('hasil_cluster')}}" class="btn btn-primary">
+        <svg class="lucide lucide-map-pin" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+            <circle cx="12" cy="10" r="3"/>
+        </svg>
+        Lihat dalam bentuk PETA
+    </a>
+</div>
 </section>
   <!-- Dashed divider between sections -->
   <div class="dashed-divider"></div>
