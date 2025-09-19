@@ -18,40 +18,12 @@
             padding: 0;
             margin: 0;
         }
-        /* Style untuk Kontrol Filter */
-        #filter-control {
-            position: absolute;
-            top: 70px; /* Posisi di bawah kontrol zoom */
-            left: 10px;
-            z-index: 1000;
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-family: sans-serif;
-        }
-        #filter-control h4 {
-            margin-top: 0;
-            margin-bottom: 5px;
-        }
-        #filter-control label {
-            display: block;
-            margin-bottom: 3px;
-        }
         </style>
-        <title>Peta Bahaya Banjir</title>
+        <title></title>
     </head>
     <body>
         <div id="map">
         </div>
-        <div id="filter-control">
-            <h4>Filter Bahaya Banjir</h4>
-            <label><input type="radio" name="filter" value="Semua" checked> Semua</label>
-            <label><input type="radio" name="filter" value="Rendah"> Rendah</label>
-            <label><input type="radio" name="filter" value="Sedang"> Sedang</label>
-            <label><input type="radio" name="filter" value="Tinggi"> Tinggi</label>
-        </div>
-
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
         <script src="js/L.Control.Layers.Tree.min.js"></script>
@@ -71,15 +43,13 @@
         <script src="data/Pinogaluman_6.js"></script>
         <script src="data/BolaangMongondowUtara_7.js"></script>
         <script>
-        // Variabel global untuk menyimpan filter yang sedang aktif
-        var currentFilter = 'Semua';
-
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
         }).fitBounds([[0.552099725028336,123.0402333272808],[0.9830543485695197,123.85745659406628]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        // remove popup's row if "visible-with-data"
         function removeEmptyRowsFromPopupContent(content, feature) {
          var tempDiv = document.createElement('div');
          tempDiv.innerHTML = content;
@@ -93,11 +63,13 @@
          }
          return tempDiv.innerHTML;
         }
+        // add class to format popup if it contains media
 		function addClassToPopupIfMedia(content, popup) {
 			var tempDiv = document.createElement('div');
 			tempDiv.innerHTML = content;
 			if (tempDiv.querySelector('td img')) {
 				popup._contentNode.classList.add('media');
+					// Delay to force the redraw
 					setTimeout(function() {
 						popup.update();
 					}, 10);
@@ -127,16 +99,19 @@
         function pop_Sangkub_1(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kelas Bahaya: ' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kecamatan: ' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Luas (Ha): ' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kabupaten'] !== null ? autolinker.link(String(feature.properties['Kabupaten']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -147,10 +122,6 @@
         }
 
         function style_Sangkub_1_0(feature) {
-            // Logika filter ditambahkan di sini
-            if (currentFilter !== 'Semua' && feature.properties.Kelas_Banj !== currentFilter) {
-                return { opacity: 0, fillOpacity: 0, interactive: false };
-            }
             switch(String(feature.properties['Kelas_Banj'])) {
                 case 'Rendah':
                     return {
@@ -178,7 +149,7 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(255,255,0,1.0)', /* Warna Kuning untuk Sedang */
+                fillColor: 'rgba(226,90,56,1.0)',
                 interactive: true,
             }
                     break;
@@ -215,16 +186,19 @@
         function pop_Bintauna_2(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kelas Bahaya: ' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kecamatan: ' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
-                     <tr>\
-                        <td colspan="2">Luas (Ha): ' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas'])) : '') + '</td>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Kabupaten'] !== null ? autolinker.link(String(feature.properties['Kabupaten']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -235,9 +209,6 @@
         }
 
         function style_Bintauna_2_0(feature) {
-            if (currentFilter !== 'Semua' && feature.properties.Kelas_Banj !== currentFilter) {
-                return { opacity: 0, fillOpacity: 0, interactive: false };
-            }
             switch(String(feature.properties['Kelas_Banj'])) {
                 case 'Rendah':
                     return {
@@ -265,7 +236,7 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(255,255,0,1.0)', /* Warna Kuning untuk Sedang */
+                fillColor: 'rgba(226,90,56,1.0)',
                 interactive: true,
             }
                     break;
@@ -299,20 +270,22 @@
             style: style_Bintauna_2_0,
         });
         bounds_group.addLayer(layer_Bintauna_2);
-        
         function pop_BolangitangTimur_3(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kelas Bahaya: ' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kecamatan: ' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
-                     <tr>\
-                        <td colspan="2">Luas (Ha): ' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas'])) : '') + '</td>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Kabupaten'] !== null ? autolinker.link(String(feature.properties['Kabupaten']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -323,9 +296,6 @@
         }
 
         function style_BolangitangTimur_3_0(feature) {
-            if (currentFilter !== 'Semua' && feature.properties.Kelas_Banj !== currentFilter) {
-                return { opacity: 0, fillOpacity: 0, interactive: false };
-            }
             switch(String(feature.properties['Kelas_Banj'])) {
                 case 'Rendah':
                     return {
@@ -353,7 +323,7 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(255,255,0,1.0)', /* Warna Kuning untuk Sedang */
+                fillColor: 'rgba(226,90,56,1.0)',
                 interactive: true,
             }
                     break;
@@ -387,20 +357,22 @@
             style: style_BolangitangTimur_3_0,
         });
         bounds_group.addLayer(layer_BolangitangTimur_3);
-
         function pop_BolangitangBarat_4(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kelas Bahaya: ' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kecamatan: ' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
-                     <tr>\
-                        <td colspan="2">Luas (Ha): ' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas'])) : '') + '</td>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Kabupaten'] !== null ? autolinker.link(String(feature.properties['Kabupaten']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -411,9 +383,6 @@
         }
 
         function style_BolangitangBarat_4_0(feature) {
-            if (currentFilter !== 'Semua' && feature.properties.Kelas_Banj !== currentFilter) {
-                return { opacity: 0, fillOpacity: 0, interactive: false };
-            }
             switch(String(feature.properties['Kelas_Banj'])) {
                 case 'Rendah':
                     return {
@@ -441,7 +410,7 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(255,255,0,1.0)', /* Warna Kuning untuk Sedang */
+                fillColor: 'rgba(226,90,56,1.0)',
                 interactive: true,
             }
                     break;
@@ -475,20 +444,22 @@
             style: style_BolangitangBarat_4_0,
         });
         bounds_group.addLayer(layer_BolangitangBarat_4);
-
         function pop_Kaidipang_5(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kelas Bahaya: ' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kecamatan: ' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
-                     <tr>\
-                        <td colspan="2">Luas (Ha): ' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas'])) : '') + '</td>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Kabupaten'] !== null ? autolinker.link(String(feature.properties['Kabupaten']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -499,9 +470,6 @@
         }
 
         function style_Kaidipang_5_0(feature) {
-            if (currentFilter !== 'Semua' && feature.properties.Kelas_Banj !== currentFilter) {
-                return { opacity: 0, fillOpacity: 0, interactive: false };
-            }
             switch(String(feature.properties['Kelas_Banj'])) {
                 case 'Rendah':
                     return {
@@ -529,7 +497,7 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(255,255,0,1.0)', /* Warna Kuning untuk Sedang */
+                fillColor: 'rgba(226,90,56,1.0)',
                 interactive: true,
             }
                     break;
@@ -563,20 +531,22 @@
             style: style_Kaidipang_5_0,
         });
         bounds_group.addLayer(layer_Kaidipang_5);
-
         function pop_Pinogaluman_6(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kelas Bahaya: ' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kecamatan: ' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
-                     <tr>\
-                        <td colspan="2">Luas (Ha): ' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas'])) : '') + '</td>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Kabupaten'] !== null ? autolinker.link(String(feature.properties['Kabupaten']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -587,9 +557,6 @@
         }
 
         function style_Pinogaluman_6_0(feature) {
-            if (currentFilter !== 'Semua' && feature.properties.Kelas_Banj !== currentFilter) {
-                return { opacity: 0, fillOpacity: 0, interactive: false };
-            }
             switch(String(feature.properties['Kelas_Banj'])) {
                 case 'Rendah':
                     return {
@@ -617,7 +584,7 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(255,255,0,1.0)', /* Warna Kuning untuk Sedang */
+                fillColor: 'rgba(226,90,56,1.0)',
                 interactive: true,
             }
                     break;
@@ -651,20 +618,22 @@
             style: style_Pinogaluman_6_0,
         });
         bounds_group.addLayer(layer_Pinogaluman_6);
-
         function pop_BolaangMongondowUtara_7(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Nama_Benca'] !== null ? autolinker.link(String(feature.properties['Nama_Benca']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kelas Bahaya: ' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kelas_Banj'] !== null ? autolinker.link(String(feature.properties['Kelas_Banj']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">Kecamatan: ' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Kecamatan'] !== null ? autolinker.link(String(feature.properties['Kecamatan']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
-                     <tr>\
-                        <td colspan="2">Luas (Ha): ' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas'])) : '') + '</td>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Kabupaten'] !== null ? autolinker.link(String(feature.properties['Kabupaten']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -675,9 +644,6 @@
         }
 
         function style_BolaangMongondowUtara_7_0(feature) {
-             if (currentFilter !== 'Semua' && feature.properties.Kelas_Banj !== currentFilter) {
-                return { opacity: 0, fillOpacity: 0, interactive: false };
-            }
             switch(String(feature.properties['Kelas_Banj'])) {
                 case 'Rendah':
                     return {
@@ -705,7 +671,7 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(255,255,0,1.0)', /* Warna Kuning untuk Sedang */
+                fillColor: 'rgba(226,90,56,1.0)',
                 interactive: true,
             }
                     break;
@@ -740,18 +706,6 @@
         });
         bounds_group.addLayer(layer_BolaangMongondowUtara_7);
         map.addLayer(layer_BolaangMongondowUtara_7);
-
-        // Kumpulkan semua layer data dan fungsi style-nya
-        var allDataLayers = [
-            { layer: layer_Sangkub_1, style: style_Sangkub_1_0 },
-            { layer: layer_Bintauna_2, style: style_Bintauna_2_0 },
-            { layer: layer_BolangitangTimur_3, style: style_BolangitangTimur_3_0 },
-            { layer: layer_BolangitangBarat_4, style: style_BolangitangBarat_4_0 },
-            { layer: layer_Kaidipang_5, style: style_Kaidipang_5_0 },
-            { layer: layer_Pinogaluman_6, style: style_Pinogaluman_6_0 },
-            { layer: layer_BolaangMongondowUtara_7, style: style_BolaangMongondowUtara_7_0 }
-        ];
-
         var overlaysTree = [
             {label: 'Bolaang Mongondow Utara<br /><table><tr><td style="text-align: center;"><img src="legend/BolaangMongondowUtara_7_Rendah0.png" /></td><td>Rendah</td></tr><tr><td style="text-align: center;"><img src="legend/BolaangMongondowUtara_7_Sedang1.png" /></td><td>Sedang</td></tr><tr><td style="text-align: center;"><img src="legend/BolaangMongondowUtara_7_Tinggi2.png" /></td><td>Tinggi</td></tr></table>', layer: layer_BolaangMongondowUtara_7},
             {label: 'Pinogaluman', layer: layer_Pinogaluman_6},
@@ -762,21 +716,17 @@
             {label: 'Sangkub', layer: layer_Sangkub_1},
             {label: "Google Hybrid", layer: layer_GoogleHybrid_0},]
         var lay = L.control.layers.tree(null, overlaysTree,{
+            //namedToggle: true,
+            //selectorBack: false,
+            //closedSymbol: '&#8862; &#x1f5c0;',
+            //openedSymbol: '&#8863; &#x1f5c1;',
+            //collapseAll: 'Collapse all',
+            //expandAll: 'Expand all',
             collapsed: false, 
         });
         lay.addTo(map);
-
 		document.addEventListener("DOMContentLoaded", function() {
-            // Logika untuk event listener filter
-            document.querySelectorAll('input[name="filter"]').forEach(function(radio) {
-                radio.addEventListener('change', function(event) {
-                    currentFilter = event.target.value;
-                    allDataLayers.forEach(function(item) {
-                        item.layer.setStyle(item.style);
-                    });
-                });
-            });
-
+            // set new Layers List height which considers toggle icon
             function newLayersListHeight() {
                 var layerScrollbarElement = document.querySelector('.leaflet-control-layers-scrollbar');
                 if (layerScrollbarElement) {
@@ -790,6 +740,7 @@
             var isLayersListExpanded = true;
             var controlLayersElement = document.querySelector('.leaflet-control-layers');
             var toggleLayerControl = document.querySelector('.leaflet-control-layers-toggle');
+            // toggle Collapsed/Expanded and apply new Layers List height
             toggleLayerControl.addEventListener('click', function() {
                 if (isLayersListExpanded) {
                     controlLayersElement.classList.remove('leaflet-control-layers-expanded');
@@ -799,6 +750,7 @@
                 isLayersListExpanded = !isLayersListExpanded;
                 newLayersListHeight()
             });	
+			// apply new Layers List height if toggle layerstree
 			if (controlLayersElement) {
 				controlLayersElement.addEventListener('click', function(event) {
 					var toggleLayerHeaderPointer = event.target.closest('.leaflet-layerstree-header-pointer span');
@@ -807,12 +759,14 @@
 					}
 				});
 			}
+            // Collapsed/Expanded at Start to apply new height
             setTimeout(function() {
                 toggleLayerControl.click();
             }, 10);
             setTimeout(function() {
                 toggleLayerControl.click();
             }, 10);
+            // Collapsed touch/small screen
             var isSmallScreen = window.innerWidth < 650;
             if (isSmallScreen) {
                 setTimeout(function() {
