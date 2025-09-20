@@ -20,25 +20,24 @@
         }
         /* Style untuk Kontrol Filter */
         #filter-control {
-            position: absolute;
-            top: 70px; /* Posisi di bawah kontrol zoom */
-            left: 10px;
-            z-index: 1000;
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-family: sans-serif;
-        }
-        #filter-control h4 {
-            margin-top: 0;
-            margin-bottom: 5px;
-        }
-        #filter-control label {
-            display: block;
-            margin-bottom: 3px;
-        }
-        </style>
+    position: absolute;
+    top: 350px;
+    right: 10px; /* Changed from 'left' to 'right' */
+    z-index: 1000;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-family: sans-serif;
+}
+#filter-control h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+#filter-control label {
+    display: block;
+    margin-bottom: 3px;
+}        </style>
         <title>Peta Bahaya Banjir</title>
     </head>
     <body>
@@ -46,10 +45,12 @@
         </div>
         <div id="filter-control">
             <h4>Filter Bahaya Banjir</h4>
-            <label><input type="radio" name="filter" value="Semua" checked> Semua</label>
-            <label><input type="radio" name="filter" value="Rendah"> Rendah</label>
-            <label><input type="radio" name="filter" value="Sedang"> Sedang</label>
-            <label><input type="radio" name="filter" value="Tinggi"> Tinggi</label>
+            <div class="flex">
+                <label><input type="radio" name="filter" value="Semua" checked> Semua</label>
+                <label><input type="radio" name="filter" value="Rendah"> Rendah</label>
+                <label><input type="radio" name="filter" value="Sedang"> Sedang</label>
+                <label><input type="radio" name="filter" value="Tinggi"> Tinggi</label>
+            </div>
         </div>
 
         <script src="js/qgis2web_expressions.js"></script>
@@ -563,7 +564,6 @@
             style: style_Kaidipang_5_0,
         });
         bounds_group.addLayer(layer_Kaidipang_5);
-
         function pop_Pinogaluman_6(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
