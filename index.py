@@ -28,12 +28,14 @@ def allowed_file(filename):
 def index():
     data = initDb.fetchContact()
     result_path_final = os.path.join('storage', 'result.csv')
+    converHTMLresultFinal = None  # default, supaya aman
     status_final_result = os.path.isfile(result_path_final)
     if status_final_result:
         resultFinal = pd.read_csv(result_path_final).drop(columns=['id','geojson'])
         converHTMLresultFinal = resultFinal.to_html(classes='table table-bordered', index=True)
 
     return render_template('front/index.html', data=data,final=converHTMLresultFinal)
+
 
 @app.route("/login",methods=['GET'])
 def login():    

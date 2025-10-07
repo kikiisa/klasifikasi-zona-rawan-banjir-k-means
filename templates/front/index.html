@@ -163,10 +163,12 @@
             </div>
             
             <div class="card-content">
-                <div class="table-wrapper">
-                    {{ final|safe }}
-                </div>
-            </div>
+    <div class="table-wrapper">
+        {% if final %}
+            {{ final|safe }}
+        {% endif %}
+    </div>
+</div>
         </div>
     {% else %}
         <div class="card">
