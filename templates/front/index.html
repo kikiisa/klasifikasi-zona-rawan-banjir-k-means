@@ -121,7 +121,7 @@
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="stat-card">
             <i class="fas fa-map-marked-alt stat-icon"></i>
-            <div class="stat-number terpantau" data-target="34"></div>
+            <div class="stat-number terpantau" data-target="34">0</div>
             <div class="stat-label">Desa Terpantau</div>
           </div>
         </div>
@@ -129,7 +129,7 @@
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="stat-card">
             <i class="fas fa-exclamation-triangle stat-icon"></i>
-            <div class="stat-number rawan-banjir-1"></div>
+            <div class="stat-number rawan-banjir-1">0</div>
             <div class="stat-label">Zona Rawan</div>
           </div>
         </div>
@@ -329,11 +329,13 @@
       const response = await fetch(url);
       const data = await response.json();
       const clusterCounts = countClusters(data);
+      
       statNumber.textContent = clusterCounts.total;
       statNumberTerpantau1.textContent = clusterCounts.total;
       statNumberRawanBanjir.textContent = clusterCounts.rawan;
       statSangatRawan.textContent = clusterCounts.sangatRawan;
       statNumberRawanBanjir1.textContent = clusterCounts.rawan;
+      
     };
     fetchDataAndCount();
   </script>
