@@ -4,105 +4,106 @@ id,lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori,geojson,kecamatan,cla
 217,123.1366502,0.9203082,Buko,2588,5,1,Buko.geojson,7107060,Tidak Rawan
 218,123.1008937,0.9103633,Buko Selatan,3022,8,5,Buko Selatan.geojson,7107060,Sangat Rawan
 219,123.1327501,0.9213702,Buko Utara,2697,10,1,Buko Utara.geojson,7107060,Tidak Rawan
-220,123.1274686,0.8757991,Busato,2504,6,3,Busato.geojson,7107060,Rawan
+220,123.1274686,0.8757991,Busato,2504,6,3,Busato.geojson,7107060,Sangat Rawan
 221,123.1103405,0.9028503,Dalapuli,2498,8,1,Dalapuli.geojson,7107060,Tidak Rawan
 222,123.1057031,0.9071478,Dalapuli Barat,2511,3,2,Dalapuli Barat.geojson,7107060,Tidak Rawan
 223,123.1142117,0.8991006,Dalapuli Timur,2618,4,1,Dalapuli Timur.geojson,7107060,Tidak Rawan
-224,123.1035262,0.8936166,Dengi,2671,1,2,Dengi.geojson,7107060,Rawan
-225,123.0476425,0.8791003,Duini,2640,7,3,Duini.geojson,7107060,Rawan
-226,123.0958926,0.8876956,Kayuogu,2677,6,2,Kayuogu.geojson,7107060,Rawan
+224,123.1035262,0.8936166,Dengi,2671,1,2,Dengi.geojson,7107060,Tidak Rawan
+225,123.0476425,0.8791003,Duini,2640,7,3,Duini.geojson,7107060,Sangat Rawan
+226,123.0958926,0.8876956,Kayuogu,2677,6,2,Kayuogu.geojson,7107060,Tidak Rawan
 227,123.1551936,0.9275295,Komus I,2664,2,0,Komus I.geojson,7107060,Tidak Rawan
 228,123.1272778,0.8902523,Padango,2853,8,4,Padango.geojson,7107060,Sangat Rawan
-229,123.1220655,0.9212744,Tambulang Pantai,2549,4,3,Tambulang Pantai.geojson,7107060,Rawan
-230,123.0582443,0.9095261,Tambulang Timur,2737,9,2,Tambulang Timur.geojson,7107060,Rawan
+229,123.1220655,0.9212744,Tambulang Pantai,2549,4,3,Tambulang Pantai.geojson,7107060,Sangat Rawan
+230,123.0582443,0.9095261,Tambulang Timur,2737,9,2,Tambulang Timur.geojson,7107060,Tidak Rawan
 231,123.1381281,0.9428426,Tanjung Sidupa,2693,4,1,Tanjung Sidupa.geojson,7107060,Tidak Rawan
 232,123.1064602,0.9180999,Tombulang,2774,7,4,Tombulang.geojson,7107060,Sangat Rawan
 233,123.1017288,0.9045159,Tuntulow,2842,5,4,Tuntulow.geojson,7107060,Sangat Rawan
 234,123.0991088,0.9165089,Tuntulow Utara,3105,3,5,Tuntulow Utara.geojson,7107060,Sangat Rawan
-235,123.0528483,0.8665408,Tuntung,2594,6,3,Tuntung.geojson,7107060,Rawan
-236,123.0647633,0.8594453,Tuntung Timur,2764,3,2,Tuntung Timur.geojson,7107060,Rawan
+235,123.0528483,0.8665408,Tuntung,2594,6,3,Tuntung.geojson,7107060,Sangat Rawan
+236,123.0647633,0.8594453,Tuntung Timur,2764,3,2,Tuntung Timur.geojson,7107060,Tidak Rawan
 237,123.2484701,0.9025119,Bigo,2681,75,3,Bigo.geojson,7107050,Rawan
-238,123.2656848,0.9011417,Bigo Selatan,2594,2,2,Bigo Selatan.geojson,7107050,Rawan
+238,123.2656848,0.9011417,Bigo Selatan,2594,2,2,Bigo Selatan.geojson,7107050,Tidak Rawan
 239,123.2464918,0.9036907,Boroko,3153,8,5,Boroko.geojson,7107050,Sangat Rawan
-240,123.2506512,0.9099043,Boroko Timur,2677,9,3,Boroko Timur.geojson,7107050,Rawan
+240,123.2506512,0.9099043,Boroko Timur,2677,9,3,Boroko Timur.geojson,7107050,Sangat Rawan
 241,123.2686414,0.9129773,Boroko Utara,2569,2,4,Boroko Utara.geojson,7107050,Sangat Rawan
-242,123.2702232,0.8788547,Gihang,2683,3,3,Gihang.geojson,7107050,Rawan
+242,123.2702232,0.8788547,Gihang,2683,3,3,Gihang.geojson,7107050,Sangat Rawan
 243,123.1996546,0.913876,Inomunga,2958,8,6,Inomunga.geojson,7107050,Sangat Rawan
-244,123.1991956,0.9315961,Inomunga Utara,2732,7,2,Inomunga Utara.geojson,7107050,Rawan
+244,123.1991956,0.9315961,Inomunga Utara,2732,7,2,Inomunga Utara.geojson,7107050,Tidak Rawan
 245,123.2284061,0.9056832,Komus II Timur,2684,9,0,Komus II Timur.geojson,7107050,Tidak Rawan
 246,123.1639056,0.9119767,Komus II,2749,7,0,Komus II.geojson,7107050,Tidak Rawan
 247,123.2615798,0.9080643,Kuala,2843,0,4,Kuala.geojson,7107050,Sangat Rawan
-248,123.2600172,0.9009579,Kuala Utara,2759,2,3,Kuala Utara.geojson,7107050,Rawan
-249,123.271289,0.8681385,Pontak,2638,2,3,Pontak.geojson,7107050,Rawan
-250,123.1187518,0.8461684,Soligir,2648,2,2,Soligir.geojson,7107050,Rawan
-251,123.1787332,0.9416426,Solo,2594,6,3,Solo.geojson,7107050,Rawan
+248,123.2600172,0.9009579,Kuala Utara,2759,2,3,Kuala Utara.geojson,7107050,Sangat Rawan
+249,123.271289,0.8681385,Pontak,2638,2,3,Pontak.geojson,7107050,Sangat Rawan
+250,123.1187518,0.8461684,Soligir,2648,2,2,Soligir.geojson,7107050,Tidak Rawan
+251,123.1787332,0.9416426,Solo,2594,6,3,Solo.geojson,7107050,Sangat Rawan
 252,123.3009496,0.9038044,Bolangitang,3174,4,4,Bolangitang.geojson,7107040,Sangat Rawan
-253,123.2995221,0.9080314,Bolangitang I,2738,2,3,Bolangitang I.geojson,7107040,Rawan
+253,123.2995221,0.9080314,Bolangitang I,2738,2,3,Bolangitang I.geojson,7107040,Sangat Rawan
 254,123.2882971,0.9084274,Bolangitang II,2833,2,4,Bolangitang II.geojson,7107040,Sangat Rawan
-255,123.2870971,0.9007646,Iyok,2774,4,2,Iyok.geojson,7107040,Rawan
+255,123.2870971,0.9007646,Iyok,2774,4,2,Iyok.geojson,7107040,Tidak Rawan
 256,123.2635361,0.8869446,Jambusarang,2697,2,4,Jambusarang.geojson,7107040,Sangat Rawan
-257,123.3243915,0.8665984,Keimanga,2816,3,3,Keimanga.geojson,7107040,Rawan
-258,123.2983593,0.8991609,Langi,2973,3,2,Langi.geojson,7107040,Rawan
+257,123.3243915,0.8665984,Keimanga,2816,3,3,Keimanga.geojson,7107040,Sangat Rawan
+258,123.2983593,0.8991609,Langi,2973,3,2,Langi.geojson,7107040,Tidak Rawan
 259,122.9621193,0.7928829,Ollot,2851,2,4,Ollot.geojson,7107040,Sangat Rawan
-260,123.2731421,0.8723041,Ollot I,2796,2,3,Ollot I.geojson,7107040,Rawan
-261,123.0226938,0.7800652,Olllot II,2868,2,3,Olllot II.geojson,7107040,Rawan
-262,123.3194606,0.8587119,Paku,2677,7,2,Paku.geojson,7107040,Rawan
-263,122.9833958,0.7775217,Paku Selatan,2784,5,2,Paku Selatan.geojson,7107040,Rawan
+260,123.2731421,0.8723041,Ollot I,2796,2,3,Ollot I.geojson,7107040,Sangat Rawan
+261,123.0226938,0.7800652,Olllot II,2868,2,3,Olllot II.geojson,7107040,Sangat Rawan
+262,123.3194606,0.8587119,Paku,2677,7,2,Paku.geojson,7107040,Tidak Rawan
+263,122.9833958,0.7775217,Paku Selatan,2784,5,2,Paku Selatan.geojson,7107040,Tidak Rawan
 264,123.2701102,0.8789711,Sonuo,2982,4,4,Sonuo.geojson,7107040,Sangat Rawan
-265,123.2929156,0.9049228,Talaga,2771,2,3,Talaga.geojson,7107040,Rawan
-266,123.2562267,0.8899956,Talaga Tomoagu,2675,2,3,Talaga Tomoagu.geojson,7107040,Rawan
-267,123.3323268,0.9095774,Tanjung Buaya,2663,7,2,Tanjung Buaya.geojson,7107040,Rawan
-268,123.2598784,0.8956402,Tote,2845,6,2,Tote.geojson,7107040,Rawan
+265,123.2929156,0.9049228,Talaga,2771,2,3,Talaga.geojson,7107040,Sangat Rawan
+266,123.2562267,0.8899956,Talaga Tomoagu,2675,2,3,Talaga Tomoagu.geojson,7107040,Sangat Rawan
+267,123.3323268,0.9095774,Tanjung Buaya,2663,7,2,Tanjung Buaya.geojson,7107040,Tidak Rawan
+268,123.2598784,0.8956402,Tote,2845,6,2,Tote.geojson,7107040,Tidak Rawan
 269,123.0465348,0.7818581,Wakat,3097,8,4,Wakat.geojson,7107040,Sangat Rawan
-270,123.1450408,0.7611374,Binjeita,2857,4,3,Binjeita.geojson,7107030,Rawan
-271,123.1351108,0.7606619,Binjeita I,2774,3,3,Binjeita I.geojson,7107030,Rawan
-272,123.4525148,0.8885914,Binjeita II,2741,2,2,Binjeita II.geojson,7107030,Rawan
+270,123.1450408,0.7611374,Binjeita,2857,4,3,Binjeita.geojson,7107030,Sangat Rawan
+271,123.1351108,0.7606619,Binjeita I,2774,3,3,Binjeita I.geojson,7107030,Sangat Rawan
+272,123.4525148,0.8885914,Binjeita II,2741,2,2,Binjeita II.geojson,7107030,Tidak Rawan
 273,123.0915928,0.7726113,Binuanga,2589,8,1,Binuanga.geojson,7107030,Tidak Rawan
-274,123.4854829,0.882902,Binuni,2693,6,2,Binuni.geojson,7107030,Rawan
-275,123.1587704,0.7577284,Biontong,2847,2,3,Biontong.geojson,7107030,Rawan
+274,123.4854829,0.882902,Binuni,2693,6,2,Binuni.geojson,7107030,Tidak Rawan
+275,123.1587704,0.7577284,Biontong,2847,2,3,Biontong.geojson,7107030,Sangat Rawan
 276,123.1855262,0.7873105,Biontong I,2849,3,4,Biontong I.geojson,7107030,Sangat Rawan
-277,123.1730483,0.7530341,Biontong II,2791,2,2,Biontong II.geojson,7107030,Rawan
-278,123.1208733,0.761598,Bohabak I,2589,2,2,Bohabak I.geojson,7107030,Rawan
-279,123.4101856,0.8925571,Bohabak II,2697,2,3,Bohabak II.geojson,7107030,Rawan
-280,123.4199192,0.8764826,Bohabak III,2577,3,2,Bohabak III.geojson,7107030,Rawan
-281,123.1092923,0.7672229,Bohabak IV,2638,4,2,Bohabak IV.geojson,7107030,Rawan
+277,123.1730483,0.7530341,Biontong II,2791,2,2,Biontong II.geojson,7107030,Tidak Rawan
+278,123.1208733,0.761598,Bohabak I,2589,2,2,Bohabak I.geojson,7107030,Tidak Rawan
+279,123.4101856,0.8925571,Bohabak II,2697,2,3,Bohabak II.geojson,7107030,Sangat Rawan
+280,123.4199192,0.8764826,Bohabak III,2577,3,2,Bohabak III.geojson,7107030,Tidak Rawan
+281,123.1092923,0.7672229,Bohabak IV,2638,4,2,Bohabak IV.geojson,7107030,Tidak Rawan
 282,123.4963053,0.8804917,Lipu Bogu,2638,4,4,Lipu Bogu.geojson,7107030,Sangat Rawan
 283,123.3348136,0.9002765,Mokoditek,1967,7,1,Mokoditek.geojson,7107030,Tidak Rawan
 284,123.299622,0.8706228,Mokoditek I,2088,6,1,Mokoditek I.geojson,7107030,Tidak Rawan
 285,123.3721955,0.8876845,Nagara,2382,5,1,Nagara.geojson,7107030,Tidak Rawan
-286,123.2295368,0.8663548,Nunuka,2101,5,3,Nunuka.geojson,7107030,Tidak Rawan
+286,123.2295368,0.8663548,Nunuka,2101,5,3,Nunuka.geojson,7107030,Sangat Rawan
 287,123.0659497,0.7695688,Saleo,2470,5,2,Saleo.geojson,7107030,Tidak Rawan
-288,123.4099003,0.7837536,Saleo I,2734,4,2,Saleo I.geojson,7107030,Rawan
+288,123.4099003,0.7837536,Saleo I,2734,4,2,Saleo I.geojson,7107030,Tidak Rawan
 289,123.4410907,0.9040152,Tanjung Labou,2033,2,2,Tanjung Labou.geojson,7107030,Tidak Rawan
 290,123.5399762,0.8854939,Batulintik,2673,2,4,Batulintik.geojson,7107020,Sangat Rawan
 291,122.9541172,0.7336715,Bintauna,2836,2,4,Bintauna.geojson,7107020,Sangat Rawan
 292,123.5675898,0.8925974,Bintauna Pantai,2895,2,4,Bintauna Pantai.geojson,7107020,Sangat Rawan
 293,123.5541418,0.8790284,Bunia,2788,2,4,Bunia.geojson,7107020,Sangat Rawan
-294,122.8639187,0.7333855,Bunong,2137,1,3,Bunong.geojson,7107020,Tidak Rawan
+294,122.8639187,0.7333855,Bunong,2137,1,3,Bunong.geojson,7107020,Sangat Rawan
 295,123.2679788,0.7104693,Huntuk,2496,2,2,Huntuk.geojson,7107020,Tidak Rawan
 296,123.3218733,0.7552466,Kopi,2558,3,4,Kopi.geojson,7107020,Sangat Rawan
-297,123.5095993,0.8781118,Kuhanga,2194,1,4,Kuhanga.geojson,7107020,Tidak Rawan
+297,123.5095993,0.8781118,Kuhanga,2194,1,4,Kuhanga.geojson,7107020,Sangat Rawan
 298,123.5342401,0.8901131,Minanga,2733,2,4,Minanga.geojson,7107020,Sangat Rawan
-299,123.2324598,0.7244381,Mome,2681,1,2,Mome.geojson,7107020,Rawan
-300,123.5447689,0.8808049,Padang,2649,2,3,Padang.geojson,7107020,Rawan
-301,123.5033082,0.8630317,Padang Barat,2775,2,3,Padang Barat.geojson,7107020,Rawan
-302,123.5125886,0.8650231,Pimpi,2846,1,3,Pimpi.geojson,7107020,Rawan
+299,123.2324598,0.7244381,Mome,2681,1,2,Mome.geojson,7107020,Tidak Rawan
+300,123.5447689,0.8808049,Padang,2649,2,3,Padang.geojson,7107020,Sangat Rawan
+301,123.5033082,0.8630317,Padang Barat,2775,2,3,Padang Barat.geojson,7107020,Sangat Rawan
+302,123.5125886,0.8650231,Pimpi,2846,1,3,Pimpi.geojson,7107020,Sangat Rawan
 303,123.5384006,0.8841129,Talaga Bintauna,2559,2,4,Talaga Bintauna.geojson,7107020,Sangat Rawan
 304,123.5403428,0.8777283,Vahuta,1998,1,2,Vahuta.geojson,7107020,Tidak Rawan
-305,123.5291001,0.8836799,Voa’a,2679,1,3,Voa’a.geojson,7107020,Rawan
+305,123.5291001,0.8836799,Voa’a,2679,1,3,Voa’a.geojson,7107020,Sangat Rawan
 306,123.7027682,0.8577776,Ampeng Sembeka,1882,2,2,Ampeng Sembeka.geojson,7107010,Tidak Rawan
 307,123.60204,0.8737545,Busisingo,3195,3,4,Busisingo.geojson,7107010,Sangat Rawan
 308,123.5788617,0.8975299,Busisingo Utara,2937,3,3,Busisingo Utara.geojson,7107010,Sangat Rawan
 309,123.596064,0.8983179,Mokusato,3117,2,4,Mokusato.geojson,7107010,Sangat Rawan
 310,123.0679893,0.8807598,Monompia,2974,1,3,Monompia.geojson,7107010,Sangat Rawan
-311,123.563682,0.8426913,Pangkusa,2633,2,3,Pangkusa.geojson,7107010,Rawan
-312,123.6264601,0.8687211,Sampiro,2771,4,3,Sampiro.geojson,7107010,Rawan
+311,123.563682,0.8426913,Pangkusa,2633,2,3,Pangkusa.geojson,7107010,Sangat Rawan
+312,123.6264601,0.8687211,Sampiro,2771,4,3,Sampiro.geojson,7107010,Sangat Rawan
 313,123.5334105,0.8477859,Sang Tombolang,2397,8,2,Sang Tombolang.geojson,7107010,Tidak Rawan
-314,123.5816367,0.8724071,Sangkub I,2669,3,3,Sangkub I.geojson,7107010,Rawan
-315,123.5721502,0.8733711,Sangkub II,2877,7,3,Sangkub II.geojson,7107010,Rawan
+314,123.5816367,0.8724071,Sangkub I,2669,3,3,Sangkub I.geojson,7107010,Sangat Rawan
+315,123.5721502,0.8733711,Sangkub II,2877,7,3,Sangkub II.geojson,7107010,Sangat Rawan
 316,123.5969271,0.8783676,Sangkub III,3119,1,3,Sangkub III.geojson,7107010,Sangat Rawan
 317,123.6297446,0.8853178,Sangkub Empat,3177,7,3,Sangkub Empat.geojson,7107010,Sangat Rawan
 318,123.6516328,0.877609,Sangkub Timur,2738,3,4,Sangkub Timur.geojson,7107010,Sangat Rawan
-319,123.5740085,0.8434258,Sidodadi,2688,5,3,Sidodadi.geojson,7107010,Rawan
+319,123.5740085,0.8434258,Sidodadi,2688,5,3,Sidodadi.geojson,7107010,Sangat Rawan
 320,123.5036874,0.8799445,Suka Makmur,2994,6,4,Suka Makmur.geojson,7107010,Sangat Rawan
 321,123.4569718,0.8588704,Tombolango,3079,4,4,Tombolango.geojson,7107010,Sangat Rawan
+325,84379837.0,347589437.0,konoha,3,8,6,,7107010,Sangat Rawan
