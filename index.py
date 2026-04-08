@@ -11,6 +11,8 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
 import csv
 import numpy as np
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
 initDb = database.ConnectionDb.run
@@ -490,10 +492,13 @@ def prosess():
             # Update centroid baru (rata-rata titik pada cluster yang sama)
             new_centroids = np.array([data_scaled_df.to_numpy()[assign == j].mean(axis=0) if np.any(assign == j) else centroids[j]
                                       for j in range(k)])
+            
+
             if np.allclose(centroids, new_centroids):
                 break
             centroids = new_centroids
 
+            
         # === 3. Jalankan KMeans sklearn untuk hasil final ===
         kmeans = KMeans(n_clusters=k, random_state=42)
         data['claster'] = kmeans.fit_predict(data_scaled)
@@ -509,6 +514,28 @@ def prosess():
 
         result_path_final = os.path.join('storage', 'result.csv')
         status_final_result = os.path.isfile(result_path_final)
+
+
+
+        # === 5. Plot Centroid & Cluster ===
+        plt.figure()
+
+        for cluster in range(k):
+            cluster_data = data_scaled_df[data['claster'] == mapping[cluster]]
+            plt.scatter(cluster_data['curah_hujan'], cluster_data['kemiringan'], label=f'Cluster {cluster}')
+
+        # Plot centroid
+        centroids_plot = kmeans.cluster_centers_
+        plt.scatter(centroids_plot[:, 0], centroids_plot[:, 1],
+                    s=300, c='red', marker='X', label='Centroid')
+
+        plt.xlabel('Curah Hujan')
+        plt.ylabel('Kemiringan')
+        plt.legend()
+
+        centroid_path = "static/centroid_plot.png"
+        plt.savefig(centroid_path)
+        plt.close()
         if status_final_result:
             resultFinal = pd.read_csv(result_path_final).drop(columns=['id','geojson'])
             converHTMLresultFinal = resultFinal.to_html(classes='table table-bordered', index=False)

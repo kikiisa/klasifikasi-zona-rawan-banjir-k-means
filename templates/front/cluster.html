@@ -276,10 +276,38 @@
         margin-left: auto;
         margin-right: auto;
       }
+      /* Shadcn Form Select override */
+      .form-select {
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: none !important;
+        transition: all 0.2s ease;
+      }
+
+      .form-select:focus {
+        border-color: #0f172a;
+      }
+
+      .z-3 {
+        z-index: 1030;
+      }
+
+      /* Menghilangkan scrollbar pada body saat di section map */
+      .vh-100 {
+        height: 100vh !important;
+      }
+
+      /* Memastikan Map Leaflet mengisi kontainer */
       #map {
-        width: 1000px; /* Menambahkan lebar 1000px */
-        height: 550px;
-        border-radius: 20px;
+        z-index: 1;
+        outline: none;
+      }
+
+      /* Floating Card Glassmorphism */
+      .backdrop-blur-md {
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
       }
 
       /* Features Section */
@@ -420,45 +448,69 @@
   </head>
 
   <body>
-    <section class="map-section mb-4">
-      <div class="container">
-        <div class="row justify-content-center mt-4">
-          <div class="col-md-6">
-            <label for="kecamatan" class="form-label fw-bold">
-              <i class="fas fa-globe me-1"></i>Filter Berdasarkan Kecamatan
-            </label>
-            <select class="form-select" id="kecamatan" required>
-              <option value="">Pilih Kecamatan</option>
-              <option value="all">Semua Wilayah</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label for="filterStatus" class="form-label fw-bold">
-              <i class="fas fa-exclamation-triangle me-1"></i>Tingkat Kerawanan
-            </label>
-            <select class="form-select" id="filterCluster">
-              <option value="all">Semua Status</option>
-              <option value="Sangat Rawan">Sangat Rawan</option>
-              <option value="Rawan">Rawan</option>
-              <option value="Tidak Rawan">Tidak Rawan</option>
-            </select>
-          </div>
-        </div>
-        <div class="d-flex justify-content-center">
-          <div class="card border-0">
-            <div class="card-body">
-              <div id="map"></div>
+    <section
+      class="map-section position-relative vh-100 overflow-hidden"
+      style="margin-top: -1rem"
+    >
+      <div
+        class="container-fluid position-absolute top-0 start-50 translate-middle-x z-3 mt-4 px-4"
+        style="max-width: 900px"
+      >
+        <div
+          class="position-absolute top-0 start-50 translate-middle-x z-3 mt-4 px-3 w-100"
+          style="max-width: 800px"
+        >
+          <div
+            class="s-card bg-white border border-slate-200 p-4 rounded-3 shadow-sm"
+          >
+            <div class="row g-3 align-items-end">
+              <div class="col-12 col-md-5">
+                <label
+                  for="kecamatan"
+                  class="form-label small fw-bold text-dark mb-2"
+                >
+                  <i class="fas fa-map-marker-alt me-1 text-muted"></i> Lokasi
+                  Wilayah
+                </label>
+                <select class="form-select custom-select-shadcn" id="kecamatan">
+                  <option value="">Pilih Kecamatan</option>
+                  <option value="all">Semua Wilayah</option>
+                </select>
+              </div>
+
+              <div class="col-12 col-md-5">
+                <label
+                  for="filterCluster"
+                  class="form-label small fw-bold text-dark mb-2"
+                >
+                  <i class="fas fa-shield-alt me-1 text-muted"></i> Status
+                  Kerawanan
+                </label>
+                <select
+                  class="form-select custom-select-shadcn"
+                  id="filterCluster"
+                >
+                  <option value="all">Semua Status</option>
+                  <option value="Sangat Rawan">Sangat Rawan</option>
+                  <option value="Rawan">Rawan</option>
+                  <option value="Tidak Rawan">Tidak Rawan</option>
+                </select>
+              </div>
+
+              <div class="col-12 col-md-2">
+                <button
+                  class="btn btn-dark w-100 fw-medium rounded-2 py-2"
+                  style="font-size: 0.85rem"
+                >
+                  Terapkan
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal fade" id="infoModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog rounded-2xl">
-          <div class="modal-body" id="modalContent">
-            <!-- Isi dari JavaScript -->
-          </div>
-        </div>
-      </div>
+
+      <div id="map" class="w-100 h-100 bg-light"></div>
     </section>
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
@@ -764,17 +816,21 @@
         // ================== LEGEND ==================
         if (!legendAdded) {
           const legend = L.control({ position: "bottomright" });
-
-          legend.onAdd = () => {
+          legend.onAdd = function (map) {
             const div = L.DomUtil.create("div", "info legend");
-            div.innerHTML = `
-        <i style="background:#DC3545"></i> Sangat Rawan<br>
-        <i style="background:#ffc107"></i> Rawan<br>
-        <i style="background:#347433"></i> Tidak Rawan
-      `;
+            const grades = ["Sangat Rawan", "Rawan", "Tidak Rawan"];
+            const colors = ["#FF894F", "#ffc107", "#7ADAA5"];
+            const labels = [];
+
+            for (let i = 0; i < grades.length; i++) {
+              labels.push(
+                `<i style="background:${colors[i]}; width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.8;"></i> ${grades[i]}<br>`
+              );
+            }
+
+            div.innerHTML = labels.join("");
             return div;
           };
-
           legend.addTo(map);
           legendAdded = true;
         }
