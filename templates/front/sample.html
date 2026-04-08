@@ -1,0 +1,167 @@
+<script>
+const map = L.map("map", {
+  center: [0.7609332, 123.2606188],
+  zoom: 12,
+});
+
+// ✅ TileLayer (hanya sekali)
+L.tileLayer(
+  "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+  {
+    attribution: "Maps",
+    id: "mapbox/outdoors-v11",
+    accessToken: "YOUR_TOKEN",
+  }
+).addTo(map);
+
+// Animasi
+map.whenReady(() => {
+  map.flyTo([0.7609332, 123.2606188], 12, {
+    animate: true,
+    duration: 2,
+  });
+});
+
+// ================== STATE ==================
+const filterCluster = document.getElementById("filterCluster");
+const selectRegency = document.getElementById("kecamatan");
+
+let previousLayers = [];
+let legendAdded = false;
+let globalData = []; // cache data
+
+// ================== UTIL ==================
+const clearMapLayers = () => {
+  previousLayers.forEach(layer => map.removeLayer(layer));
+  previousLayers = [];
+};
+
+// ================== FETCH DATA ==================
+const loadData = async () => {
+  const res = await fetch("/api/results");
+  globalData = await res.json();
+};
+
+// ================== DROPDOWN ==================
+const fetchSelectDown = async () => {
+  try {
+    const res = await fetch("https://www.emsifa.com/api-wilayah-indonesia/api/districts/7107.json");
+    const districts = await res.json();
+
+    districts.forEach(d => {
+      const option = document.createElement("option");
+      option.value = d.id;
+      option.textContent = d.name;
+      selectRegency.appendChild(option);
+    });
+  } catch (err) {
+    console.error("Gagal ambil kecamatan:", err);
+  }
+};
+
+// ================== FILTER CORE ==================
+const applyFilter = (id_kecamatan) => {
+  let hasil = [...globalData];
+
+  // Filter kecamatan
+  if (id_kecamatan !== "all") {
+    hasil = hasil.filter(item => item.kecamatan == id_kecamatan);
+  }
+
+  // ✅ Filter cluster
+  const selectedCluster = filterCluster.value;
+  if (selectedCluster !== "all") {
+    hasil = hasil.filter(item => item.claster === selectedCluster);
+  }
+  
+
+  return hasil;
+};
+
+// ================== RENDER MAP ==================
+const renderMap = async (data) => {
+  for (const values of data) {
+    const geojsonUrl = `/static/upload/${values.geojson}`;
+
+    let circleColor = "#999";
+    let iconUrl = "/static/image/default.png";
+
+    if (values.claster === "Sangat Rawan") {
+      circleColor = "#DC3545";
+      iconUrl = "https://cdn-icons-png.flaticon.com/128/564/564619.png";
+    } else if (values.claster === "Rawan") {
+      circleColor = "#ffc107";
+      iconUrl = "https://cdn-icons-png.flaticon.com/128/1008/1008928.png";
+    } else if (values.claster === "Tidak Rawan") {
+      circleColor = "#347433";
+      iconUrl = "https://cdn-icons-png.flaticon.com/128/1161/1161388.png";
+    }
+
+    const geojsonData = await (await fetch(geojsonUrl)).json();
+
+    const layer = L.geoJSON(geojsonData, {
+      style: {
+        color: circleColor,
+        weight: 1,
+      },
+      onEachFeature: (feature, layer) => {
+        layer.bindTooltip(feature.properties.nama || "Tanpa Nama");
+
+        layer.on("click", () => {
+          const content = `
+            <h3>${values.claster}</h3>
+            <p><b>Nama:</b> ${feature.properties.nama || "-"}</p>
+            <p><b>Kecamatan:</b> ${feature.properties.kecamatan || "-"}</p>
+            <p><b>Riwayat:</b> ${values.banjir_histori || "-"}</p>
+            <p><b>Curah Hujan:</b> ${values.curah_hujan || "-"}</p>
+            <p><b>Kemiringan:</b> ${values.kemiringan || "-"}</p>
+          `;
+
+          document.getElementById("modalContent").innerHTML = content;
+          new bootstrap.Modal(document.getElementById("infoModal")).show();
+        });
+      }
+    }).addTo(map);
+
+    previousLayers.push(layer);
+  }
+
+  // ================== LEGEND ==================
+  if (!legendAdded) {
+    const legend = L.control({ position: "bottomright" });
+
+    legend.onAdd = () => {
+      const div = L.DomUtil.create("div", "info legend");
+      div.innerHTML = `
+        <i style="background:#DC3545"></i> Sangat Rawan<br>
+        <i style="background:#ffc107"></i> Rawan<br>
+        <i style="background:#347433"></i> Tidak Rawan
+      `;
+      return div;
+    };
+
+    legend.addTo(map);
+    legendAdded = true;
+  }
+};
+
+// ================== MAIN ==================
+const updateMap = async () => {
+  clearMapLayers();
+  const kecamatan = selectRegency.value || "all";
+
+  const filtered = applyFilter(kecamatan);
+  await renderMap(filtered);
+};
+
+// ================== EVENT ==================
+selectRegency.addEventListener("change", updateMap);
+filterCluster.addEventListener("change", updateMap);
+
+// ================== INIT ==================
+(async () => {
+  await fetchSelectDown();
+  await loadData();
+  await updateMap();
+})();
+</script>

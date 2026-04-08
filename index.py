@@ -407,8 +407,6 @@ def results():
 
     data = pd.read_csv(file_path)
     return  data.to_json(orient="records")
-
-
 @app.route("/sinkronasi", methods=["POST"])
 def sinkronasi():
     datas = initDb.fetchData()
@@ -435,11 +433,7 @@ def sinkronasi():
         writer.writeheader()
         writer.writerows(modified_datas)
 
-    # Simpan ke file
-    # with open(file_path, mode="w", newline='', encoding='utf-8') as file:
-    #     writer = csv.DictWriter(file, fieldnames=datas[0].keys())
-    #     writer.writeheader()
-    #     writer.writerows(datas)
+    
     result_path = os.path.join('storage', 'sinkronasi.csv')
     resultSinkronasi = pd.read_csv(result_path).drop(columns=['id','geojson','claster'])
     flash(f"Berhasil Menyinkronkan Data, Lakukan Prosessing Data","success")
@@ -511,7 +505,6 @@ def prosess():
         data['claster'] = data['claster'].map(label_map)
 
         data.to_csv("storage/result.csv", index=False)
-
         flash('Proses Berhasil', 'success')
 
         result_path_final = os.path.join('storage', 'result.csv')
@@ -551,6 +544,7 @@ def hasil_cluster():
 def peta_bencana():
     data = initDb.fetchContact()
     return render_template("front/peta-bencana.html",data=data)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,4 +1,4 @@
-#!/home/kikiisa/Documents/web/klasifikasi-zona-rawan-banjir-k-means/venv/bin/python3
+#!/home/kikiisa/Documents/web/k-means-banjir/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
