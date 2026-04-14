@@ -36,7 +36,15 @@ def index():
         resultFinal = pd.read_csv(result_path_final).drop(columns=['id','geojson'])
         converHTMLresultFinal = resultFinal.to_html(classes='table table-bordered', index=True)
 
-    return render_template('front/index.html', data=data,final=converHTMLresultFinal)
+    statusFile = False
+    checkFile = os.path.isfile(os.path.join(dataset_dir,'result.csv'))
+    if(checkFile):
+        statusFile = True
+    else:
+        statusFile = False
+        
+
+    return render_template('front/index.html', data=data,final=converHTMLresultFinal,existFile=statusFile)
 
 
 @app.route("/login",methods=['GET'])
@@ -45,6 +53,7 @@ def login():
         return redirect(url_for('dashboard'))
     else:
         return render_template('auth/auth.html',title='Login')
+
 
 @app.route('/logout',methods=['GET'])
 def logout():
@@ -85,6 +94,7 @@ def dashboard():
         statusFile = True
     else:
         statusFile = False
+
     return render_template('dashboard/index.html',title='Dashboard',existFile=statusFile)
 
 
