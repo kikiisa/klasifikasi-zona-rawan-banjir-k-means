@@ -136,7 +136,7 @@ def management_user():
 @app.route("/create/user",methods=["GET"])
 def create_user():
     return render_template("management-user/create.html")
-
+login
 @app.route("/edit/user/<id>",methods=["GET"])
 def edit_user(id):
     data = initDb.editUser(id)
