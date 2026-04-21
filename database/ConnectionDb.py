@@ -2,9 +2,6 @@ import mysql.connector
 from mysql.connector import Error
 import pandas as pd
 from werkzeug.security import generate_password_hash
-
-
-
 class ConnectionDb:  # Fixed typo: Claster -> Cluster
     def __init__(self):
         self.config = {

@@ -43,9 +43,13 @@
         <script src="{{ url_for('static', filename='qgis/data/Pinogaluman_6.js') }}"></script>
         <script src="{{ url_for('static', filename='qgis/data/BolaangMongondowUtara_7.js') }}"></script>
         <script>
-        var map = L.map('map', {
-            zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[0.552099725028336,123.0402333272808],[0.9830543485695197,123.85745659406628]]);
+        //var map = L.map('map', {
+            //zoomControl:false, maxZoom:28, minZoom:1
+        //}).//fitBounds([[0.552099725028336,123.0402333272808],[0.9830543485695197,123.85745659406628]]);
+         const map = L.map("map", {
+        center: [0.7609332, 123.2606188],
+        zoom: 12,
+      });
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});

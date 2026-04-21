@@ -575,7 +575,9 @@ def update_contact():
 @app.route("/hasil-cluster",methods=['GET'])
 def hasil_cluster():    
     data = initDb.fetchContact()
-    return render_template('front/cluster.html', data=data)
+    # return render_template('front/cluster.html', data=data)
+    return render_template('front/peta-1-cluster.html', data=data)
+    
 
 @app.route("/peta-bencana",methods=["GET"])
 def peta_bencana():
