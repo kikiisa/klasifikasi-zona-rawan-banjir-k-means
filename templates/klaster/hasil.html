@@ -53,11 +53,6 @@
                 <h4>Interpretasi Threshold Dasar</h4>
               </div>
               <div class="card-body">
-                <p class="mb-3">
-                  Hasil proses sekarang membawa interpretasi threshold dari data sinkron,
-                  sehingga setiap desa punya kategori dasar untuk curah hujan, kemiringan,
-                  dan histori banjir.
-                </p>
                 <div class="mb-2"><strong>Curah Hujan</strong>: &lt; 2600 = rendah, 2600-2799 = sedang, &ge; 2800 = tinggi</div>
                 <div class="mb-2"><strong>Kemiringan</strong>: &lt; 5 = landai, 5-7 = sedang, &ge; 8 = curam</div>
                 <div class="mb-3"><strong>Histori Banjir</strong>: 0 = tidak pernah, 1-2 = pernah, &ge; 3 = sering</div>
@@ -67,6 +62,19 @@
                 </div>
               </div>
             </div>
+            {% if convergence_summary %}
+            <div class="alert alert-{{ convergence_summary.status }} mt-4 mb-3" role="alert">
+              <div class="d-flex justify-content-between align-items-start flex-wrap">
+                <div>
+                  <h6 class="mb-1">{{ convergence_summary.title }}</h6>
+                  <div>{{ convergence_summary.message }}</div>
+                </div>
+                <span class="badge badge-{{ convergence_summary.status }} mt-2 mt-md-0">
+                  Iterasi {{ convergence_summary.iteration }}
+                </span>
+              </div>
+            </div>
+            {% endif %}
 
             <!-- Convergence Plot Section -->
             {% if convergence_plot %}
@@ -107,15 +115,18 @@
             {% for log in log_iterasi %}
             <div class="border p-3 mb-4">
               <h5>Iterasi {{ log.iterasi }}</h5>
+              {% if log.is_converged %}
+                <div class="alert alert-success py-2 mb-3" role="alert">
+                  <strong>{{ log.convergence_message }}</strong>
+                </div>
+              {% endif %}
               <p><strong>Rumus:</strong> {{ log.rumus }}</p>
               <p><strong>Inertia:</strong> <span class="badge badge-info">{{ "%.6f"|format(log.inertia) }}</span></p>
-              {% if log.convergence_change %}
+              {% if log.convergence_change is not none %}
                 <p><strong>Convergence Change:</strong> <span class="badge badge-success">{{ "%.4f"|format(log.convergence_change) }}%</span></p>
               {% endif %}
               <h6>Jarak ke Setiap Centroid</h6>
               {{ log.jarak_html|safe }}
-              <h6>Assignment Tiap Data</h6>
-              {{ log.assign_html|safe }}
               <h6>Centroid Baru</h6>
               {{ log.centroid_html|safe }}
             </div>

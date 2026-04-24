@@ -132,7 +132,6 @@ class KMeansProcessor:
 
             # Create log HTML tables
             jarak_df = pd.DataFrame(distances, columns=[f'C{j}' for j in range(k)])
-            assign_df = pd.DataFrame({'Data': range(len(assign)), 'Cluster': assign})
             centroid_df = pd.DataFrame(centroids, columns=self.features)
 
             # Calculate convergence change
@@ -145,10 +144,11 @@ class KMeansProcessor:
                 'iterasi': i + 1,
                 'rumus': 'Jarak Euclidean: √Σ(x_i - c_i)²',
                 'jarak_html': jarak_df.to_html(classes='table table-bordered'),
-                'assign_html': assign_df.to_html(classes='table table-bordered'),
                 'centroid_html': centroid_df.to_html(classes='table table-bordered'),
                 'inertia': inertia,
-                'convergence_change': convergence_change
+                'convergence_change': convergence_change,
+                'is_converged': False,
+                'convergence_message': None
             })
 
             # Update new centroid
@@ -160,6 +160,8 @@ class KMeansProcessor:
             ])
 
             if np.allclose(centroids, new_centroids):
+                log_iterasi[-1]['is_converged'] = True
+                log_iterasi[-1]['convergence_message'] = f'Konvergensi tercapai pada iterasi ke-{i + 1}'
                 print(f"Converged at iteration {i + 1}")
                 break
             
@@ -406,6 +408,21 @@ def process_clustering():
             ]
         })
         convergence_html = convergence_table.to_html(classes='table table-bordered', index=False)
+        converged_log = next((log for log in result['log_iterasi'] if log['is_converged']), None)
+        if converged_log:
+            convergence_summary = {
+                'status': 'success',
+                'title': 'Model Sudah Konvergen',
+                'message': converged_log['convergence_message'],
+                'iteration': converged_log['iterasi']
+            }
+        else:
+            convergence_summary = {
+                'status': 'warning',
+                'title': 'Konvergensi Belum Terdeteksi',
+                'message': f"Model berhenti sampai iterasi ke-{len(result['log_iterasi'])} tanpa penanda konvergensi.",
+                'iteration': len(result['log_iterasi'])
+            }
 
         return render_template('klaster/hasil.html',
             scaled=result['data_scaled'].to_html(classes='table table-bordered'),
@@ -414,6 +431,7 @@ def process_clustering():
             log_iterasi=result['log_iterasi'],
             final=converHTMLresultFinal,
             threshold_columns=THRESHOLD_COLUMNS,
+            convergence_summary=convergence_summary,
             convergence_plot=result['convergence_plot'],
             convergence_table=convergence_html,
             inertia_history=result['inertia_history'],

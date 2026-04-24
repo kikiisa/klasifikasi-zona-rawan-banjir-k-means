@@ -35,7 +35,7 @@ def index():
     
     if status_final_result:
         resultFinal = pd.read_csv(result_path_final).drop(columns=['id', 'geojson'], errors='ignore')
-        converHTMLresultFinal = resultFinal.to_html(classes='table table-bordered', index=True)
+        converHTMLresultFinal = resultFinal.to_html(classes='table table-bordered', index=False)
 
     statusFile = os.path.isfile(os.path.join('storage', 'result.csv'))
     return render_template('front/index.html', data=data, final=converHTMLresultFinal, existFile=statusFile)

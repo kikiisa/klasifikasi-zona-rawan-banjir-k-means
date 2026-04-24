@@ -104,9 +104,27 @@
     /* Table Styling */
     .table-container {
       border: 1px solid var(--border);
-      border-radius: 0.75rem;
-      background: #fff;
-      /* Menghapus overflow: hidden agar responsive wrapper datatables bekerja */
+      border-radius: 1rem;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .table-shell {
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      border-radius: 0.9rem;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .table.dataTable {
+      width: 100% !important;
+      margin: 0 !important;
+      border-collapse: separate;
+      border-spacing: 0;
     }
 
     .table thead th {
@@ -117,36 +135,48 @@
       color: var(--muted-fg);
       border-bottom: 1px solid var(--border);
       padding: 1rem !important;
+      white-space: nowrap;
+      vertical-align: middle;
     }
 
     .table tbody td {
-      padding: 1rem !important;
+      padding: 0.9rem 1rem !important;
       border-bottom: 1px solid var(--border);
       font-size: 0.875rem;
       color: #334155;
+      vertical-align: middle;
     }
 
-    /* PERBAIKAN: DataTables Responsive Controls */
     .dataTables_wrapper .dataTables_length,
     .dataTables_wrapper .dataTables_filter {
-      @media (max-width: 767px) {
-        text-align: center;
-        margin-bottom: 1rem;
-      }
+      color: var(--muted-fg);
+      font-size: 0.875rem;
     }
 
     .dataTables_wrapper .dataTables_filter input {
       border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      padding: 0.55rem 1rem;
       margin-left: 0.5rem;
-      @media (max-width: 767px) { margin-left: 0; width: 100%; margin-top: 0.5rem; }
+      background: #fff;
+      min-width: 240px;
+      box-shadow: none !important;
     }
 
     .dataTables_wrapper .dataTables_length select {
       border: 1px solid var(--border);
-      border-radius: 0.4rem;
+      border-radius: 999px;
       padding: 0.25rem 1.5rem 0.25rem 0.5rem;
+      background-color: #fff;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+      color: var(--muted-fg);
+      font-size: 0.82rem;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+      margin-top: 0.5rem;
     }
 
     .pagination .page-link {
@@ -161,6 +191,108 @@
       background: var(--primary);
       border-color: var(--primary);
       color: var(--primary-fg);
+    }
+
+    .table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table tbody td.col-desa {
+      min-width: 180px;
+      font-weight: 600;
+      color: var(--fg-main);
+    }
+
+    .table tbody td.col-threshold {
+      min-width: 280px;
+      white-space: normal;
+      line-height: 1.5;
+    }
+
+    .table tbody td.col-number,
+    .table tbody td.col-kecamatan {
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .badge-soft {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      line-height: 1.2;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .badge-soft.badge-neutral {
+      background: #f8fafc;
+      color: #475569;
+      border-color: #e2e8f0;
+    }
+
+    .badge-soft.badge-safe {
+      background: #ecfdf5;
+      color: #047857;
+      border-color: #a7f3d0;
+    }
+
+    .badge-soft.badge-warn {
+      background: #fffbeb;
+      color: #b45309;
+      border-color: #fcd34d;
+    }
+
+    .badge-soft.badge-danger {
+      background: #fef2f2;
+      color: #b91c1c;
+      border-color: #fca5a5;
+    }
+
+    .table-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .table-meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      font-size: 0.78rem;
+      color: var(--muted-fg);
+    }
+
+    @media (max-width: 767px) {
+      .dataTables_wrapper .dataTables_length,
+      .dataTables_wrapper .dataTables_filter,
+      .dataTables_wrapper .dataTables_info,
+      .dataTables_wrapper .dataTables_paginate {
+        text-align: center;
+      }
+
+      .dataTables_wrapper .dataTables_filter input {
+        margin-left: 0;
+        margin-top: 0.5rem;
+        min-width: 0;
+        width: 100%;
+      }
+
+      .table-container {
+        padding: 1rem !important;
+      }
+
+      .table thead th,
+      .table tbody td {
+        padding: 0.8rem !important;
+      }
     }
 
     /* Perbaikan Warna Progress Bar */
@@ -345,8 +477,15 @@
       
       <div class="table-container p-3 p-md-4 shadow-sm">
           {% if final %}
-            <div class="table-responsive">
-              {{ final|safe }}
+            <div class="table-meta">
+              <div class="table-meta-chip"><i class="fas fa-table"></i> Dataset hasil clustering</div>
+              <div class="table-meta-chip"><i class="fas fa-mobile-alt"></i> Tetap nyaman digeser di layar kecil</div>
+              <div class="table-meta-chip"><i class="fas fa-tags"></i> Kategori utama ditampilkan sebagai badge</div>
+            </div>
+            <div class="table-shell">
+              <div class="table-responsive">
+                {{ final|safe }}
+              </div>
             </div>
           {% else %}
             <div class="text-center py-5 border border-dashed-s rounded-3 my-3">
@@ -382,23 +521,83 @@
     $(document).ready(function() {
       // PERBAIKAN: Inisialisasi DataTable Responsive & Styling
       if ($('.dataframe').length > 0) {
-        $('.dataframe').addClass('table table-hover table-striped-columns w-full m-0').DataTable({
+        const table = $('.dataframe');
+
+        const applyTableEnhancements = () => {
+          const getBadgeClass = (value) => {
+            const text = String(value).trim().toLowerCase();
+            if (['sangat rawan', 'tinggi', 'curam', 'sering'].includes(text)) return 'badge-danger';
+            if (['rawan', 'sedang', 'pernah'].includes(text)) return 'badge-warn';
+            if (['tidak rawan', 'rendah', 'landai', 'tidak pernah'].includes(text)) return 'badge-safe';
+            return 'badge-neutral';
+          };
+
+          const badgeHeaders = [
+            'interpretasi_curah_hujan',
+            'interpretasi_kemiringan',
+            'interpretasi_banjir_histori',
+            'claster'
+          ];
+
+          const headerMap = {};
+          table.find('thead th').each(function(index) {
+            headerMap[$(this).text().trim().toLowerCase()] = index;
+          });
+
+          table.find('tbody tr').each(function() {
+            const cells = $(this).find('td');
+
+            const namaDesaIndex = headerMap['nama_desa'];
+            const thresholdIndex = headerMap['interpretasi_threshold'];
+            const kecamatanIndex = headerMap['kecamatan'];
+
+            if (namaDesaIndex !== undefined) $(cells[namaDesaIndex]).addClass('col-desa');
+            if (thresholdIndex !== undefined) $(cells[thresholdIndex]).addClass('col-threshold');
+            if (kecamatanIndex !== undefined) $(cells[kecamatanIndex]).addClass('col-kecamatan');
+
+            [
+              'lng',
+              'lat',
+              'curah_hujan',
+              'kemiringan',
+              'banjir_histori'
+            ].forEach((header) => {
+              const index = headerMap[header];
+              if (index !== undefined) $(cells[index]).addClass('col-number');
+            });
+
+            badgeHeaders.forEach((header) => {
+              const index = headerMap[header];
+              if (index === undefined) return;
+
+              const cell = $(cells[index]);
+              const rawText = cell.text().trim();
+              if (!rawText || cell.find('.badge-soft').length) return;
+              cell.html(`<span class="badge-soft ${getBadgeClass(rawText)}">${rawText}</span>`);
+            });
+          });
+        };
+
+        table.addClass('table table-hover align-middle w-100 m-0').DataTable({
           "pageLength": 10,
-          "responsive": true, // Mengaktifkan responsivitas bawaan DT
+          "autoWidth": false,
+          "responsive": false,
           "language": {
-            "search": "", // Menghapus teks "Search"
-            "searchPlaceholder": "Cari data...", // Menambahkan placeholder
+            "search": "",
+            "searchPlaceholder": "Cari desa, kecamatan, atau cluster...",
             "lengthMenu": "_MENU_",
             "info": "Menampilkan _START_ - _END_ dari _TOTAL_",
             "paginate": { "previous": '<i class="fas fa-chevron-left"></i>', "next": '<i class="fas fa-chevron-right"></i>' }
           },
-          // Tata letak elemen kontrol yang responsive (l=length, f=filter/search, t=table, r=processing, i=info, p=pagination)
-          "dom": '<"row align-items-center mb-4"<"col-12 col-md-6"l><"col-12 col-md-6"f>>rt<"row align-items-center mt-4"<"col-12 col-md-6"i><"col-12 col-md-6"p>>'
+          "dom": '<"row align-items-center gy-3 mb-4"<"col-12 col-md-4"l><"col-12 col-md-8"f>>rt<"row align-items-center gy-3 mt-4"<"col-12 col-md-5"i><"col-12 col-md-7"p>>',
+          "drawCallback": function() {
+            applyTableEnhancements();
+          }
         });
-        
-        // Menambahkan ikon search pada input secara manual untuk estetika shadcn
-        $('.dataTables_filter label').addClass('relative d-block d-md-inline-block').append('<i class="fas fa-search absolute text-muted-fg opacity-50" style="left: 1rem; top: 50%; transform: translateY(-50%); font-size: 0.8rem;"></i>');
-        $('.dataTables_filter input').css('padding-left', '2.2rem');
+
+        applyTableEnhancements();
+        $('.dataTables_filter label').addClass('relative d-block d-md-inline-block').append('<i class="fas fa-search position-absolute text-muted-fg opacity-50" style="left: 1rem; top: 50%; transform: translateY(-50%); font-size: 0.8rem;"></i>');
+        $('.dataTables_filter input').css('padding-left', '2.4rem');
       }
 
       // Fetch Data API (Tetap sama)
