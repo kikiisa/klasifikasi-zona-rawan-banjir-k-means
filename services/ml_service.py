@@ -12,6 +12,82 @@ from .utils import login_required
 
 initDb = database.ConnectionDb.run
 DATASET_DIR = 'storage'
+THRESHOLD_COLUMNS = [
+    'interpretasi_curah_hujan',
+    'interpretasi_kemiringan',
+    'interpretasi_banjir_histori',
+    'interpretasi_threshold'
+]
+
+
+def _to_number(value):
+    """Convert raw value to float when possible."""
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def classify_curah_hujan(value):
+    """Classify rainfall threshold."""
+    value = _to_number(value)
+    if value is None:
+        return 'tidak diketahui'
+    if value < 2600:
+        return 'rendah'
+    if value < 2800:
+        return 'sedang'
+    return 'tinggi'
+
+
+def classify_kemiringan(value):
+    """Classify slope threshold."""
+    value = _to_number(value)
+    if value is None:
+        return 'tidak diketahui'
+    if value < 5:
+        return 'landai'
+    if value < 8:
+        return 'sedang'
+    return 'curam'
+
+
+def classify_banjir_histori(value):
+    """Classify flood-history threshold."""
+    value = _to_number(value)
+    if value is None:
+        return 'tidak diketahui'
+    if value == 0:
+        return 'tidak pernah'
+    if value < 3:
+        return 'pernah'
+    return 'sering'
+
+
+def build_threshold_interpretation(row):
+    """Build derived threshold interpretations for a dataset row."""
+    curah_hujan = classify_curah_hujan(row.get('curah_hujan'))
+    kemiringan = classify_kemiringan(row.get('kemiringan'))
+    banjir_histori = classify_banjir_histori(row.get('banjir_histori'))
+
+    return {
+        'interpretasi_curah_hujan': curah_hujan,
+        'interpretasi_kemiringan': kemiringan,
+        'interpretasi_banjir_histori': banjir_histori,
+        'interpretasi_threshold': (
+            f"Curah hujan {curah_hujan}, "
+            f"kemiringan {kemiringan}, "
+            f"histori banjir {banjir_histori}"
+        )
+    }
+
+
+def enrich_threshold_columns(data):
+    """Ensure threshold interpretation columns are available and up to date."""
+    threshold_df = data.apply(build_threshold_interpretation, axis=1, result_type='expand')
+    for column in THRESHOLD_COLUMNS:
+        data[column] = threshold_df[column]
+    return data
 
 
 class KMeansProcessor:
@@ -25,7 +101,8 @@ class KMeansProcessor:
         
     def load_data(self, file_path):
         """Load data from CSV file"""
-        return pd.read_csv(file_path)
+        data = pd.read_csv(file_path)
+        return enrich_threshold_columns(data)
     
     def preprocess_data(self, data):
         """Preprocess and scale data"""
@@ -241,7 +318,8 @@ def management_cluster_view():
         title='Clustering Management',
         resultSinkronasi=converHTMLresultSinkronasi,
         resultFinalData=converHTMLresultFinal,
-        resultStepProsessing=convertHTMLresultProcessing   
+        resultStepProsessing=convertHTMLresultProcessing,
+        threshold_columns=THRESHOLD_COLUMNS
     )
 
 
@@ -261,9 +339,23 @@ def sinkronasi_data():
     # Transform data
     modified_datas = []
     for row in datas:
-        new_row = row.copy()
-        new_row['kecamatan'] = new_row.pop('claster')
-        new_row['claster'] = row['claster']
+        threshold_result = build_threshold_interpretation(row)
+        new_row = {
+            'id': row.get('id'),
+            'lng': row.get('lng'),
+            'lat': row.get('lat'),
+            'nama_desa': row.get('nama_desa'),
+            'curah_hujan': row.get('curah_hujan'),
+            'interpretasi_curah_hujan': threshold_result['interpretasi_curah_hujan'],
+            'kemiringan': row.get('kemiringan'),
+            'interpretasi_kemiringan': threshold_result['interpretasi_kemiringan'],
+            'banjir_histori': row.get('banjir_histori'),
+            'interpretasi_banjir_histori': threshold_result['interpretasi_banjir_histori'],
+            'interpretasi_threshold': threshold_result['interpretasi_threshold'],
+            'geojson': row.get('geojson'),
+            'kecamatan': row.get('claster'),
+            'claster': row.get('claster')
+        }
         modified_datas.append(new_row)
 
     with open(file_path, mode="w", newline='', encoding='utf-8') as file:
@@ -321,6 +413,7 @@ def process_clustering():
             hasil=result['result'].to_html(classes='table table-bordered'),
             log_iterasi=result['log_iterasi'],
             final=converHTMLresultFinal,
+            threshold_columns=THRESHOLD_COLUMNS,
             convergence_plot=result['convergence_plot'],
             convergence_table=convergence_html,
             inertia_history=result['inertia_history'],

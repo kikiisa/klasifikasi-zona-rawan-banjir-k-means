@@ -55,6 +55,25 @@
               </button>
             </form>
             <a onclick="resetData()" href="javascript:void(0)" class="btn btn-danger mb-3"><i class="fas fa-sync"></i> Reset Data</a>
+            <div class="card border-primary mt-3">
+              <div class="card-header">
+                <h4>Aturan Threshold Dasar</h4>
+              </div>
+              <div class="card-body">
+                <p class="mb-3">
+                  Saat tombol <strong>Sinkronasi Data</strong> dijalankan, sistem akan
+                  menambahkan interpretasi threshold dasar ke CSV agar hasil cluster
+                  lebih mudah dianalisis.
+                </p>
+                <div class="mb-2"><strong>Curah Hujan</strong>: &lt; 2600 = rendah, 2600-2799 = sedang, &ge; 2800 = tinggi</div>
+                <div class="mb-2"><strong>Kemiringan</strong>: &lt; 5 = landai, 5-7 = sedang, &ge; 8 = curam</div>
+                <div class="mb-3"><strong>Histori Banjir</strong>: 0 = tidak pernah, 1-2 = pernah, &ge; 3 = sering</div>
+                <div class="alert alert-light border mb-0">
+                  Kolom interpretasi yang dibentuk:
+                  <strong>{{ threshold_columns|join(', ') }}</strong>
+                </div>
+              </div>
+            </div>
             </div>
           </div>
         </div>
