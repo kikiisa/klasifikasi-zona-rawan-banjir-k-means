@@ -1,569 +1,99 @@
 
-from flask import Flask,render_template,request,redirect,url_for,flash,session,jsonify,make_response
+"""
+Main Flask Application - K-Means Flood Clustering System
+Routes are organized using service modules for better maintainability
+"""
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_cors import CORS
-from werkzeug.utils import secure_filename
 import os
 import pandas as pd
-from werkzeug.security import generate_password_hash
-from werkzeug.security import check_password_hash
 import database.ConnectionDb
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.cluster import KMeans
-import csv
-import numpy as np
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-import matplotlib.pyplot as plt
+
+# Import services
+from services import auth_service, user_service, data_service, upload_service, ml_service
+from services.utils import login_required
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
-initDb = database.ConnectionDb.run
 app.secret_key = "jody"
 CORS(app)
-dataset_dir = 'storage'
+
+# Configuration
 UPLOAD_FOLDER = 'dataset'
-ALLOWED_EXTENSIONS = {'csv'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+initDb = database.ConnectionDb.run
+
+# ==================== FRONTEND ROUTES ====================
 
 @app.route('/')
 def index():
+    """Display home page"""
     data = initDb.fetchContact()
     result_path_final = os.path.join('storage', 'result.csv')
-    converHTMLresultFinal = None  # default, supaya aman
+    converHTMLresultFinal = None
     status_final_result = os.path.isfile(result_path_final)
+    
     if status_final_result:
-        resultFinal = pd.read_csv(result_path_final).drop(columns=['id','geojson'])
+        resultFinal = pd.read_csv(result_path_final).drop(columns=['id', 'geojson'], errors='ignore')
         converHTMLresultFinal = resultFinal.to_html(classes='table table-bordered', index=True)
 
-    statusFile = False
-    checkFile = os.path.isfile(os.path.join(dataset_dir,'result.csv'))
-    if(checkFile):
-        statusFile = True
-    else:
-        statusFile = False
-        
-
-    return render_template('front/index.html', data=data,final=converHTMLresultFinal,existFile=statusFile)
+    statusFile = os.path.isfile(os.path.join('storage', 'result.csv'))
+    return render_template('front/index.html', data=data, final=converHTMLresultFinal, existFile=statusFile)
 
 
-@app.route("/login",methods=['GET'])
-def login():    
-    if(session.get('status')):
-        return redirect(url_for('dashboard'))
-    else:
-        return render_template('auth/auth.html',title='Login')
+@app.route("/hasil-cluster", methods=['GET'])
+def hasil_cluster():
+    """Display clustering results"""
+    data = initDb.fetchContact()
+    return render_template('front/cluster.html', data=data)
 
 
-@app.route('/logout',methods=['GET'])
-def logout():
-    session.pop('status',None)
-    session.pop('id',None)
-    return redirect(url_for('login'))
+@app.route("/peta-bencana", methods=["GET"])
+def peta_bencana():
+    """Display disaster map"""
+    data = initDb.fetchContact()
+    return render_template("front/peta-bencana.html", data=data)
 
-@app.route('/login',methods=['POST'])
+
+# ==================== AUTHENTICATION ROUTES ====================
+
+@app.route("/login", methods=['GET'])
+def login():
+    """Display login page"""
+    return auth_service.login_view()
+
+
+@app.route("/login", methods=['POST'])
 def login_post():
-    username = request.form.get("username")
-    password = request.form.get("password")
-    user = initDb.getUserByUsername(username)
-    if user:    
-        if user['status'] != 'active':
-            flash("Akun anda di Nonaktifkan")
-            return redirect(url_for("login"))
-        
-        if check_password_hash(user['password'], password):
-            session['id'] = user
-            session['status'] = True
-            return redirect(url_for("dashboard"))
-        else:
-            flash("Username atau Password Salah")
-            return redirect(url_for("login"))
-    else:
-        flash("Usernme atau Password Salah")
-        return redirect(url_for("login"))
-       
-@app.route('/dashboard')
-def dashboard():
-    if(not session.get('status')):
-        flash('Silahkan Login Terlebih Dahulu !')
-        return redirect(url_for('login'))   
-    
-    statusFile = False
-    checkFile = os.path.isfile(os.path.join(dataset_dir,'result.csv'))
-    if(checkFile):
-        statusFile = True
-    else:
-        statusFile = False
-
-    return render_template('dashboard/index.html',title='Dashboard',existFile=statusFile)
+    """Handle login form submission"""
+    return auth_service.login_post_view()
 
 
-@app.route("/setting",methods=["GET"])
+@app.route('/logout', methods=['GET'])
+def logout():
+    """Handle user logout"""
+    return auth_service.logout_view()
+
+
+# ==================== USER PROFILE ROUTES ====================
+
+@app.route("/setting", methods=["GET"])
+@login_required
 def settings():
-    if(not session.get('status')):
-        flash('Silahkan Login Terlebih Dahulu !')
-        return redirect(url_for('login')) 
-    
-    return render_template("profile/index.html",data=session.get("id"))
-# route management data
-@app.route('/management-data',methods=['GET'])
-def management_data():
-    if(not session.get('status')):
-        flash('Silahkan Login Terlebih Dahulu !')
-        return redirect(url_for('login'))
-    data = initDb.fetchData()
-    return render_template('management-data/index.html',title='Management Data',data=data)
-
-@app.route("/data-peta",methods=['GET'])
-def data_peta():
-    if(not session.get('status')):
-        flash('Silahkan Login Terlebih Dahulu !')
-        return redirect(url_for('login'))
-    statusFile = False
-    checkFile = os.path.isfile(os.path.join(dataset_dir,'result.csv'))
-    if(checkFile):
-        statusFile = True
-    else:
-        statusFile = False 
-    return render_template('peta/index.html',title='Data Peta',existFile=statusFile)
-
-@app.route("/management-user",methods=['GET'])
-def management_user():
-    # return jsonify(session.get("id")['role'])
-    if(not session.get('status')):
-        flash('Silahkan Login Terlebih Dahulu !')
-        return redirect(url_for('login'))
-    else:
-        user = session.get("id")['role']
-        if(user != 'admin'):
-            flash('Maaf Akses Terbatas')
-            return redirect(url_for('login'))
-        else:
-            data = initDb.fetchDataUser()
-            return render_template("management-user/index.html",data=data)
-            
-
-@app.route("/create/user",methods=["GET"])
-def create_user():
-    return render_template("management-user/create.html")
-login
-@app.route("/edit/user/<id>",methods=["GET"])
-def edit_user(id):
-    data = initDb.editUser(id)
-    return render_template("management-user/edit.html",data=data)
-
-@app.route("/create/user/store",methods=["POST"])
-def store_user():
-    username = request.form.get('username')
-    full_name = request.form.get('full_name')
-    email = request.form.get('email')
-    password = request.form.get('password')
-    status = request.form.get('status')
-    role = request.form.get('role')
-    initDb.insertUser(username,full_name,email,password,status,role)
-    flash("Berhasil Menambahkan User","success")
-    return redirect(url_for("management_user"))
-
-@app.route("/update/user/<id>",methods=["POST"])
-def update_user(id):
-    username = request.form.get('username')
-    full_name = request.form.get('full_name')
-    email = request.form.get('email')
-    password = request.form.get('password')
-    status = request.form.get('status')
-    role = request.form.get('role')
-    initDb.updateUser(id,username,full_name,email,password,status,role)
-    flash("Berhasil Menghapus Data","success")
-    return redirect(url_for('management_user'))
-
-@app.route("/delete-user/<id>",methods=["GET"])
-def delete_user(id):
-    initDb.deleteUser(id)
-    flash("Berhasil Menghapus Data","success")
-    
-    return redirect(url_for('management_user'))
-
-@app.route("/reset-data",methods=['GET'])
-def reset_data():
-    if(not session.get('status')):
-        flash('Silahkan Login Terlebih Dahulu !')
-        return redirect(url_for('login'))
-    
-    filelist = [ f for f in os.listdir(dataset_dir) if f.endswith(".csv") ]
-    for f in filelist:
-        os.remove(os.path.join(dataset_dir, f))
-    flash("Berhasil Reset Data","success")
-    return redirect(url_for('management_cluster'))
-@app.route('/management-data/create',methods=['GET'])
-def create():
-    if(not session.get('status')):
-        flash('Silahkan Login Terlebih Dahulu !')
-        return redirect(url_for('login'))
-    kecamatan_data = [
-        {
-            "id": "7107010",
-            "regency_id": "7107",
-            "name": "SANGKUB"
-        },
-        {
-            "id": "7107020",
-            "regency_id": "7107",
-            "name": "BINTAUNA"
-        },
-        {
-            "id": "7107030",
-            "regency_id": "7107",
-            "name": "BOLANG ITANG TIMUR"
-        },
-        {
-            "id": "7107040",
-            "regency_id": "7107",
-            "name": "BOLANG ITANG BARAT"
-        },
-        {
-            "id": "7107050",
-            "regency_id": "7107",
-            "name": "KAIDIPANG"
-        },
-        {
-            "id": "7107060",
-            "regency_id": "7107",
-            "name": "PINOGALUMAN"
-        }
-    ]
-    return render_template('management-data/create.html',title='Create Data',kecamatan=kecamatan_data)
-
-@app.route("/management-data/edit/<id>",methods=['GET'])
-def edit(id):
-    if(not session.get('status')):
-        flash('Silahkan Login Terlebih Dahulu !')
-        return redirect(url_for('login'))
-    data = initDb.fetchDataUserById(id)
-    kecamatan_data = [
-        {
-            "id": "7107010",
-            "regency_id": "7107",
-            "name": "SANGKUB"
-        },
-        {
-            "id": "7107020",
-            "regency_id": "7107",
-            "name": "BINTAUNA"
-        },
-        {
-            "id": "7107030",
-            "regency_id": "7107",
-            "name": "BOLANG ITANG TIMUR"
-        },
-        {
-            "id": "7107040",
-            "regency_id": "7107",
-            "name": "BOLANG ITANG BARAT"
-        },
-        {
-            "id": "7107050",
-            "regency_id": "7107",
-            "name": "KAIDIPANG"
-        },
-        {
-            "id": "7107060",
-            "regency_id": "7107",
-            "name": "PINOGALUMAN"
-        }
-    ]
-    return render_template('management-data/edit.html',title='Edit Data',data=data,kecamatan=kecamatan_data)
-@app.route("/management-data/update/<id>",methods=['POST'])
-def update(id):
-    if(not session.get('status')):
-        flash('Silahkan Login Terlebih Dahulu !')
-        return redirect(url_for('login'))
-    lng = request.form.get('lng')
-    lat = request.form.get('lat')
-    nama_desa = request.form.get('nama_desa')
-    curah_hujan = request.form.get('curah_hujan')
-    kemiringan = request.form.get('kemiringan')
-    banjir_histori = request.form.get('banjir_histori')
-    kecamatan = request.form.get("kecamatan")
-
-    file = request.files.get('upload')
-    filename = None
-    if file and file.filename != '':        
-        ext = os.path.splitext(file.filename)[1]  # dapatkan ekstensi (misalnya .jpg)
-        filename = nama_desa + ext # buat nama acak dengan ekstensi asli
-        upload_folder = os.path.join('static', 'upload')
-        os.makedirs(upload_folder, exist_ok=True)  # Buat folder jika belum ada
-        file_path = os.path.join(upload_folder, filename)
-        file.save(file_path)
-        initDb.updateData(id,lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori,filename,kecamatan)
-    else:
-        initDb.updateDataNoData(id,lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori,kecamatan)
-        
-    flash("Berhasil Updated Data","success")
-    return redirect(url_for('management_data'))
-
-@app.route("/management-data/delete/<id>",methods=['GET'])
-def delete(id):
-    if(not session.get('status')):
-        flash('Silahkan Login Terlebih Dahulu !')
-        return redirect(url_for('login'))
-    initDb.deleteData(id)
-    
-    flash("Berhasil Menghapus Data","success")
-    return redirect(url_for('management_data'))
+    """Display user settings"""
+    return render_template("profile/index.html", data=session.get("id"))
 
 
-# end route management data
-@app.route('/insert-data',methods=['POST'])
-def insertData():
-    if(request.method == 'POST'):     
-        lng = request.form.get('lng')
-        lat = request.form.get('lat')
-        nama_desa = request.form.get('nama_desa')
-        curah_hujan = request.form.get('curah_hujan')
-        kemiringan = request.form.get('kemiringan')
-        banjir_histori = request.form.get('banjir_histori')
-        kecamatan = request.form.get("kecamatan")
-        
-        # return jsonify(request.form.get("kecamatan"))
-        file = request.files.get('upload')
-        filename = None
-        if file and file.filename != '':
-            ext = os.path.splitext(file.filename)[1]  # dapatkan ekstensi (misalnya .jpg)
-            filename = nama_desa + ext # buat nama acak dengan ekstensi asli
-            upload_folder = os.path.join('static', 'upload')
-            os.makedirs(upload_folder, exist_ok=True)  # Buat folder jika belum ada
-            file_path = os.path.join(upload_folder, filename)
-            file.save(file_path)
-
-        # Simpan data ke database
-        initDb.insertData(lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori,filename,kecamatan)
-        # initDb.insertData(lng,lat,nama_desa,curah_hujan,kemiringan,banjir_histori)
-        flash('Data Berhasil Disimpan','success')
-        return redirect(url_for('management_data'))
-    
-
-@app.route('/upload-file',methods=['POST','GET'])
-def upload_file():
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            flash('Tidak ada file dalam form.')
-            return redirect(request.url)
-        file = request.files['file']
-
-        if file.filename == '':
-            flash('Tidak ada file yang dipilih.')
-            return redirect(request.url)
-
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)  # Hindari nama aneh
-            filename = secure_filename(file.filename)
-            ext = filename.rsplit('.', 1)[1].lower()
-            # Rename otomatis dengan timestamp
-            new_filename = f"dataset.{ext}"
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
-            file.save(filepath)
-            flash('File berhasil diupload: ' + new_filename)
-            return redirect(url_for('upload_file'))
-        flash('File tidak diizinkan.')
-        return redirect(request.url)
-    return redirect(url_for('dashboard'))
-
-
-@app.route("/cluster-data",methods=["GET"])
-def management_cluster():
-    if(not session.get('status')):
-        flash('Silahkan Login Terlebih Dahulu !')
-        return redirect(url_for('login'))
-    
-    result_path = os.path.join('storage', 'sinkronasi.csv')
-    result_path_processing = os.path.join('storage', 'prosessing.csv')
-    result_path_final = os.path.join('storage', 'result.csv')
-
-    
-    
-    # Inisialisasi nilai default
-    converHTMLresultSinkronasi = None
-    converHTMLresultFinal = None
-    convertHTMLresultProcessing = None
-    
-    status_sinkronasi = os.path.isfile(result_path)
-    processingData = os.path.isfile(result_path_processing)
-    status_final_result = os.path.isfile(result_path_final)
-    
-    if status_sinkronasi:
-        resultSinkronasi = pd.read_csv(result_path).drop(columns=['id','geojson'])
-        converHTMLresultSinkronasi = resultSinkronasi.to_html(classes='table table-bordered', index=False)  
-    
-    if processingData:
-        resultProcessing = pd.read_csv(result_path_processing)
-        convertHTMLresultProcessing = resultProcessing.to_html(classes='table table-bordered', index=False)
-        
-    if status_final_result:
-        resultFinal = pd.read_csv(result_path_final).drop(columns=['id','geojson'])
-        converHTMLresultFinal = resultFinal.to_html(classes='table table-bordered', index=False)
-        
-    return render_template(
-        'klaster/index.html',
-        title='Dashboard',
-        resultSinkronasi=converHTMLresultSinkronasi,
-        resultFinalData=converHTMLresultFinal,
-        resultStepProsessing=convertHTMLresultProcessing   
-    )
-
-
-@app.route("/api/results", methods=["GET"])
-def results():  
-    file_path = os.path.join("storage", "result.csv")
-    if not os.path.isfile(file_path):
-        return jsonify({"error": "Not Found"}), 404
-
-    data = pd.read_csv(file_path)
-    return  data.to_json(orient="records")
-@app.route("/sinkronasi", methods=["POST"])
-def sinkronasi():
-    datas = initDb.fetchData()
-
-    if not datas:
-       flash("Data Tidak Ditemukan","danger")
-       return redirect(url_for('management_cluster'))
-
-    # Pastikan direktori 'storage/' ada
-    os.makedirs("storage", exist_ok=True)
-
-    # Tentukan path file tujuan
-    file_path = os.path.join("storage", "sinkronasi.csv")
-    # Transformasi data: ganti key 'claster' jadi 'kecamatan', dan tambahkan 'claster'
-    modified_datas = []
-    for row in datas:
-        new_row = row.copy()
-        new_row['kecamatan'] = new_row.pop('claster')  # ganti nama kolom
-        new_row['claster'] = row['claster']            # tambahkan kolom claster kembali
-        modified_datas.append(new_row)
-
-    with open(file_path, mode="w", newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=modified_datas[0].keys())
-        writer.writeheader()
-        writer.writerows(modified_datas)
-
-    
-    result_path = os.path.join('storage', 'sinkronasi.csv')
-    resultSinkronasi = pd.read_csv(result_path).drop(columns=['id','geojson','claster'])
-    flash(f"Berhasil Menyinkronkan Data, Lakukan Prosessing Data","success")
-    return redirect(url_for('management_cluster'))
-
-@app.route("/api/filter-by/<id>",methods=['GET'])
-def filterbyidKecamatan(id):
-    data = initDb.getVillaeByDistrict(id)
-    return jsonify(data)
-
-    
-@app.route('/prosess', methods=['POST'])
-def prosess():
-    if request.method == 'POST':
-        file_path = os.path.join(dataset_dir, 'sinkronasi.csv')
-        if not os.path.isfile(file_path):
-            flash('File CSV Tidak Ditemukan, Silahkan Sinkronasi Kembali', "danger")
-            return redirect(url_for('management_cluster'))
-
-        # === 1. Load & preprocessing ===
-        data = pd.read_csv(file_path)
-        fitur = ['curah_hujan', 'kemiringan', 'banjir_histori']
-
-        scaler = MinMaxScaler()
-        data_scaled = scaler.fit_transform(data[fitur])
-        data_scaled_df = pd.DataFrame(data_scaled, columns=fitur)
-        data_scaled_df.to_csv("storage/prosessing.csv", index=False)
-
-        # === 2. Jalankan KMeans manual untuk log iterasi ===
-        k = 3
-        np.random.seed(42)
-        centroids = data_scaled_df.sample(n=k).to_numpy()
-
-        log_iterasi = []
-        max_iter = 10
-        for i in range(max_iter):
-            # Hitung jarak Euclidean: √Σ(x_i - c_i)²
-            distances = np.sqrt(((data_scaled_df.to_numpy()[:, None] - centroids[None, :]) ** 2).sum(axis=2))
-            assign = np.argmin(distances, axis=1)
-
-            # Simpan log HTML
-            jarak_df = pd.DataFrame(distances, columns=[f'C{j}' for j in range(k)])
-            assign_df = pd.DataFrame({'Data': range(len(assign)), 'Cluster': assign})
-            centroid_df = pd.DataFrame(centroids, columns=fitur)
-
-            log_iterasi.append({
-                'iterasi': i + 1,
-                'rumus': 'Jarak Euclidean: √Σ(x_i - c_i)²',
-                'jarak_html': jarak_df.to_html(classes='table table-bordered'),
-                'assign_html': assign_df.to_html(classes='table table-bordered'),
-                'centroid_html': centroid_df.to_html(classes='table table-bordered')
-            })
-
-            # Update centroid baru (rata-rata titik pada cluster yang sama)
-            new_centroids = np.array([data_scaled_df.to_numpy()[assign == j].mean(axis=0) if np.any(assign == j) else centroids[j]
-                                      for j in range(k)])
-            
-
-            if np.allclose(centroids, new_centroids):
-                break
-            centroids = new_centroids
-
-            
-        # === 3. Jalankan KMeans sklearn untuk hasil final ===
-        kmeans = KMeans(n_clusters=k, random_state=42)
-        data['claster'] = kmeans.fit_predict(data_scaled)
-
-        mapping = {0: 'Tidak Rawan', 1: 'Rawan', 2: 'Sangat Rawan'}
-        centers = pd.DataFrame(kmeans.cluster_centers_, columns=fitur)
-        order = centers['curah_hujan'].argsort().values
-        label_map = {old: mapping[new] for new, old in enumerate(order)}
-        data['claster'] = data['claster'].map(label_map)
-
-        data.to_csv("storage/result.csv", index=False)
-        flash('Proses Berhasil', 'success')
-
-        result_path_final = os.path.join('storage', 'result.csv')
-        status_final_result = os.path.isfile(result_path_final)
-
-
-
-        # === 5. Plot Centroid & Cluster ===
-        plt.figure()
-
-        for cluster in range(k):
-            cluster_data = data_scaled_df[data['claster'] == mapping[cluster]]
-            plt.scatter(cluster_data['curah_hujan'], cluster_data['kemiringan'], label=f'Cluster {cluster}')
-
-        # Plot centroid
-        centroids_plot = kmeans.cluster_centers_
-        plt.scatter(centroids_plot[:, 0], centroids_plot[:, 1],
-                    s=300, c='red', marker='X', label='Centroid')
-
-        plt.xlabel('Curah Hujan')
-        plt.ylabel('Kemiringan')
-        plt.legend()
-
-        centroid_path = "static/centroid_plot.png"
-        plt.savefig(centroid_path)
-        plt.close()
-        if status_final_result:
-            resultFinal = pd.read_csv(result_path_final).drop(columns=['id','geojson'])
-            converHTMLresultFinal = resultFinal.to_html(classes='table table-bordered', index=False)
-        
-        return render_template('klaster/hasil.html',
-            scaled=data_scaled_df.to_html(classes='table table-bordered'),
-            centers=centers.to_html(classes='table table-bordered'),
-            hasil=data.to_html(classes='table table-bordered'),
-            log_iterasi=log_iterasi,
-            final=converHTMLresultFinal
-        )
 @app.route('/contact', methods=['GET'])
 def contact():
+    """Display contact page"""
     data = initDb.fetchContact()
     return render_template('contact/index.html', contact=data)
 
+
 @app.route('/contact', methods=['POST'])
 def update_contact():
+    """Update contact information"""
     instagram = request.form.get('instagram')
     facebook = request.form.get('facebook')
     whatsapp = request.form.get('whatsapp')
@@ -572,19 +102,164 @@ def update_contact():
     return redirect(url_for('contact'))
 
 
-@app.route("/hasil-cluster",methods=['GET'])
-def hasil_cluster():    
-    data = initDb.fetchContact()
-    return render_template('front/cluster.html', data=data)
-    # return render_template('front/peta-1-cluster.html', data=data)
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    """Display main dashboard"""
+    statusFile = os.path.isfile(os.path.join('storage', 'result.csv'))
+    return render_template('dashboard/index.html', title='Dashboard', existFile=statusFile)
+# ==================== USER MANAGEMENT ROUTES ====================
+
+@app.route("/management-user", methods=['GET'])
+@login_required
+def management_user():
+    """Display user management page"""
+    return user_service.list_users()
+
+
+@app.route("/create/user", methods=["GET"])
+def create_user():
+    """Display create user form"""
+    return user_service.create_user_view()
+
+
+@app.route("/edit/user/<id>", methods=["GET"])
+@login_required
+def edit_user(id):
+    """Display edit user form"""
+    return user_service.edit_user_view(id)
+
+
+@app.route("/create/user/store", methods=["POST"])
+@login_required
+def store_user():
+    """Store new user"""
+    return user_service.store_user()
+
+
+@app.route("/update/user/<id>", methods=["POST"])
+@login_required
+def update_user(id):
+    """Update user data"""
+    return user_service.update_user(id)
+
+
+@app.route("/delete-user/<id>", methods=["GET"])
+@login_required
+def delete_user(id):
+    """Delete user"""
+    return user_service.delete_user(id)
+
+# ==================== DATA MANAGEMENT ROUTES ====================
+
+@app.route('/management-data', methods=['GET'])
+@login_required
+def management_data():
+    """Display data management page"""
+    return data_service.list_data()
+
+
+@app.route("/data-peta", methods=['GET'])
+@login_required
+def data_peta():
+    """Display map data page"""
+    statusFile = os.path.isfile(os.path.join('storage', 'result.csv'))
+    return render_template('peta/index.html', title='Data Peta', existFile=statusFile)
+
+
+@app.route('/management-data/create', methods=['GET'])
+@login_required
+def create():
+    """Display create data form"""
+    return data_service.create_data_view()
+
+
+@app.route("/management-data/edit/<id>", methods=['GET'])
+@login_required
+def edit(id):
+    """Display edit data form"""
+    return data_service.edit_data_view(id)
+
+
+@app.route("/management-data/update/<id>", methods=['POST'])
+@login_required
+def update(id):
+    """Update data"""
+    return data_service.update_data(id)
+
+
+@app.route("/management-data/delete/<id>", methods=['GET'])
+@login_required
+def delete(id):
+    """Delete data"""
+    return data_service.delete_data(id)
+
+
+@app.route('/insert-data', methods=['POST'])
+@login_required
+def insertData():
+    """Insert new data"""
+    return data_service.insert_data()
+
+
+@app.route("/reset-data", methods=['GET'])
+@login_required
+def reset_data():
+    """Reset all data"""
+    return data_service.reset_data()
     
 
-@app.route("/peta-bencana",methods=["GET"])
-def peta_bencana():
-    data = initDb.fetchContact()
-    return render_template("front/peta-bencana.html",data=data)
+# ==================== FILE UPLOAD ROUTES ====================
 
+@app.route('/upload-file', methods=['POST', 'GET'])
+@login_required
+def upload_file():
+    """Handle file upload"""
+    return upload_service.upload_file()
+
+
+# ==================== MACHINE LEARNING / CLUSTERING ROUTES ====================
+
+@app.route("/cluster-data", methods=["GET"])
+@login_required
+def management_cluster():
+    """Display clustering management page"""
+    return ml_service.management_cluster_view()
+
+
+@app.route("/sinkronasi", methods=["POST"])
+@login_required
+def sinkronasi():
+    """Synchronize data from database"""
+    return ml_service.sinkronasi_data()
+
+
+@app.route('/prosess', methods=['POST'])
+@login_required
+def prosess():
+    """Process clustering"""
+    return ml_service.process_clustering()
+
+
+@app.route("/api/results", methods=["GET"])
+def results():
+    """Get clustering results as JSON"""
+    result = ml_service.get_results()
+    if result is None:
+        return jsonify({"error": "Not Found"}), 404
+    return result.to_json(orient="records")
+
+
+@app.route("/api/filter-by/<id>", methods=['GET'])
+@login_required
+def filterbyidKecamatan(id):
+    """Get villages filtered by district"""
+    data = ml_service.get_filter_by_district(id)
+    return jsonify(data)
+
+
+# ==================== APPLICATION ENTRY POINT ====================
 
 if __name__ == '__main__':
+    """Run Flask application in debug mode"""
     app.run(debug=True)
-    
