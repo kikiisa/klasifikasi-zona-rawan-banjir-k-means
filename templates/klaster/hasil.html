@@ -8,6 +8,177 @@
   .nav-button {
     margin: 2px;
   }
+
+  .table-panel {
+    margin-top: 1rem;
+    border: 1px solid #cfe0f5;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #f2f8ff 100%);
+    box-shadow: 0 16px 40px rgba(37, 99, 235, 0.08);
+    overflow: hidden;
+  }
+
+  .table-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #dbe9f8;
+    background: linear-gradient(135deg, #f4f9ff 0%, #e7f1ff 100%);
+  }
+
+  .table-panel-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e3a5f;
+  }
+
+  .table-panel-subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.86rem;
+    color: #5f7692;
+  }
+
+  .table-panel-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: #dbeafe;
+    color: #1e40af;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .table-shell {
+    padding: 1rem 1.25rem 1.25rem;
+  }
+
+  .table-shell .table-responsive {
+    border: 1px solid #d9e7f5;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fdfefe;
+  }
+
+  .table-shell table.dataframe,
+  .table-shell table.table {
+    width: 100% !important;
+    margin: 0 !important;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: #1f3653;
+  }
+
+  .table-shell table.dataframe thead th,
+  .table-shell table.table thead th {
+    padding: 0.95rem 1rem;
+    border: 0;
+    border-bottom: 1px solid #d6e5f5;
+    background: linear-gradient(180deg, #eff6ff 0%, #e4f0ff 100%);
+    color: #27496d;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .table-shell table.dataframe tbody td,
+  .table-shell table.table tbody td {
+    padding: 0.9rem 1rem;
+    border-top: 1px solid #e5eef8;
+    vertical-align: middle;
+    font-size: 0.92rem;
+  }
+
+  .table-shell table.dataframe tbody tr:nth-child(even),
+  .table-shell table.table tbody tr:nth-child(even) {
+    background: #f7fbff;
+  }
+
+  .table-shell table.dataframe tbody tr:hover,
+  .table-shell table.table tbody tr:hover {
+    background: #eaf4ff;
+  }
+
+  .table-shell .dataTables_wrapper {
+    padding: 0;
+  }
+
+  .table-shell .dataTables_length label,
+  .table-shell .dataTables_filter label {
+    margin-bottom: 1rem;
+    color: #33506f;
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+
+  .table-shell .dataTables_length select,
+  .table-shell .dataTables_filter input {
+    min-height: 40px;
+    border: 1px solid #cddff1;
+    border-radius: 10px;
+    background: #f8fbff;
+    box-shadow: none;
+  }
+
+  .table-shell .dataTables_filter input {
+    margin-left: 0.5rem;
+    padding: 0.45rem 0.75rem;
+  }
+
+  .table-shell .dataTables_info {
+    padding-top: 1rem;
+    color: #58718d;
+    font-size: 0.88rem;
+  }
+
+  .table-shell .dataTables_paginate {
+    padding-top: 0.75rem;
+  }
+
+  .table-shell .dataTables_paginate .paginate_button {
+    margin: 0 0.15rem;
+    border-radius: 10px !important;
+    border: 1px solid transparent !important;
+  }
+
+  .table-shell .dataTables_paginate .paginate_button.current,
+  .table-shell .dataTables_paginate .paginate_button.current:hover {
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+    color: #fff !important;
+  }
+
+  .iteration-card {
+    border: 1px solid #d3e3f5;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    box-shadow: 0 14px 30px rgba(37, 99, 235, 0.06);
+  }
+
+  .iteration-card h5,
+  .iteration-card h6 {
+    color: #1e3a5f;
+    font-weight: 700;
+  }
+
+  @media (max-width: 767.98px) {
+    .table-panel-header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .table-shell {
+      padding: 0.85rem;
+    }
+  }
 </style>
 <section class="section">
   <div class="section-header">
@@ -75,7 +246,6 @@
               </div>
             </div>
             {% endif %}
-
             <!-- Convergence Plot Section -->
             {% if convergence_plot %}
             <div class="row mt-4">
@@ -100,20 +270,31 @@
                 </div>
               </div>
             </div>
-
             <!-- Convergence Statistics Table -->
             <div class="card mt-4">
               <div class="card-header">
                 <h4>Convergence Statistics</h4>
               </div>
               <div class="card-body">
-                {{ convergence_table|safe }}
+                <div class="table-panel mt-0">
+                  <div class="table-panel-header">
+                    <div>
+                      <p class="table-panel-title">Statistik Konvergensi</p>
+                      <p class="table-panel-subtitle">Ringkasan perubahan inertia dan stabilitas proses clustering.</p>
+                    </div>
+                    <span class="table-panel-badge">Analytics</span>
+                  </div>
+                  <div class="table-shell">
+                    {{ convergence_table|safe }}
+                  </div>
+                </div>
               </div>
+              
             </div>
             {% endif %}
 
             {% for log in log_iterasi %}
-            <div class="border p-3 mb-4">
+            <div class="iteration-card p-3 mb-4">
               <h5>Iterasi {{ log.iterasi }}</h5>
               {% if log.is_converged %}
                 <div class="alert alert-success py-2 mb-3" role="alert">
@@ -126,13 +307,48 @@
                 <p><strong>Convergence Change:</strong> <span class="badge badge-success">{{ "%.4f"|format(log.convergence_change) }}%</span></p>
               {% endif %}
               <h6>Jarak ke Setiap Centroid</h6>
-              {{ log.jarak_html|safe }}
+              <div class="table-panel">
+                <div class="table-panel-header">
+                  <div>
+                    <p class="table-panel-title">Distance Matrix</p>
+                    <p class="table-panel-subtitle">Perbandingan jarak setiap data terhadap centroid pada iterasi ini.</p>
+                  </div>
+                  <span class="table-panel-badge">Iterasi {{ log.iterasi }}</span>
+                </div>
+                <div class="table-shell">
+                  {{ log.jarak_html|safe }}
+                </div>
+              </div>
               <h6>Centroid Baru</h6>
-              {{ log.centroid_html|safe }}
+              <div class="table-panel">
+                <div class="table-panel-header">
+                  <div>
+                    <p class="table-panel-title">Updated Centroid</p>
+                    <p class="table-panel-subtitle">Posisi centroid setelah pembaruan berdasarkan hasil pengelompokan.</p>
+                  </div>
+                  <span class="table-panel-badge">Cluster Center</span>
+                </div>
+                <div class="table-shell">
+                  {{ log.centroid_html|safe }}
+                </div>
+              </div>
             </div>
             {% endfor %}
             <div class="process mt-3">
-              {% if final %} {{ final|safe }} {% else %}
+              {% if final %}
+              <div class="table-panel">
+                <div class="table-panel-header">
+                  <div>
+                    <p class="table-panel-title">Hasil Akhir Clustering</p>
+                    <p class="table-panel-subtitle">Tabel hasil akhir dengan tampilan yang lebih rapi dan mudah dibaca.</p>
+                  </div>
+                  <span class="table-panel-badge">Final Result</span>
+                </div>
+                <div class="table-shell">
+                  {{ final|safe }}
+                </div>
+              </div>
+              {% else %}
              <div class="alert alert-warning" role="alert">
                No results found. Please ensure the input data is valid.
              </div>
@@ -169,21 +385,47 @@
 <script src="{{url_for('static',filename='template/js/page/modules-sweetalert.js')}}"></script>
 <!-- <script src="{{url_for('static',filename='template/js/page/modules-datatables.js')}}"></script> -->
 <script>
-  $(".dataframe ").dataTable({
-    columnDefs: [{ sortable: false, targets: [2, 3] }],
+  $(".table-shell table").each(function () {
+    const $table = $(this);
+    const rowCount = $table.find("tbody tr").length;
+
+    $table.addClass("table");
+
+    if (!$table.parent().hasClass("table-responsive")) {
+      $table.wrap('<div class="table-responsive"></div>');
+    }
+
+    if ($.fn.DataTable.isDataTable(this)) {
+      return;
+    }
+
+    if (rowCount > 0) {
+      $table.DataTable({
+        pageLength: 10,
+        lengthMenu: [
+          [10, 25, 50, -1],
+          [10, 25, 50, "Semua"],
+        ],
+        autoWidth: false,
+        ordering: true,
+        searching: false,
+        responsive: false,
+        language: {
+          lengthMenu: "Tampilkan _MENU_ baris",
+          info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+          infoEmpty: "Belum ada data untuk ditampilkan",
+          zeroRecords: "Data tidak ditemukan",
+          paginate: {
+            previous: "Sebelumnya",
+            next: "Berikutnya",
+          },
+        },
+      });
+    }
   });
 
 </script>
-<script src="{{url_for('static',filename='template/modules/datatables/datatables.min.js')}}"></script>
-<script
-  src="{{url_for('static',filename='template/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
-<script
-  src="{{url_for('static',filename='template/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
 <script>
-  $("#table-1").dataTable({
-    columnDefs: [{ sortable: false, targets: [2, 3] }],
-  });
-
   const resetData = async () => {
     swal({
       title: "Apakah anda yakin ingin Reset data ini?",
