@@ -4,9 +4,26 @@ import os
 import database.ConnectionDb
 from .utils import login_required, get_kecamatan_data
 from .upload_service import save_file_upload
+from .data_validation import validate_feature_inputs
 
 initDb = database.ConnectionDb.run
 DATASET_DIR = 'storage'
+
+
+def _validate_and_clean_form_input():
+    """Validate numeric feature fields before saving."""
+    cleaned_values, errors = validate_feature_inputs(request.form)
+
+    nama_desa = (request.form.get('nama_desa') or '').strip()
+    kecamatan = (request.form.get('kecamatan') or '').strip()
+
+    if not nama_desa:
+        errors.append('Nama desa wajib diisi.')
+
+    if not kecamatan:
+        errors.append('Kecamatan wajib dipilih.')
+
+    return cleaned_values, errors
 
 
 @login_required
@@ -37,19 +54,31 @@ def insert_data():
     if request.method == 'POST':
         lng = request.form.get('lng')
         lat = request.form.get('lat')
-        nama_desa = request.form.get('nama_desa')
-        curah_hujan = request.form.get('curah_hujan')
-        kemiringan = request.form.get('kemiringan')
-        banjir_histori = request.form.get('banjir_histori')
-        kecamatan = request.form.get("kecamatan")
-        
+        nama_desa = (request.form.get('nama_desa') or '').strip()
+        kecamatan = (request.form.get("kecamatan") or '').strip()
+
+        cleaned_values, errors = _validate_and_clean_form_input()
+        if errors:
+            for error in errors:
+                flash(error, 'danger')
+            return redirect(url_for('create'))
+
         file = request.files.get('upload')
         filename = None
-        
+
         if file and file.filename != '':
             filename = save_file_upload(file, nama_desa)
 
-        initDb.insertData(lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, filename, kecamatan)
+        initDb.insertData(
+            lng,
+            lat,
+            nama_desa,
+            cleaned_values['curah_hujan'],
+            cleaned_values['kemiringan'],
+            cleaned_values['banjir_histori'],
+            filename,
+            kecamatan
+        )
         flash('Data Berhasil Disimpan', 'success')
         return redirect(url_for('management_data'))
 
@@ -59,19 +88,41 @@ def update_data(id):
     """Update data"""
     lng = request.form.get('lng')
     lat = request.form.get('lat')
-    nama_desa = request.form.get('nama_desa')
-    curah_hujan = request.form.get('curah_hujan')
-    kemiringan = request.form.get('kemiringan')
-    banjir_histori = request.form.get('banjir_histori')
-    kecamatan = request.form.get("kecamatan")
+    nama_desa = (request.form.get('nama_desa') or '').strip()
+    kecamatan = (request.form.get("kecamatan") or '').strip()
+
+    cleaned_values, errors = _validate_and_clean_form_input()
+    if errors:
+        for error in errors:
+            flash(error, 'danger')
+        return redirect(url_for('edit', id=id))
 
     file = request.files.get('upload')
     
     if file and file.filename != '':
         filename = save_file_upload(file, nama_desa)
-        initDb.updateData(id, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, filename, kecamatan)
+        initDb.updateData(
+            id,
+            lng,
+            lat,
+            nama_desa,
+            cleaned_values['curah_hujan'],
+            cleaned_values['kemiringan'],
+            cleaned_values['banjir_histori'],
+            filename,
+            kecamatan
+        )
     else:
-        initDb.updateDataNoData(id, lng, lat, nama_desa, curah_hujan, kemiringan, banjir_histori, kecamatan)
+        initDb.updateDataNoData(
+            id,
+            lng,
+            lat,
+            nama_desa,
+            cleaned_values['curah_hujan'],
+            cleaned_values['kemiringan'],
+            cleaned_values['banjir_histori'],
+            kecamatan
+        )
         
     flash("Berhasil Updated Data", "success")
     return redirect(url_for('management_data'))

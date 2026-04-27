@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from flask import flash, render_template, redirect, url_for
 import database.ConnectionDb
 from .utils import login_required
+from .data_validation import validate_dataframe_features
 
 initDb = database.ConnectionDb.run
 DATASET_DIR = 'storage'
@@ -106,8 +107,9 @@ class KMeansProcessor:
     
     def preprocess_data(self, data):
         """Preprocess and scale data"""
-        data_scaled = self.scaler.fit_transform(data[self.features])
-        return pd.DataFrame(data_scaled, columns=self.features)
+        validated_data = validate_dataframe_features(data, context_label='data K-Means')
+        data_scaled = self.scaler.fit_transform(validated_data[self.features])
+        return validated_data, pd.DataFrame(data_scaled, columns=self.features)
     
     def run_kmeans_steps(self, data_scaled_df):
         """Run K-means with step-by-step logging and convergence tracking"""
@@ -253,7 +255,7 @@ class KMeansProcessor:
         data = self.load_data(input_file)
         
         # Preprocess
-        data_scaled_df = self.preprocess_data(data)
+        validated_data, data_scaled_df = self.preprocess_data(data)
         
         # Save scaled data
         data_scaled_df.to_csv(os.path.join(DATASET_DIR, "prosessing.csv"), index=False)
@@ -265,19 +267,19 @@ class KMeansProcessor:
         kmeans = self.fit_kmeans(data_scaled_df)
         
         # Map clusters to risk levels
-        data, centers, label_map = self.map_clusters(data, kmeans)
+        validated_data, centers, label_map = self.map_clusters(validated_data, kmeans)
         
         # Save result
-        data.to_csv(os.path.join(DATASET_DIR, "result.csv"), index=False)
+        validated_data.to_csv(os.path.join(DATASET_DIR, "result.csv"), index=False)
         
         # Plot visualizations
-        centroid_plot_path = self.plot_centroid_and_clusters(data_scaled_df, data, kmeans, label_map)
+        centroid_plot_path = self.plot_centroid_and_clusters(data_scaled_df, validated_data, kmeans, label_map)
         convergence_plot_path = self.plot_convergence(inertia_history)
         
         return {
             'data_scaled': data_scaled_df,
             'centers': centers,
-            'result': data,
+            'result': validated_data,
             'log_iterasi': log_iterasi,
             'kmeans': kmeans,
             'inertia_history': inertia_history,

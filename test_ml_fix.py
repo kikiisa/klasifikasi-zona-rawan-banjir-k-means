@@ -54,7 +54,8 @@ def test_ml_processor():
     # Test 2: Preprocess data
     print("\n[TEST 2] Preprocessing data...")
     try:
-        data_scaled = processor.preprocess_data(data)
+        validated_data, data_scaled = processor.preprocess_data(data)
+        print("  ✓ Data validated successfully")
         print("  ✓ Data scaled successfully")
         print("  ✓ Scaled data shape: {}".format(data_scaled.shape))
         print("  ✓ Sample scaled values:\n{}".format(data_scaled.head()))
@@ -65,9 +66,10 @@ def test_ml_processor():
     # Test 3: Run K-means steps
     print("\n[TEST 3] Running K-means with step logging...")
     try:
-        log_iterasi, centroids = processor.run_kmeans_steps(data_scaled)
+        log_iterasi, centroids, inertia_history = processor.run_kmeans_steps(data_scaled)
         print("  ✓ K-means steps completed")
         print("  ✓ Iterations logged: {}".format(len(log_iterasi)))
+        print("  ✓ Inertia history length: {}".format(len(inertia_history)))
         for i, log in enumerate(log_iterasi):
             print("    - Iterasi {}: {} (formula: {})".format(
                 log['iterasi'], 
@@ -92,7 +94,7 @@ def test_ml_processor():
     # Test 5: Map clusters (THIS WAS THE BUG)
     print("\n[TEST 5] Mapping clusters to risk levels (FIXED)...")
     try:
-        data_with_clusters, centers, label_map = processor.map_clusters(data, kmeans)
+        data_with_clusters, centers, label_map = processor.map_clusters(validated_data, kmeans)
         print("  ✓ Clusters mapped successfully")
         print("  ✓ Label map: {}".format(label_map))
         print("  ✓ Cluster distribution:")

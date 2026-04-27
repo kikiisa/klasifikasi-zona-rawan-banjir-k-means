@@ -1,108 +1,109 @@
 id,lng,lat,nama_desa,curah_hujan,interpretasi_curah_hujan,kemiringan,interpretasi_kemiringan,banjir_histori,interpretasi_banjir_histori,interpretasi_threshold,geojson,kecamatan,claster
-215,123.1251358,0.8940865,Batubantayo,2558,rendah,7,sedang,4,sering,"Curah hujan rendah, kemiringan sedang, histori banjir sering",Batubantayo.geojson,7107060,Sangat Rawan
-216,123.165318,0.8964744,Batutajam,2642,sedang,3,landai,0,tidak pernah,"Curah hujan sedang, kemiringan landai, histori banjir tidak pernah",Batutajam.geojson,7107060,Tidak Rawan
-217,123.1366502,0.9203082,Buko,2588,rendah,5,sedang,1,pernah,"Curah hujan rendah, kemiringan sedang, histori banjir pernah",Buko.geojson,7107060,Tidak Rawan
-218,123.1008937,0.9103633,Buko Selatan,3022,tinggi,8,curam,5,sering,"Curah hujan tinggi, kemiringan curam, histori banjir sering",Buko Selatan.geojson,7107060,Sangat Rawan
-219,123.1327501,0.9213702,Buko Utara,2697,sedang,10,curam,1,pernah,"Curah hujan sedang, kemiringan curam, histori banjir pernah",Buko Utara.geojson,7107060,Tidak Rawan
-220,123.1274686,0.8757991,Busato,2504,rendah,6,sedang,3,sering,"Curah hujan rendah, kemiringan sedang, histori banjir sering",Busato.geojson,7107060,Rawan
-221,123.1103405,0.9028503,Dalapuli,2498,rendah,8,curam,1,pernah,"Curah hujan rendah, kemiringan curam, histori banjir pernah",Dalapuli.geojson,7107060,Tidak Rawan
-222,123.1057031,0.9071478,Dalapuli Barat,2511,rendah,3,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Dalapuli Barat.geojson,7107060,Tidak Rawan
-223,123.1142117,0.8991006,Dalapuli Timur,2618,sedang,4,landai,1,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Dalapuli Timur.geojson,7107060,Tidak Rawan
-224,123.1035262,0.8936166,Dengi,2671,sedang,1,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Dengi.geojson,7107060,Rawan
-225,123.0476425,0.8791003,Duini,2640,sedang,7,sedang,3,sering,"Curah hujan sedang, kemiringan sedang, histori banjir sering",Duini.geojson,7107060,Rawan
-226,123.0958926,0.8876956,Kayuogu,2677,sedang,6,sedang,2,pernah,"Curah hujan sedang, kemiringan sedang, histori banjir pernah",Kayuogu.geojson,7107060,Rawan
-227,123.1551936,0.9275295,Komus I,2664,sedang,2,landai,0,tidak pernah,"Curah hujan sedang, kemiringan landai, histori banjir tidak pernah",Komus I.geojson,7107060,Tidak Rawan
-228,123.1272778,0.8902523,Padango,2853,tinggi,8,curam,4,sering,"Curah hujan tinggi, kemiringan curam, histori banjir sering",Padango.geojson,7107060,Sangat Rawan
-229,123.1220655,0.9212744,Tambulang Pantai,2549,rendah,4,landai,3,sering,"Curah hujan rendah, kemiringan landai, histori banjir sering",Tambulang Pantai.geojson,7107060,Rawan
-230,123.0582443,0.9095261,Tambulang Timur,2737,sedang,9,curam,2,pernah,"Curah hujan sedang, kemiringan curam, histori banjir pernah",Tambulang Timur.geojson,7107060,Rawan
-231,123.1381281,0.9428426,Tanjung Sidupa,2693,sedang,4,landai,1,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Tanjung Sidupa.geojson,7107060,Tidak Rawan
-232,123.1064602,0.9180999,Tombulang,2774,sedang,7,sedang,4,sering,"Curah hujan sedang, kemiringan sedang, histori banjir sering",Tombulang.geojson,7107060,Sangat Rawan
-233,123.1017288,0.9045159,Tuntulow,2842,tinggi,5,sedang,4,sering,"Curah hujan tinggi, kemiringan sedang, histori banjir sering",Tuntulow.geojson,7107060,Sangat Rawan
-234,123.0991088,0.9165089,Tuntulow Utara,3105,tinggi,3,landai,5,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Tuntulow Utara.geojson,7107060,Sangat Rawan
-235,123.0528483,0.8665408,Tuntung,2594,rendah,6,sedang,3,sering,"Curah hujan rendah, kemiringan sedang, histori banjir sering",Tuntung.geojson,7107060,Rawan
-236,123.0647633,0.8594453,Tuntung Timur,2764,sedang,3,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Tuntung Timur.geojson,7107060,Rawan
-237,123.2484701,0.9025119,Bigo,2681,sedang,75,curam,3,sering,"Curah hujan sedang, kemiringan curam, histori banjir sering",Bigo.geojson,7107050,Rawan
-238,123.2656848,0.9011417,Bigo Selatan,2594,rendah,2,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Bigo Selatan.geojson,7107050,Rawan
-239,123.2464918,0.9036907,Boroko,3153,tinggi,8,curam,5,sering,"Curah hujan tinggi, kemiringan curam, histori banjir sering",Boroko.geojson,7107050,Sangat Rawan
-240,123.2506512,0.9099043,Boroko Timur,2677,sedang,9,curam,3,sering,"Curah hujan sedang, kemiringan curam, histori banjir sering",Boroko Timur.geojson,7107050,Rawan
-241,123.2686414,0.9129773,Boroko Utara,2569,rendah,2,landai,4,sering,"Curah hujan rendah, kemiringan landai, histori banjir sering",Boroko Utara.geojson,7107050,Sangat Rawan
-242,123.2702232,0.8788547,Gihang,2683,sedang,3,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Gihang.geojson,7107050,Rawan
-243,123.1996546,0.913876,Inomunga,2958,tinggi,8,curam,6,sering,"Curah hujan tinggi, kemiringan curam, histori banjir sering",Inomunga.geojson,7107050,Sangat Rawan
-244,123.1991956,0.9315961,Inomunga Utara,2732,sedang,7,sedang,2,pernah,"Curah hujan sedang, kemiringan sedang, histori banjir pernah",Inomunga Utara.geojson,7107050,Rawan
-245,123.2284061,0.9056832,Komus II Timur,2684,sedang,9,curam,0,tidak pernah,"Curah hujan sedang, kemiringan curam, histori banjir tidak pernah",Komus II Timur.geojson,7107050,Tidak Rawan
-246,123.1639056,0.9119767,Komus II,2749,sedang,7,sedang,0,tidak pernah,"Curah hujan sedang, kemiringan sedang, histori banjir tidak pernah",Komus II.geojson,7107050,Tidak Rawan
-247,123.2615798,0.9080643,Kuala,2843,tinggi,0,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Kuala.geojson,7107050,Sangat Rawan
-248,123.2600172,0.9009579,Kuala Utara,2759,sedang,2,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Kuala Utara.geojson,7107050,Rawan
-249,123.271289,0.8681385,Pontak,2638,sedang,2,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Pontak.geojson,7107050,Rawan
-250,123.1187518,0.8461684,Soligir,2648,sedang,2,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Soligir.geojson,7107050,Rawan
-251,123.1787332,0.9416426,Solo,2594,rendah,6,sedang,3,sering,"Curah hujan rendah, kemiringan sedang, histori banjir sering",Solo.geojson,7107050,Rawan
-252,123.3009496,0.9038044,Bolangitang,3174,tinggi,4,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Bolangitang.geojson,7107040,Sangat Rawan
-253,123.2995221,0.9080314,Bolangitang I,2738,sedang,2,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Bolangitang I.geojson,7107040,Rawan
-254,123.2882971,0.9084274,Bolangitang II,2833,tinggi,2,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Bolangitang II.geojson,7107040,Sangat Rawan
-255,123.2870971,0.9007646,Iyok,2774,sedang,4,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Iyok.geojson,7107040,Rawan
-256,123.2635361,0.8869446,Jambusarang,2697,sedang,2,landai,4,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Jambusarang.geojson,7107040,Sangat Rawan
-257,123.3243915,0.8665984,Keimanga,2816,tinggi,3,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Keimanga.geojson,7107040,Rawan
-258,123.2983593,0.8991609,Langi,2973,tinggi,3,landai,2,pernah,"Curah hujan tinggi, kemiringan landai, histori banjir pernah",Langi.geojson,7107040,Rawan
-259,122.9621193,0.7928829,Ollot,2851,tinggi,2,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Ollot.geojson,7107040,Sangat Rawan
-260,123.2731421,0.8723041,Ollot I,2796,sedang,2,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Ollot I.geojson,7107040,Rawan
-261,123.0226938,0.7800652,Olllot II,2868,tinggi,2,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Olllot II.geojson,7107040,Rawan
-262,123.3194606,0.8587119,Paku,2677,sedang,7,sedang,2,pernah,"Curah hujan sedang, kemiringan sedang, histori banjir pernah",Paku.geojson,7107040,Rawan
-263,122.9833958,0.7775217,Paku Selatan,2784,sedang,5,sedang,2,pernah,"Curah hujan sedang, kemiringan sedang, histori banjir pernah",Paku Selatan.geojson,7107040,Rawan
-264,123.2701102,0.8789711,Sonuo,2982,tinggi,4,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Sonuo.geojson,7107040,Sangat Rawan
-265,123.2929156,0.9049228,Talaga,2771,sedang,2,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Talaga.geojson,7107040,Rawan
-266,123.2562267,0.8899956,Talaga Tomoagu,2675,sedang,2,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Talaga Tomoagu.geojson,7107040,Rawan
-267,123.3323268,0.9095774,Tanjung Buaya,2663,sedang,7,sedang,2,pernah,"Curah hujan sedang, kemiringan sedang, histori banjir pernah",Tanjung Buaya.geojson,7107040,Rawan
-268,123.2598784,0.8956402,Tote,2845,tinggi,6,sedang,2,pernah,"Curah hujan tinggi, kemiringan sedang, histori banjir pernah",Tote.geojson,7107040,Rawan
-269,123.0465348,0.7818581,Wakat,3097,tinggi,8,curam,4,sering,"Curah hujan tinggi, kemiringan curam, histori banjir sering",Wakat.geojson,7107040,Sangat Rawan
-270,123.1450408,0.7611374,Binjeita,2857,tinggi,4,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Binjeita.geojson,7107030,Rawan
-271,123.1351108,0.7606619,Binjeita I,2774,sedang,3,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Binjeita I.geojson,7107030,Rawan
-272,123.4525148,0.8885914,Binjeita II,2741,sedang,2,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Binjeita II.geojson,7107030,Rawan
-273,123.0915928,0.7726113,Binuanga,2589,rendah,8,curam,1,pernah,"Curah hujan rendah, kemiringan curam, histori banjir pernah",Binuanga.geojson,7107030,Tidak Rawan
-274,123.4854829,0.882902,Binuni,2693,sedang,6,sedang,2,pernah,"Curah hujan sedang, kemiringan sedang, histori banjir pernah",Binuni.geojson,7107030,Rawan
-275,123.1587704,0.7577284,Biontong,2847,tinggi,2,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Biontong.geojson,7107030,Rawan
-276,123.1855262,0.7873105,Biontong I,2849,tinggi,3,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Biontong I.geojson,7107030,Sangat Rawan
-277,123.1730483,0.7530341,Biontong II,2791,sedang,2,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Biontong II.geojson,7107030,Rawan
-278,123.1208733,0.761598,Bohabak I,2589,rendah,2,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Bohabak I.geojson,7107030,Rawan
-279,123.4101856,0.8925571,Bohabak II,2697,sedang,2,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Bohabak II.geojson,7107030,Rawan
-280,123.4199192,0.8764826,Bohabak III,2577,rendah,3,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Bohabak III.geojson,7107030,Rawan
-281,123.1092923,0.7672229,Bohabak IV,2638,sedang,4,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Bohabak IV.geojson,7107030,Rawan
-282,123.4963053,0.8804917,Lipu Bogu,2638,sedang,4,landai,4,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Lipu Bogu.geojson,7107030,Sangat Rawan
-283,123.3348136,0.9002765,Mokoditek,1967,rendah,7,sedang,1,pernah,"Curah hujan rendah, kemiringan sedang, histori banjir pernah",Mokoditek.geojson,7107030,Tidak Rawan
-284,123.299622,0.8706228,Mokoditek I,2088,rendah,6,sedang,1,pernah,"Curah hujan rendah, kemiringan sedang, histori banjir pernah",Mokoditek I.geojson,7107030,Tidak Rawan
-285,123.3721955,0.8876845,Nagara,2382,rendah,5,sedang,1,pernah,"Curah hujan rendah, kemiringan sedang, histori banjir pernah",Nagara.geojson,7107030,Tidak Rawan
-286,123.2295368,0.8663548,Nunuka,2101,rendah,5,sedang,3,sering,"Curah hujan rendah, kemiringan sedang, histori banjir sering",Nunuka.geojson,7107030,Tidak Rawan
-287,123.0659497,0.7695688,Saleo,2470,rendah,5,sedang,2,pernah,"Curah hujan rendah, kemiringan sedang, histori banjir pernah",Saleo.geojson,7107030,Tidak Rawan
-288,123.4099003,0.7837536,Saleo I,2734,sedang,4,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Saleo I.geojson,7107030,Rawan
-289,123.4410907,0.9040152,Tanjung Labou,2033,rendah,2,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Tanjung Labou.geojson,7107030,Tidak Rawan
-290,123.5399762,0.8854939,Batulintik,2673,sedang,2,landai,4,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Batulintik.geojson,7107020,Sangat Rawan
-291,122.9541172,0.7336715,Bintauna,2836,tinggi,2,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Bintauna.geojson,7107020,Sangat Rawan
-292,123.5675898,0.8925974,Bintauna Pantai,2895,tinggi,2,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Bintauna Pantai.geojson,7107020,Sangat Rawan
-293,123.5541418,0.8790284,Bunia,2788,sedang,2,landai,4,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Bunia.geojson,7107020,Sangat Rawan
-294,122.8639187,0.7333855,Bunong,2137,rendah,1,landai,3,sering,"Curah hujan rendah, kemiringan landai, histori banjir sering",Bunong.geojson,7107020,Tidak Rawan
-295,123.2679788,0.7104693,Huntuk,2496,rendah,2,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Huntuk.geojson,7107020,Tidak Rawan
-296,123.3218733,0.7552466,Kopi,2558,rendah,3,landai,4,sering,"Curah hujan rendah, kemiringan landai, histori banjir sering",Kopi.geojson,7107020,Sangat Rawan
-297,123.5095993,0.8781118,Kuhanga,2194,rendah,1,landai,4,sering,"Curah hujan rendah, kemiringan landai, histori banjir sering",Kuhanga.geojson,7107020,Tidak Rawan
-298,123.5342401,0.8901131,Minanga,2733,sedang,2,landai,4,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Minanga.geojson,7107020,Sangat Rawan
-299,123.2324598,0.7244381,Mome,2681,sedang,1,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Mome.geojson,7107020,Rawan
-300,123.5447689,0.8808049,Padang,2649,sedang,2,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Padang.geojson,7107020,Rawan
-301,123.5033082,0.8630317,Padang Barat,2775,sedang,2,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Padang Barat.geojson,7107020,Rawan
-302,123.5125886,0.8650231,Pimpi,2846,tinggi,1,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Pimpi.geojson,7107020,Rawan
-303,123.5384006,0.8841129,Talaga Bintauna,2559,rendah,2,landai,4,sering,"Curah hujan rendah, kemiringan landai, histori banjir sering",Talaga Bintauna.geojson,7107020,Sangat Rawan
-304,123.5403428,0.8777283,Vahuta,1998,rendah,1,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Vahuta.geojson,7107020,Tidak Rawan
-305,123.5291001,0.8836799,Voa’a,2679,sedang,1,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Voa’a.geojson,7107020,Rawan
-306,123.7027682,0.8577776,Ampeng Sembeka,1882,rendah,2,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Ampeng Sembeka.geojson,7107010,Tidak Rawan
-307,123.60204,0.8737545,Busisingo,3195,tinggi,3,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Busisingo.geojson,7107010,Sangat Rawan
-308,123.5788617,0.8975299,Busisingo Utara,2937,tinggi,3,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Busisingo Utara.geojson,7107010,Sangat Rawan
-309,123.596064,0.8983179,Mokusato,3117,tinggi,2,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Mokusato.geojson,7107010,Sangat Rawan
-310,123.0679893,0.8807598,Monompia,2974,tinggi,1,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Monompia.geojson,7107010,Sangat Rawan
-311,123.563682,0.8426913,Pangkusa,2633,sedang,2,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Pangkusa.geojson,7107010,Rawan
-312,123.6264601,0.8687211,Sampiro,2771,sedang,4,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Sampiro.geojson,7107010,Rawan
-313,123.5334105,0.8477859,Sang Tombolang,2397,rendah,8,curam,2,pernah,"Curah hujan rendah, kemiringan curam, histori banjir pernah",Sang Tombolang.geojson,7107010,Tidak Rawan
-314,123.5816367,0.8724071,Sangkub I,2669,sedang,3,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Sangkub I.geojson,7107010,Rawan
-315,123.5721502,0.8733711,Sangkub II,2877,tinggi,7,sedang,3,sering,"Curah hujan tinggi, kemiringan sedang, histori banjir sering",Sangkub II.geojson,7107010,Rawan
-316,123.5969271,0.8783676,Sangkub III,3119,tinggi,1,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Sangkub III.geojson,7107010,Sangat Rawan
-317,123.6297446,0.8853178,Sangkub Empat,3177,tinggi,7,sedang,3,sering,"Curah hujan tinggi, kemiringan sedang, histori banjir sering",Sangkub Empat.geojson,7107010,Sangat Rawan
-318,123.6516328,0.877609,Sangkub Timur,2738,sedang,3,landai,4,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Sangkub Timur.geojson,7107010,Sangat Rawan
-319,123.5740085,0.8434258,Sidodadi,2688,sedang,5,sedang,3,sering,"Curah hujan sedang, kemiringan sedang, histori banjir sering",Sidodadi.geojson,7107010,Rawan
-320,123.5036874,0.8799445,Suka Makmur,2994,tinggi,6,sedang,4,sering,"Curah hujan tinggi, kemiringan sedang, histori banjir sering",Suka Makmur.geojson,7107010,Sangat Rawan
-321,123.4569718,0.8588704,Tombolango,3079,tinggi,4,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Tombolango.geojson,7107010,Sangat Rawan
+215,123.1251358,0.8940865,Batubantayo,2558.0,rendah,7.0,sedang,4,sering,"Curah hujan rendah, kemiringan sedang, histori banjir sering",Batubantayo.geojson,7107060,Rawan
+216,123.165318,0.8964744,Batutajam,2642.0,sedang,3.0,landai,0,tidak pernah,"Curah hujan sedang, kemiringan landai, histori banjir tidak pernah",Batutajam.geojson,7107060,Rawan
+217,123.1366502,0.9203082,Buko,2588.0,rendah,5.0,sedang,1,pernah,"Curah hujan rendah, kemiringan sedang, histori banjir pernah",Buko.geojson,7107060,Rawan
+218,123.1008937,0.9103633,Buko Selatan,3022.0,tinggi,8.0,curam,5,sering,"Curah hujan tinggi, kemiringan curam, histori banjir sering",Buko Selatan.geojson,7107060,Sangat Rawan
+219,123.1327501,0.9213702,Buko Utara,2697.0,sedang,10.0,curam,1,pernah,"Curah hujan sedang, kemiringan curam, histori banjir pernah",Buko Utara.geojson,7107060,Rawan
+220,123.1274686,0.8757991,Busato,2504.0,rendah,6.0,sedang,3,sering,"Curah hujan rendah, kemiringan sedang, histori banjir sering",Busato.geojson,7107060,Rawan
+221,123.1103405,0.9028503,Dalapuli,2498.0,rendah,8.0,curam,1,pernah,"Curah hujan rendah, kemiringan curam, histori banjir pernah",Dalapuli.geojson,7107060,Rawan
+222,123.1057031,0.9071478,Dalapuli Barat,2511.0,rendah,3.0,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Dalapuli Barat.geojson,7107060,Rawan
+223,123.1142117,0.8991006,Dalapuli Timur,2618.0,sedang,4.0,landai,1,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Dalapuli Timur.geojson,7107060,Rawan
+224,123.1035262,0.8936166,Dengi,2671.0,sedang,1.0,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Dengi.geojson,7107060,Rawan
+225,123.0476425,0.8791003,Duini,2640.0,sedang,7.0,sedang,3,sering,"Curah hujan sedang, kemiringan sedang, histori banjir sering",Duini.geojson,7107060,Rawan
+226,123.0958926,0.8876956,Kayuogu,2677.0,sedang,6.0,sedang,2,pernah,"Curah hujan sedang, kemiringan sedang, histori banjir pernah",Kayuogu.geojson,7107060,Rawan
+227,123.1551936,0.9275295,Komus I,2664.0,sedang,2.0,landai,0,tidak pernah,"Curah hujan sedang, kemiringan landai, histori banjir tidak pernah",Komus I.geojson,7107060,Rawan
+228,123.1272778,0.8902523,Padango,2853.0,tinggi,8.0,curam,4,sering,"Curah hujan tinggi, kemiringan curam, histori banjir sering",Padango.geojson,7107060,Sangat Rawan
+229,123.1220655,0.9212744,Tambulang Pantai,2549.0,rendah,4.0,landai,3,sering,"Curah hujan rendah, kemiringan landai, histori banjir sering",Tambulang Pantai.geojson,7107060,Rawan
+230,123.0582443,0.9095261,Tambulang Timur,2737.0,sedang,9.0,curam,2,pernah,"Curah hujan sedang, kemiringan curam, histori banjir pernah",Tambulang Timur.geojson,7107060,Rawan
+231,123.1381281,0.9428426,Tanjung Sidupa,2693.0,sedang,4.0,landai,1,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Tanjung Sidupa.geojson,7107060,Rawan
+232,123.1064602,0.9180999,Tombulang,2774.0,sedang,7.0,sedang,4,sering,"Curah hujan sedang, kemiringan sedang, histori banjir sering",Tombulang.geojson,7107060,Sangat Rawan
+233,123.1017288,0.9045159,Tuntulow,2842.0,tinggi,5.0,sedang,4,sering,"Curah hujan tinggi, kemiringan sedang, histori banjir sering",Tuntulow.geojson,7107060,Sangat Rawan
+234,123.0991088,0.9165089,Tuntulow Utara,3105.0,tinggi,3.0,landai,5,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Tuntulow Utara.geojson,7107060,Sangat Rawan
+235,123.0528483,0.8665408,Tuntung,2594.0,rendah,6.0,sedang,3,sering,"Curah hujan rendah, kemiringan sedang, histori banjir sering",Tuntung.geojson,7107060,Rawan
+236,123.0647633,0.8594453,Tuntung Timur,2764.0,sedang,3.0,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Tuntung Timur.geojson,7107060,Rawan
+237,123.2484701,0.9025119,Bigo,2681.0,sedang,75.0,curam,3,sering,"Curah hujan sedang, kemiringan curam, histori banjir sering",Bigo.geojson,7107050,Rawan
+238,123.2656848,0.9011417,Bigo Selatan,2594.0,rendah,2.0,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Bigo Selatan.geojson,7107050,Rawan
+239,123.2464918,0.9036907,Boroko,3153.0,tinggi,8.0,curam,5,sering,"Curah hujan tinggi, kemiringan curam, histori banjir sering",Boroko.geojson,7107050,Sangat Rawan
+240,123.2506512,0.9099043,Boroko Timur,2677.0,sedang,9.0,curam,3,sering,"Curah hujan sedang, kemiringan curam, histori banjir sering",Boroko Timur.geojson,7107050,Rawan
+241,123.2686414,0.9129773,Boroko Utara,2569.0,rendah,2.0,landai,4,sering,"Curah hujan rendah, kemiringan landai, histori banjir sering",Boroko Utara.geojson,7107050,Rawan
+242,123.2702232,0.8788547,Gihang,2683.0,sedang,3.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Gihang.geojson,7107050,Rawan
+243,123.1996546,0.913876,Inomunga,2958.0,tinggi,8.0,curam,6,sering,"Curah hujan tinggi, kemiringan curam, histori banjir sering",Inomunga.geojson,7107050,Sangat Rawan
+244,123.1991956,0.9315961,Inomunga Utara,2732.0,sedang,7.0,sedang,2,pernah,"Curah hujan sedang, kemiringan sedang, histori banjir pernah",Inomunga Utara.geojson,7107050,Rawan
+245,123.2284061,0.9056832,Komus II Timur,2684.0,sedang,9.0,curam,0,tidak pernah,"Curah hujan sedang, kemiringan curam, histori banjir tidak pernah",Komus II Timur.geojson,7107050,Rawan
+246,123.1639056,0.9119767,Komus II,2749.0,sedang,7.0,sedang,0,tidak pernah,"Curah hujan sedang, kemiringan sedang, histori banjir tidak pernah",Komus II.geojson,7107050,Rawan
+247,123.2615798,0.9080643,Kuala,2843.0,tinggi,0.0,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Kuala.geojson,7107050,Sangat Rawan
+248,123.2600172,0.9009579,Kuala Utara,2759.0,sedang,2.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Kuala Utara.geojson,7107050,Rawan
+249,123.271289,0.8681385,Pontak,2638.0,sedang,2.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Pontak.geojson,7107050,Rawan
+250,123.1187518,0.8461684,Soligir,2648.0,sedang,2.0,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Soligir.geojson,7107050,Rawan
+251,123.1787332,0.9416426,Solo,2594.0,rendah,6.0,sedang,3,sering,"Curah hujan rendah, kemiringan sedang, histori banjir sering",Solo.geojson,7107050,Rawan
+252,123.3009496,0.9038044,Bolangitang,3174.0,tinggi,4.0,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Bolangitang.geojson,7107040,Sangat Rawan
+253,123.2995221,0.9080314,Bolangitang I,2738.0,sedang,2.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Bolangitang I.geojson,7107040,Rawan
+254,123.2882971,0.9084274,Bolangitang II,2833.0,tinggi,2.0,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Bolangitang II.geojson,7107040,Sangat Rawan
+255,123.2870971,0.9007646,Iyok,2774.0,sedang,4.0,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Iyok.geojson,7107040,Rawan
+256,123.2635361,0.8869446,Jambusarang,2697.0,sedang,2.0,landai,4,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Jambusarang.geojson,7107040,Sangat Rawan
+257,123.3243915,0.8665984,Keimanga,2816.0,tinggi,3.0,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Keimanga.geojson,7107040,Sangat Rawan
+258,123.2983593,0.8991609,Langi,2973.0,tinggi,3.0,landai,2,pernah,"Curah hujan tinggi, kemiringan landai, histori banjir pernah",Langi.geojson,7107040,Sangat Rawan
+259,122.9621193,0.7928829,Ollot,2851.0,tinggi,2.0,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Ollot.geojson,7107040,Sangat Rawan
+260,123.2731421,0.8723041,Ollot I,2796.0,sedang,2.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Ollot I.geojson,7107040,Sangat Rawan
+261,123.0226938,0.7800652,Olllot II,2868.0,tinggi,2.0,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Olllot II.geojson,7107040,Sangat Rawan
+262,123.3194606,0.8587119,Paku,2677.0,sedang,7.0,sedang,2,pernah,"Curah hujan sedang, kemiringan sedang, histori banjir pernah",Paku.geojson,7107040,Rawan
+263,122.9833958,0.7775217,Paku Selatan,2784.0,sedang,5.0,sedang,2,pernah,"Curah hujan sedang, kemiringan sedang, histori banjir pernah",Paku Selatan.geojson,7107040,Rawan
+264,123.2701102,0.8789711,Sonuo,2982.0,tinggi,4.0,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Sonuo.geojson,7107040,Sangat Rawan
+265,123.2929156,0.9049228,Talaga,2771.0,sedang,2.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Talaga.geojson,7107040,Rawan
+266,123.2562267,0.8899956,Talaga Tomoagu,2675.0,sedang,2.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Talaga Tomoagu.geojson,7107040,Rawan
+267,123.3323268,0.9095774,Tanjung Buaya,2663.0,sedang,7.0,sedang,2,pernah,"Curah hujan sedang, kemiringan sedang, histori banjir pernah",Tanjung Buaya.geojson,7107040,Rawan
+268,123.2598784,0.8956402,Tote,2845.0,tinggi,6.0,sedang,2,pernah,"Curah hujan tinggi, kemiringan sedang, histori banjir pernah",Tote.geojson,7107040,Rawan
+269,123.0465348,0.7818581,Wakat,3097.0,tinggi,8.0,curam,4,sering,"Curah hujan tinggi, kemiringan curam, histori banjir sering",Wakat.geojson,7107040,Sangat Rawan
+270,123.1450408,0.7611374,Binjeita,2857.0,tinggi,4.0,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Binjeita.geojson,7107030,Sangat Rawan
+271,123.1351108,0.7606619,Binjeita I,2774.0,sedang,3.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Binjeita I.geojson,7107030,Rawan
+272,123.4525148,0.8885914,Binjeita II,2741.0,sedang,2.0,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Binjeita II.geojson,7107030,Rawan
+273,123.0915928,0.7726113,Binuanga,2589.0,rendah,8.0,curam,1,pernah,"Curah hujan rendah, kemiringan curam, histori banjir pernah",Binuanga.geojson,7107030,Rawan
+274,123.4854829,0.882902,Binuni,2693.0,sedang,6.0,sedang,2,pernah,"Curah hujan sedang, kemiringan sedang, histori banjir pernah",Binuni.geojson,7107030,Rawan
+275,123.1587704,0.7577284,Biontong,2847.0,tinggi,2.0,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Biontong.geojson,7107030,Sangat Rawan
+276,123.1855262,0.7873105,Biontong I,2849.0,tinggi,3.0,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Biontong I.geojson,7107030,Sangat Rawan
+277,123.1730483,0.7530341,Biontong II,2791.0,sedang,2.0,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Biontong II.geojson,7107030,Rawan
+278,123.1208733,0.761598,Bohabak I,2589.0,rendah,2.0,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Bohabak I.geojson,7107030,Rawan
+279,123.4101856,0.8925571,Bohabak II,2697.0,sedang,2.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Bohabak II.geojson,7107030,Rawan
+280,123.4199192,0.8764826,Bohabak III,2577.0,rendah,3.0,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Bohabak III.geojson,7107030,Rawan
+281,123.1092923,0.7672229,Bohabak IV,2638.0,sedang,4.0,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Bohabak IV.geojson,7107030,Rawan
+282,123.4963053,0.8804917,Lipu Bogu,2638.0,sedang,4.0,landai,4,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Lipu Bogu.geojson,7107030,Rawan
+283,123.3348136,0.9002765,Mokoditek,1967.0,rendah,7.0,sedang,1,pernah,"Curah hujan rendah, kemiringan sedang, histori banjir pernah",Mokoditek.geojson,7107030,Tidak Rawan
+284,123.299622,0.8706228,Mokoditek I,2088.0,rendah,6.0,sedang,1,pernah,"Curah hujan rendah, kemiringan sedang, histori banjir pernah",Mokoditek I.geojson,7107030,Tidak Rawan
+285,123.3721955,0.8876845,Nagara,2382.0,rendah,5.0,sedang,1,pernah,"Curah hujan rendah, kemiringan sedang, histori banjir pernah",Nagara.geojson,7107030,Rawan
+286,123.2295368,0.8663548,Nunuka,2101.0,rendah,5.0,sedang,3,sering,"Curah hujan rendah, kemiringan sedang, histori banjir sering",Nunuka.geojson,7107030,Tidak Rawan
+287,123.0659497,0.7695688,Saleo,2470.0,rendah,5.0,sedang,2,pernah,"Curah hujan rendah, kemiringan sedang, histori banjir pernah",Saleo.geojson,7107030,Rawan
+288,123.4099003,0.7837536,Saleo I,2734.0,sedang,4.0,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Saleo I.geojson,7107030,Rawan
+289,123.4410907,0.9040152,Tanjung Labou,2033.0,rendah,2.0,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Tanjung Labou.geojson,7107030,Tidak Rawan
+290,123.5399762,0.8854939,Batulintik,2673.0,sedang,2.0,landai,4,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Batulintik.geojson,7107020,Sangat Rawan
+291,122.9541172,0.7336715,Bintauna,2836.0,tinggi,2.0,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Bintauna.geojson,7107020,Sangat Rawan
+292,123.5675898,0.8925974,Bintauna Pantai,2895.0,tinggi,2.0,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Bintauna Pantai.geojson,7107020,Sangat Rawan
+293,123.5541418,0.8790284,Bunia,2788.0,sedang,2.0,landai,4,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Bunia.geojson,7107020,Sangat Rawan
+294,122.8639187,0.7333855,Bunong,2137.0,rendah,1.0,landai,3,sering,"Curah hujan rendah, kemiringan landai, histori banjir sering",Bunong.geojson,7107020,Tidak Rawan
+295,123.2679788,0.7104693,Huntuk,2496.0,rendah,2.0,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Huntuk.geojson,7107020,Rawan
+296,123.3218733,0.7552466,Kopi,2558.0,rendah,3.0,landai,4,sering,"Curah hujan rendah, kemiringan landai, histori banjir sering",Kopi.geojson,7107020,Rawan
+297,123.5095993,0.8781118,Kuhanga,2194.0,rendah,1.0,landai,4,sering,"Curah hujan rendah, kemiringan landai, histori banjir sering",Kuhanga.geojson,7107020,Tidak Rawan
+298,123.5342401,0.8901131,Minanga,2733.0,sedang,2.0,landai,4,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Minanga.geojson,7107020,Sangat Rawan
+299,123.2324598,0.7244381,Mome,2681.0,sedang,1.0,landai,2,pernah,"Curah hujan sedang, kemiringan landai, histori banjir pernah",Mome.geojson,7107020,Rawan
+300,123.5447689,0.8808049,Padang,2649.0,sedang,2.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Padang.geojson,7107020,Rawan
+301,123.5033082,0.8630317,Padang Barat,2775.0,sedang,2.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Padang Barat.geojson,7107020,Rawan
+302,123.5125886,0.8650231,Pimpi,2846.0,tinggi,1.0,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Pimpi.geojson,7107020,Sangat Rawan
+303,123.5384006,0.8841129,Talaga Bintauna,2559.0,rendah,2.0,landai,4,sering,"Curah hujan rendah, kemiringan landai, histori banjir sering",Talaga Bintauna.geojson,7107020,Rawan
+304,123.5403428,0.8777283,Vahuta,1998.0,rendah,1.0,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Vahuta.geojson,7107020,Tidak Rawan
+305,123.5291001,0.8836799,Voa’a,2679.0,sedang,1.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Voa’a.geojson,7107020,Rawan
+306,123.7027682,0.8577776,Ampeng Sembeka,1882.0,rendah,2.0,landai,2,pernah,"Curah hujan rendah, kemiringan landai, histori banjir pernah",Ampeng Sembeka.geojson,7107010,Tidak Rawan
+307,123.60204,0.8737545,Busisingo,3195.0,tinggi,3.0,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Busisingo.geojson,7107010,Sangat Rawan
+308,123.5788617,0.8975299,Busisingo Utara,2937.0,tinggi,3.0,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Busisingo Utara.geojson,7107010,Sangat Rawan
+309,123.596064,0.8983179,Mokusato,3117.0,tinggi,2.0,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Mokusato.geojson,7107010,Sangat Rawan
+310,123.0679893,0.8807598,Monompia,2974.0,tinggi,1.0,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Monompia.geojson,7107010,Sangat Rawan
+311,123.563682,0.8426913,Pangkusa,2633.0,sedang,2.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Pangkusa.geojson,7107010,Rawan
+312,123.6264601,0.8687211,Sampiro,2771.0,sedang,4.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Sampiro.geojson,7107010,Rawan
+313,123.5334105,0.8477859,Sang Tombolang,2397.0,rendah,8.0,curam,2,pernah,"Curah hujan rendah, kemiringan curam, histori banjir pernah",Sang Tombolang.geojson,7107010,Rawan
+314,123.5816367,0.8724071,Sangkub I,2669.0,sedang,3.0,landai,3,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Sangkub I.geojson,7107010,Rawan
+315,123.5721502,0.8733711,Sangkub II,2877.0,tinggi,7.0,sedang,3,sering,"Curah hujan tinggi, kemiringan sedang, histori banjir sering",Sangkub II.geojson,7107010,Sangat Rawan
+316,123.5969271,0.8783676,Sangkub III,3119.0,tinggi,1.0,landai,3,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Sangkub III.geojson,7107010,Sangat Rawan
+317,123.6297446,0.8853178,Sangkub Empat,3177.0,tinggi,7.0,sedang,3,sering,"Curah hujan tinggi, kemiringan sedang, histori banjir sering",Sangkub Empat.geojson,7107010,Sangat Rawan
+318,123.6516328,0.877609,Sangkub Timur,2738.0,sedang,3.0,landai,4,sering,"Curah hujan sedang, kemiringan landai, histori banjir sering",Sangkub Timur.geojson,7107010,Sangat Rawan
+319,123.5740085,0.8434258,Sidodadi,2688.0,sedang,5.0,sedang,3,sering,"Curah hujan sedang, kemiringan sedang, histori banjir sering",Sidodadi.geojson,7107010,Rawan
+320,123.5036874,0.8799445,Suka Makmur,2994.0,tinggi,6.0,sedang,4,sering,"Curah hujan tinggi, kemiringan sedang, histori banjir sering",Suka Makmur.geojson,7107010,Sangat Rawan
+321,123.4569718,0.8588704,Tombolango,3079.0,tinggi,4.0,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Tombolango.geojson,7107010,Sangat Rawan
+327,123.1541488,0.5432589,Alale,2200.0,rendah,8.0,curam,8,sering,"Curah hujan rendah, kemiringan curam, histori banjir sering",Alale.geojson,7107060,Tidak Rawan

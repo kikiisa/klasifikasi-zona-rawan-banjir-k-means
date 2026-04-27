@@ -106,3 +106,4 @@ id,lng,lat,nama_desa,curah_hujan,interpretasi_curah_hujan,kemiringan,interpretas
 319,123.5740085,0.8434258,Sidodadi,2688,sedang,5,sedang,3,sering,"Curah hujan sedang, kemiringan sedang, histori banjir sering",Sidodadi.geojson,7107010,7107010
 320,123.5036874,0.8799445,Suka Makmur,2994,tinggi,6,sedang,4,sering,"Curah hujan tinggi, kemiringan sedang, histori banjir sering",Suka Makmur.geojson,7107010,7107010
 321,123.4569718,0.8588704,Tombolango,3079,tinggi,4,landai,4,sering,"Curah hujan tinggi, kemiringan landai, histori banjir sering",Tombolango.geojson,7107010,7107010
+327,123.1541488,0.5432589,Alale,2200,rendah,8,curam,8,sering,"Curah hujan rendah, kemiringan curam, histori banjir sering",Alale.geojson,7107060,7107060
