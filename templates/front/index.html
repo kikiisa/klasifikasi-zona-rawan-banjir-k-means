@@ -106,18 +106,20 @@
       border: 1px solid var(--border);
       border-radius: 1rem;
       background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      overflow: visible;
     }
 
     .table-shell {
       border: 1px solid rgba(226, 232, 240, 0.9);
       border-radius: 0.9rem;
       background: #ffffff;
-      overflow: hidden;
+      overflow: visible;
     }
 
     .table-responsive {
       overflow-x: auto;
       scrollbar-width: thin;
+      overflow-y: visible;
     }
 
     .table.dataTable {
@@ -225,6 +227,13 @@
       line-height: 1.2;
       border: 1px solid transparent;
       white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .badge-soft:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .badge-soft.badge-neutral {
@@ -317,6 +326,36 @@
     .bg-muted { background-color: var(--muted) !important; }
     .text-muted-fg { color: var(--muted-fg) !important; }
     .border-dashed-s { border: 1px dashed var(--border) !important; }
+
+    /* Tooltip Styling */
+    .tooltip {
+      --bs-tooltip-z-index: 9999;
+      --bs-tooltip-max-width: 300px;
+    }
+
+    .tooltip.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .tooltip-inner {
+      background-color: var(--primary);
+      color: var(--primary-fg);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      text-align: left;
+      max-width: 300px;
+      word-wrap: break-word;
+    }
+
+    .bs-tooltip-top .tooltip-arrow::before,
+    .bs-tooltip-bottom .tooltip-arrow::before,
+    .bs-tooltip-start .tooltip-arrow::before,
+    .bs-tooltip-end .tooltip-arrow::before {
+      border-top-color: var(--primary);
+    }
   </style>
 </head>
 
@@ -518,10 +557,78 @@
   <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
   <script>
+    // Tooltip Information Mapping
+    const tooltipData = {
+      'curah_hujan': {
+        'rendah': 'Memiliki intensitas air hujan paling minim di antara sampel data lainnya.',
+        'sedang': 'Berada di fase transisi/moderat, tidak terlalu kering dan tidak ekstrem.',
+        'tinggi': 'Volume air hujan sangat besar, berpotensi genangan jika drainase buruk.'
+      },
+      'kemiringan': {
+        'landai': 'Sudut elevasi sangat kecil, kondisi tanah datar/sangat stabil. Permukaan tanah landai, risiko pergeseran tanah sangat minim.',
+        'sedang': 'Menunjukkan karakteristik wilayah yang mulai bergelombang atau berbukit kecil. Air mengalir lebih cepat ke daerah bawah, mengurangi risiko genangan.',
+        'curam': 'Area berbukit dengan sudut curam. Air cenderung mengalir cepat, meningkatkan risiko erosi dan longsor.'
+      },
+      'banjir_histori': {
+        'tidak pernah': 'Belum pernah tercatat banjir besar dalam 5 tahun terakhir.',
+        'pernah': 'Hanya terjadi genangan jika ada sumbatan pada drainase utama desa.',
+        'sering': 'Terjadi genangan setinggi 30-50cm setiap musim penghujan puncak.'
+      }
+    };
+
     $(document).ready(function() {
+      // Function to initialize tooltips - Define first before use
+      const initializeTooltips = function() {
+        const tooltipElements = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        tooltipElements.forEach(function(el) {
+          const existingTooltip = bootstrap.Tooltip.getInstance(el);
+          if (existingTooltip) {
+            existingTooltip.dispose();
+          }
+          new bootstrap.Tooltip(el, {
+            delay: { show: 100, hide: 100 },
+            html: false
+          });
+        });
+      };
+
       // PERBAIKAN: Inisialisasi DataTable Responsive & Styling
       if ($('.dataframe').length > 0) {
         const table = $('.dataframe');
+
+        const getTooltipText = (header, value) => {
+          const cleanValue = value.trim().toLowerCase();
+          const headerLower = header.toLowerCase();
+          
+          // Check for rainfall interpretation
+          if (headerLower.includes('curah') || headerLower.includes('rainfall')) {
+            for (let key in tooltipData.curah_hujan) {
+              if (cleanValue.includes(key.toLowerCase())) {
+                return tooltipData.curah_hujan[key];
+              }
+            }
+          }
+          
+          // Check for slope interpretation
+          if (headerLower.includes('kemiringan') || headerLower.includes('slope')) {
+            for (let key in tooltipData.kemiringan) {
+              if (cleanValue.includes(key.toLowerCase())) {
+                return tooltipData.kemiringan[key];
+              }
+            }
+          }
+          
+          // Check for flood history interpretation
+          if ((headerLower.includes('banjir') || headerLower.includes('flood')) && (headerLower.includes('histori') || headerLower.includes('history'))) {
+            for (let key in tooltipData.banjir_histori) {
+              if (cleanValue.includes(key.toLowerCase())) {
+                return tooltipData.banjir_histori[key];
+              }
+            }
+          }
+          
+          return '';
+        };
 
         const applyTableEnhancements = () => {
           const getBadgeClass = (value) => {
@@ -573,7 +680,18 @@
               const cell = $(cells[index]);
               const rawText = cell.text().trim();
               if (!rawText || cell.find('.badge-soft').length) return;
-              cell.html(`<span class="badge-soft ${getBadgeClass(rawText)}">${rawText}</span>`);
+              
+              const tooltipText = getTooltipText(header, rawText);
+              const isTooltipHeader = ['interpretasi_curah_hujan', 'interpretasi_kemiringan', 'interpretasi_banjir_histori'].includes(header);
+              let badgeHtml = `<span class="badge-soft ${getBadgeClass(rawText)}"`;
+              
+              if (tooltipText && isTooltipHeader) {
+                const uniqueId = 'tooltip-' + Math.random().toString(36).substr(2, 9);
+                badgeHtml += ` id="${uniqueId}" data-bs-toggle="tooltip" data-bs-placement="top" title="${tooltipText.replace(/"/g, '&quot;')}"`;
+              }
+              
+              badgeHtml += `>${rawText}</span>`;
+              cell.html(badgeHtml);
             });
           });
         };
@@ -592,30 +710,107 @@
           "dom": '<"row align-items-center gy-3 mb-4"<"col-12 col-md-4"l><"col-12 col-md-8"f>>rt<"row align-items-center gy-3 mt-4"<"col-12 col-md-5"i><"col-12 col-md-7"p>>',
           "drawCallback": function() {
             applyTableEnhancements();
+            initializeTooltips();
           }
         });
 
         applyTableEnhancements();
+        initializeTooltips();
+        
         $('.dataTables_filter label').addClass('relative d-block d-md-inline-block').append('<i class="fas fa-search position-absolute text-muted-fg opacity-50" style="left: 1rem; top: 50%; transform: translateY(-50%); font-size: 0.8rem;"></i>');
         $('.dataTables_filter input').css('padding-left', '2.4rem');
       }
 
-      // Fetch Data API (Tetap sama)
+      // Fetch Data API untuk menampilkan statistik di hero section
       const fetchData = async () => {
         try {
-          const res = await fetch("/api/results");
+          console.log('Fetching data from /api/results...');
+          
+          // Try first endpoint
+          let res = await fetch("/api/results");
+          if (!res.ok) {
+            console.warn(`/api/results returned status ${res.status}, trying alternative endpoint`);
+            res = await fetch("/results");
+          }
+          
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          
           const data = await res.json();
+          console.log('API Response:', data);
+          console.log('Data length:', data.length);
+          
+          // Check if data is an array
+          if (!Array.isArray(data)) {
+            console.error('Data is not an array:', typeof data);
+            return;
+          }
+          
           let counts = { total: data.length, sangat: 0, rawan: 0 };
           data.forEach(item => {
+            console.log('Item claster:', item.claster);
             if (item.claster === "Sangat Rawan") counts.sangat++;
             if (item.claster === "Rawan") counts.rawan++;
           });
-          $(".terpantau, .terpantau-1").text(counts.total);
-          $(".rawan-banjir, .rawan-banjir-1").text(counts.rawan);
-          $(".sangat-rawan").text(counts.sangat);
-        } catch (e) { console.error("Error load data", e); }
+          
+          console.log('Final counts:', counts);
+          
+          // Update hero section
+          const rawanElements = document.querySelectorAll('.rawan-banjir');
+          console.log('Found .rawan-banjir elements:', rawanElements.length);
+          rawanElements.forEach(el => {
+            el.textContent = counts.rawan;
+            console.log('Updated rawan-banjir to:', counts.rawan);
+          });
+          
+          const terpantau1Elements = document.querySelectorAll('.terpantau-1');
+          console.log('Found .terpantau-1 elements:', terpantau1Elements.length);
+          terpantau1Elements.forEach(el => {
+            el.textContent = counts.total;
+            console.log('Updated terpantau-1 to:', counts.total);
+          });
+          
+          // Update statistics section
+          const terpantauElements = document.querySelectorAll('.terpantau');
+          console.log('Found .terpantau elements:', terpantauElements.length);
+          terpantauElements.forEach(el => {
+            el.textContent = counts.total;
+            console.log('Updated terpantau to:', counts.total);
+          });
+          
+          const rawanBanjir1Elements = document.querySelectorAll('.rawan-banjir-1');
+          console.log('Found .rawan-banjir-1 elements:', rawanBanjir1Elements.length);
+          rawanBanjir1Elements.forEach(el => {
+            el.textContent = counts.rawan;
+            console.log('Updated rawan-banjir-1 to:', counts.rawan);
+          });
+          
+          const sangatRawanElements = document.querySelectorAll('.sangat-rawan');
+          console.log('Found .sangat-rawan elements:', sangatRawanElements.length);
+          sangatRawanElements.forEach(el => {
+            el.textContent = counts.sangat;
+            console.log('Updated sangat-rawan to:', counts.sangat);
+          });
+          
+        } catch (e) { 
+          console.error("Error loading data:", e);
+          // Set default values jika API fail
+          document.querySelectorAll('.terpantau, .terpantau-1, .rawan-banjir, .rawan-banjir-1, .sangat-rawan').forEach(el => {
+            el.textContent = "0";
+          });
+        }
       };
-      fetchData();
+      
+      // Fetch data dengan delay untuk memastikan DOM siap
+      setTimeout(fetchData, 500);
+      
+      // Also fetch on document ready as fallback
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          setTimeout(fetchData, 100);
+        });
+      }
     });
   </script>
   <script src="{{url_for('static',filename='template/modules/chart.min.js')}}"></script>    
@@ -703,6 +898,55 @@
   };
 
   fetchDataStatistik();
+</script>
+
+<!-- Tooltip initialization and event handling script -->
+<script>
+  // Reinitialize tooltips after DOM updates
+  const reinitializeTooltips = function() {
+    const tooltipElements = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltipElements.forEach(function(el) {
+      const instance = bootstrap.Tooltip.getInstance(el);
+      if (instance) {
+        instance.dispose();
+      }
+      new bootstrap.Tooltip(el, {
+        delay: { show: 100, hide: 100 },
+        html: false,
+        trigger: 'hover'
+      });
+    });
+  };
+
+  // Call on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', reinitializeTooltips);
+  } else {
+    reinitializeTooltips();
+  }
+
+  // Watch for dynamic content changes
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.addedNodes.length) {
+        const hasTooltip = [].slice.call(mutation.addedNodes).some(node => {
+          return node.querySelector && node.querySelector('[data-bs-toggle="tooltip"]');
+        });
+        if (hasTooltip) {
+          setTimeout(reinitializeTooltips, 100);
+        }
+      }
+    });
+  });
+
+  const tableContainer = document.querySelector('.table-responsive');
+  if (tableContainer) {
+    observer.observe(tableContainer, {
+      childList: true,
+      subtree: true,
+      characterData: false
+    });
+  }
 </script>
 </body>
 </html>
