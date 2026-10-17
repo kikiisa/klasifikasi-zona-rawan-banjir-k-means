@@ -4,17 +4,17 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     FLASK APPLICATION (index.py)                  │
-│                                                                    │
-│  Routes organized by category:                                    │
-│  ├── Frontend Routes (/, /hasil-cluster, /peta-bencana)          │
-│  ├── Auth Routes (/login, /logout)                               │
-│  ├── User Profile Routes (/setting, /contact, /dashboard)        │
-│  ├── User Management Routes (/management-user, /edit/user/*)     │
-│  ├── Data Management Routes (/management-data, /insert-data/*)   │
-│  ├── Upload Routes (/upload-file)                                │
-│  └── ML/Clustering Routes (/cluster-data, /prosess, /api/*)      │
-└──────────────────────────────────────────────────────────────────┘
+│                     FLASK APPLICATION (index.py)                │
+│                                                                 │
+│  Routes organized by category:                                  │
+│  ├── Frontend Routes (/, /hasil-cluster, /peta-bencana)         │
+│  ├── Auth Routes (/login, /logout)                              │
+│  ├── User Profile Routes (/setting, /contact, /dashboard)       │
+│  ├── User Management Routes (/management-user, /edit/user/*)    │
+│  ├── Data Management Routes (/management-data, /insert-data/*)  │
+│  ├── Upload Routes (/upload-file)                               │
+│  └── ML/Clustering Routes (/cluster-data, /prosess, /api/*)     │
+└─────────────────────────────────────────────────────────────────┘
                                  │
                     ┌────────────┼────────────┐
                     │            │            │
@@ -44,11 +44,11 @@
 │ @admin_req  │ │@admin_   │ │             │ │            │ │- load_data() │
 │             │ │  required│ │             │ │            │ │- preprocess()│
 └─────────────┘ └──────────┘ └─────────────┘ └────────────┘ │- run_kmeans()│
-                                                              │- fit_kmeans()│
-                                                              │- map_cluster│
-                                                              │- plot_viz() │
-                                                              │- process()  │
-                                                              └──────────────┘
+                                                                │- fit_kmeans()│
+                                                                │- map_cluster│
+                                                                │- plot_viz() │
+                                                                │- process()  │
+                                                                └──────────────┘
 ```
 
 ## 📁 Folder Structure
@@ -142,7 +142,6 @@ REQUEST
                    ├── jsonify()
                    └── flash()
 ```
-
 ## 🎯 ML Pipeline Detail
 
 ```
@@ -184,9 +183,7 @@ Input: CSV File (sinkronasi.csv)
        ├── Iteration logs
        └── Plot image
 ```
-
 ## 🔐 Access Control
-
 ```
 ┌─────────────────────┐
 │  Public Routes      │
